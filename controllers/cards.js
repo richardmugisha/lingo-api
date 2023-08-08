@@ -27,10 +27,9 @@ const getDeckCards = async(req, res) => {
 const createCard = async(req, res) => {
     try {
         const deckName = req.params.deckName;
-        
         if (req.body.mode === "manual") {
-            const { cardType: type, cardWord: word, ...content } = req.body
-            console.log(deckName, content)
+            const { cardType:type, cardWord:word, ...content } = req.body.content
+            //console.log(deckName, type, content)
             const card = await Card.create( {
                 deckName, type, word, ...content
             })
@@ -40,7 +39,7 @@ const createCard = async(req, res) => {
                 apiKey: process.env.OPENAI_API_KEY
                                 }))
             const words = req.body.content;
-            const question = words + `  : Use these words, and generate a JSON of objects containing the information that I will need for my flashcard app. I need to know which word type it is (noun, verb, adj, adverb, idiom, ...), the word itself, an array 4 objects {meaning of the word, usage of the word}, an array of 4 synonyms, and an array of 4 antonyms. To recap, the format should be: [{deckName: ${deckName}, type: type, word: word, meaning: [{meaning: meaning, example: usage}, +3 more], synonym: [4 synonyms], antonym: [4 antonyms]}, {the same for other words}]. Don't touch the deckName value pair, I want it as I gave to you. Your response should just be a pure JSON with no comments. I am using the data to store it in a database. !!!Please give me just the array. The array will be used to insert data to mongoose automatically. So, don't add any superfluous info. I won't be there to filter the unncessary comments.`
+            const question = words + `  : Use these words, and generate a JSON of objects containing the information that I will need for my flashcard app. I need to know which word type it is (noun, verb, adj, adverb, idiom, ...), the word itself, an array 4 objects {meaning of the word, usage of the word}, an array of 4 synonyms, and an array of 4 antonyms. To recap, the format should be: [{deckName: ${deckName}, type: type, word: word, meaning: [{meaning: meaning, example: usage}, +3 more], synonym: [4 synonyms], antonym: [4 antonyms]}, {the same for other words}]. Don't touch the deckName key value pair, I want it as I gave to you. Your response should just be a pure JSON with no comments. No meaning, example should be empty. I am using the data to store it in a database. !!!Please give me just the array. The array will be used to insert data to mongoose automatically. So, don't add any superfluous info. I won't be there to filter the unncessary comments.`
             console.log('start')
             const response = await openAI.createChatCompletion({
                 model: "gpt-3.5-turbo",
@@ -48,7 +47,7 @@ const createCard = async(req, res) => {
             })
 
             const generateData = response.data.choices[0].message.content;
-            console.log('yes')
+            //console.log('yes')
             const parseData = JSON.parse(generateData);
             Card.insertMany(parseData)
             .then(() => {
@@ -69,9 +68,9 @@ const createCard = async(req, res) => {
 
 const deleteCards = async (req, res) => {
     try {
-        console.log('anyy')
+        //console.log('anyy')
         const deckNames = req.params.deckName.split(',');
-        console.log(deckNames)
+        //console.log(deckNames)
         const cards = await Card.deleteMany({ deckName: { $in: deckNames }})
                         .then((deleteData) => {
                             return res.status(201).json( {msg: `${deleteData.deletedCount} cards deleted successfully`})

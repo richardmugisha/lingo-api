@@ -18,7 +18,7 @@ app.get('/cardHome/:msg', (req, res) => {
 
 app.use('/api/v1/cards', cards)
 
-const port = 5000;
+const port = process.env.PORT || 3500;
 
 const start = async () => {
     try {
