@@ -1,5 +1,6 @@
 const express = require('express');
 const cards = require('./routes/cards');
+const deck = require('./routes/deck')
 const connectDB = require('./db/connect');
 const cors = require('cors')
 require('dotenv').config()
@@ -16,7 +17,7 @@ app.get('/cardHome/:msg', (req, res) => {
 })
 
 
-app.use('/api/v1/cards', cards)
+app.use('/api/v1/cards', cards, deck)
 
 const port = process.env.PORT || 3500;
 

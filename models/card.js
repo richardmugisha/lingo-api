@@ -28,22 +28,3 @@ const CardSchema = new mongoose.Schema({
 })
 
 module.exports = mongoose.model('Card', CardSchema)
-
-/*
-{
-  "word": "solace",
-  "type": "noun",
-  "meaning": [
-      {
-        "meaning": "travailler dans les bous",
-        "example": "never give up"
-      },
-      {
-        "meaning": "travailler dans les bous",
-        "example": "never give up"
-      }
-    ],
-  "synonym": ["race", "ethny"],
-  "antonym": ["work", "hard"]
-}
-*/
