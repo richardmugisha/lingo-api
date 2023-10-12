@@ -13,16 +13,17 @@ const CardSchema = new mongoose.Schema({
         type: String,
         required: [true, 'must provide the word type']
     },
+    
     meaning: {
-        type: Array,
+        type: String,
         required: [true, 'must provide meanings and examples']
     },
     synonym: {
-        type: Array,
+        type: String,
         required: [true, 'must provide synonyms']
     },
     antonym: {
-        type: Array,
+        type: String,
         required: [true, 'must provide antonyms']
     }
 })
