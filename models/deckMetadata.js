@@ -3,23 +3,31 @@ const mongoose = require('mongoose');
 const DeckMetaDataSchema = new mongoose.Schema({
     deckName: {
         type: String,
-        required: [true, 'must provide deck name']
+        required: [true, 'Must provide deck name']
     },
-    
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    cardNumber: {
+        type: Number,
+        required: [true, 'How many cards are in this deck']
+    },
     performance: {
         correct: {
-            type: Array,
-            required: [true, 'must provide correct ratio']
+            type: [Number],
+            required: [true, 'Must provide correct ratio']
         },
         performance: {
-            type: Array,
-            required: [true, 'must provide performance ratio']
+            type: [Number],
+            required: [true, 'Must provide performance ratio']
         },
         time: {
-            type: Array,
-            required: [true, 'must provide time taken']
+            type: [Number],
+            required: [true, 'Must provide time taken']
         }
     }
-})
+});
 
-module.exports = mongoose.model('DeckMetaData', DeckMetaDataSchema)
+module.exports = mongoose.model('DeckMetaData', DeckMetaDataSchema);

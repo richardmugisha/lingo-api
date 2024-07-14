@@ -1,58 +1,45 @@
 const Card = require('../models/card');
-const openai = require('openai')
-const { Configuration, OpenAIApi } = openai;
+const { createNewDeck } = require('./deck')
 
-const getDecks = async(req, res) => {
+const { openaiProcess } = require('../utils/openaiProcess')
+
+const getDeckCards = async (req, res) => {
     try {
-        const pipeline = [{ $group: { _id: '$deckName' } }];
-        const deckNamesCursor = await Card.aggregate(pipeline);
-        const deckNamesList = deckNamesCursor.map(deck => deck._id)
-        res.status(200).json( { deckNamesList })
+        const deckId = req.params.deckName; // Retrieve deckId from request parameters
+        const cards = await Card.find({ deck: deckId }); // Find cards by deckId
+        res.status(200).json({ cards });
     } catch (error) {
-        res.status(500).json( { msg: error } )
+        console.error(error);
+        res.status(500).json({ msg: error.message });
     }
-}
+};
 
-const getDeckCards = async(req, res) => {
-    try{
-        const deckName = req.params.deckName;
-        const cards = await Card.find({deckName: deckName});
-        res.status(200).json({ cards })
-    }
-    catch (error) {
-        res.status(500).json( { msg: error } )
-    }
-}
 
 const createCard = async(req, res) => {
+    const testAI = false; //openai api not ready yet. When ready, let the content come from the client
+    let deck;
     try {
-        const deckName = req.params.deckName;
-        if (req.body.mode === "manual") {
-            const { cardType:type, cardWord:word, ...content } = req.body.content
-            //console.log(deckName, type, content)
-            const card = await Card.create( {
-                deckName, type, word, ...content
-            })
-            res.status(201).json( { card } )
-        } else {
-            const openAI = new OpenAIApi( new Configuration({
-                apiKey: process.env.OPENAI_API_KEY
-                                }))
-            const words = req.body.content;
-            const question =  `[${words}] : Use these words, and generate a JSON of objects containing the information that I will need for my flashcard app. I need to know which word type it is (noun, verb, adj, adverb, idiom, ...), the word itself, an array 4 objects {meaning of the word, usage of the word}, an array of 4 synonyms, and an array of 4 antonyms. To recap, the format should be: [{deckName: ${deckName}, type: type, word: word, meaning: [{meaning: meaning, example: usage}, +3 more], synonym: [4 synonyms], antonym: [4 antonyms]}, {the same for other words}]. Don't touch the deckName key value pair, I want it as I gave to you. Your response should just be a pure JSON with no comments. No meaning or example section should be empty. I am using the data to store it in a database. !!!Please give me just the array. The array will be used to insert data to mongoose automatically. So, don't add any superfluous info. I won't be there to filter the unncessary comments.`
-            console.log('start')
-            const response = await openAI.createChatCompletion({
-                model: "gpt-3.5-turbo",
-                messages: [{ role: "user", content: question}]
-            })
+        const {deckName }= req.params;
+        const {userId, deckId, content} = req.body
+        
+        const manualMode = req.body.mode === "manual"
+        const cardNumber = manualMode ? 1 : testAI ? 7: content.length;
+        console.log(userId, deckId, deckName, cardNumber)
+        // Check if deck metadata exists
+        deck = await createNewDeck(deckId, deckName, userId, cardNumber);
 
-            const generateData = response.data.choices[0].message.content;
-            //console.log('yes')
-            const parseData = JSON.parse(generateData);
-            Card.insertMany(parseData)
+        if (manualMode) {
+            const card = await Card.create( {
+                deck : deck._id, ...content
+            })
+            res.status(201).json( { deck, card } )
+        } else {
+            const words = content;
+            const parseData = await openaiProcess(words, 'regular deck', testAI) // true is for testing
+            const cards = parseData.map(card => ({...card, deck: deck._id }))
+            Card.insertMany(cards)
             .then(() => {
-                console.log('saved')
-                return res.status(201).json( { msg: 'successful' } );
+                return res.status(201).json( { deck } );
                 }
             ).catch( (error) => {
                 return res.status(500).json({msg: error.message})
@@ -62,16 +49,15 @@ const createCard = async(req, res) => {
         
     }
     catch (error) {
-        res.status(500).json({msg: error.message})
+        console.log(error)
+        res.status(500).json({error: error.message, deck})
     }
 }
 
 const deleteCards = async (req, res) => {
     try {
-        //console.log('anyy')
-        const deckNames = req.params.deckName.split(',');
-        //console.log(deckNames)
-        const cards = await Card.deleteMany({ deckName: { $in: deckNames }})
+        const deckIds = req.params.deckIds.split(',');
+        const cards = await Card.deleteMany({ deckName: { $in: deckIds }})
                         .then((deleteData) => {
                             return res.status(201).json( {msg: `${deleteData.deletedCount} cards deleted successfully`})
                         })
@@ -82,7 +68,6 @@ const deleteCards = async (req, res) => {
 }
 
 module.exports = {
-    getDecks,
     getDeckCards,
     createCard,
     deleteCards

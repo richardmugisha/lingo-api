@@ -1,35 +1,77 @@
-const DeckMetadata = require('../models/deckMetadata');
+const DeckMetaData = require('../models/deckMetaData');
+const Card = require('../models/card')
 
+const createNewDeck = async (deckId, deckName, userId, cardNumber) => {
+    try {
+        let deck;
+        if (deckId) {
+            deck = await DeckMetaData.findById(deckId)
+            deck.cardNumber += cardNumber
+        }
+        else {
+            deck = new DeckMetaData({
+                deckName,
+                creator: userId,
+                cardNumber,
+                performance: {
+                    correct: [0],
+                    performance: [0],
+                    time: [0]
+                }
+            });
+        }
 
-const getDeckMetadata = async (req, res) => {
+        deck = await deck.save();
+        console.log('Deck metadata saved:');
+        return deck
+    } catch (error) {
+        console.error('Error saving deck metadata:', error);
+    }
+    
+}
+
+const getDecks = async(req, res) => {
+    try {
+        const decks = await DeckMetaData.find();
+        res.status(200).json(decks)
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching decks', error});
+    }
+    // try {
+    //     const pipeline = [{ $group: { _id: '$deckName' } }];
+    //     const deckNamesCursor = await Card.aggregate(pipeline);
+    //     const deckNamesList = deckNamesCursor.map(deck => deck._id)
+    //     res.status(200).json( { deckNamesList })
+    // } catch (error) {
+    //     res.status(500).json( { msg: error } )
+    // }
+}
+
+const getDeckMetaData = async (req, res) => {
     try {
         const deckName = req.params.deckName;
-        console.log(deckName);
-        const deckMetadata = await DeckMetadata.findOne({ deckName: deckName });
-        return res.status(200).json( { deckMetadata })
+        const deckMetaData = await DeckMetaData.findOne({ deckName });
+        return res.status(200).json( { deckMetaData })
     } catch (error) {
         res.status(500).json( { msg: error })
     }
 }
 
-const updateDeckMetadata = async (req, res) => {
+const updateDeckMetaData = async (req, res) => {
     try {
         const deckName = req.params.deckName;
-        let deckMetadata = await DeckMetadata.findOne({ deckName: deckName });
-       // console.log(deckName, req.body)
-        // create deckMetadata if no exist
-        if (!deckMetadata) {
-            //console.log('no')
+        let deckMetaData = await DeckMetaData.findOne({ deckName: deckName });
+        if (!deckMetaData) {
             const perform = {
                 correct : [req.body.correct], performance : [req.body.performance], time : [req.body.time]
             }
             const content = { deckName, performance : perform } 
-            deckMetadata = await DeckMetadata.create(content);
-            return res.status(201).json( { deckMetadata } )
+            deckMetaData = await DeckMetaData.create(content);
+            return res.status(201).json( { deckMetaData } )
         }
         // insert the results if exits
         
-        deckMetadata = await DeckMetadata.updateOne(
+        deckMetaData = await DeckMetaData.updateOne(
             { deckName: deckName },
             {
                 $push: {
@@ -39,7 +81,6 @@ const updateDeckMetadata = async (req, res) => {
                 }
             }
         )
-        //console.log(deckMetadata)
         return res.status(200).json({ msg: 'Perform items pushed successfully' })
 
     } catch (error) {
@@ -48,8 +89,30 @@ const updateDeckMetadata = async (req, res) => {
     }
 }
 
+const deleteDecks = async (req, res) => {
+    try {
+        const deckIds = req.params.deckName.split(',');
+        // Delete all cards associated with the specified decks
+        const deleteCardResult = await Card.deleteMany({ deck: { $in: deckIds } });
+        console.log(`${deleteCardResult.deletedCount} cards deleted successfully`);
+
+        // Delete the specified decks
+        const deleteDeckResult = await DeckMetaData.deleteMany({ _id: { $in: deckIds } });
+        console.log(`${deleteDeckResult.deletedCount} decks deleted successfully`);
+
+        res.status(200).json({
+            msg: `${deleteCardResult.deletedCount} cards and ${deleteDeckResult.deletedCount} decks deleted successfully`
+        });
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ msg: error.message });
+    }
+};
 
 module.exports = {
-    getDeckMetadata,
-    updateDeckMetadata
-}
+    createNewDeck,
+    getDecks,
+    getDeckMetaData,
+    updateDeckMetaData,
+    deleteDecks
+};

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const { getDeckMetadata, updateDeckMetadata } = require('../controllers/deck')
+const { deleteDecks, getDeckMetaData, updateDeckMetaData } = require('../controllers/deck')
 
-router.route('/deckMetadata/:deckName').get(getDeckMetadata).patch(updateDeckMetadata);
+router.route('/deckMetaData/:deckName').get(getDeckMetaData).patch(updateDeckMetaData).delete(deleteDecks);
 
 module.exports = router
