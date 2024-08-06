@@ -40,9 +40,10 @@ const promptMaker = (words, regularOrTemporaryDeck) => {
                                         "antonym": "An antonym"
                                     ]
                                 }
-            2. Strictly respect the object keys I gave you. You can only change the values.
-            3. Don't give me anything apart from a javaScript array because when I run JSON.parse(yourResult), it would throw an error
-            4. The values for all the keys are required because they are also required per my database schema`
+            2. I cannot stress enough how much important it is that the wordReferenceInExample should be inside the example given to you or the example you give. For example articulate inside "She articulated her words perfectly"
+            3. Strictly respect the object keys I gave you. You can only change the values.
+            4. Don't give me anything apart from a javaScript array because when I run JSON.parse(yourResult), it would throw an error
+            5. The values for all the keys are required because they are also required per my database schema`
         }
 
 const gen = [

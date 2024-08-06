@@ -1,5 +1,6 @@
 const DeckMetaData = require('../models/deckMetaData');
-const Card = require('../models/card')
+const Card = require('../models/card');
+const Story = require('../models/story')
 
 const createNewDeck = async (deckId, deckName, userId, cardNumber) => {
     try {
@@ -32,7 +33,9 @@ const createNewDeck = async (deckId, deckName, userId, cardNumber) => {
 
 const getDecks = async(req, res) => {
     try {
-        const decks = await DeckMetaData.find();
+        const { creator } = req.params;
+        console.log(creator)
+        const decks = await DeckMetaData.find(creator ? { creator } : {} );
         res.status(200).json(decks)
     } catch (error) {
         res.status(500).json({message: 'Error fetching decks', error});
@@ -109,10 +112,39 @@ const deleteDecks = async (req, res) => {
     }
 };
 
+const createStory = async(req, res) => {
+    const { deckId } = req.params;
+    const {userId, story, title} = req.body;
+    console.log(deckId, userId, story)
+    try {
+        const createdStory = await Story.create(userId ? {creator: userId, deck: deckId, story, title} : {deck: deckId, story, title} )
+        console.log(createdStory)
+        res.status(200).json({story: createdStory})
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+const getStories = async(req, res) => {
+    const { deckId } = req.params;
+    try {
+        const stories = await Story.find({ deck: deckId })
+        console.log(stories)
+        res.status(200).json({ stories })
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ msg: error.message });
+    }
+}
+
 module.exports = {
     createNewDeck,
     getDecks,
     getDeckMetaData,
     updateDeckMetaData,
-    deleteDecks
+    deleteDecks,
+    createStory,
+    getStories,
 };
