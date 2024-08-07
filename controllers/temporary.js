@@ -49,13 +49,14 @@ const getTemporary = async(req, res) => {
 }
 
 const stealFromTemporary = async (req, res) => {
-    let { userId, idType, id, selected } = req.body;
+    let { userId, idType, id, selected, deckLang } = req.body;
 
     const tempDeck = await Temporary.findOne({ creator: userId })
 
     const deck = idType === 'deckId' ? await DeckMetaData.findById(id) : 
         new DeckMetaData({
             deckName: id,
+            deckLang,
             creator: userId,
             cardNumber: 0,
             performance: {

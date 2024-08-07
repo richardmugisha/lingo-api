@@ -20,13 +20,13 @@ const createCard = async(req, res) => {
     let deck;
     try {
         const {deckName }= req.params;
-        const {userId, deckId, content} = req.body
+        const {userId, deckId, content, deckLang} = req.body
         
         const manualMode = req.body.mode === "manual"
         const cardNumber = manualMode ? 1 : testAI ? 7: content.length;
         console.log(userId, deckId, deckName, cardNumber)
         // Check if deck metadata exists
-        deck = await createNewDeck(deckId, deckName, userId, cardNumber);
+        deck = await createNewDeck(deckId, deckName, userId, cardNumber, deckLang);
 
         if (manualMode) {
             const card = await Card.create( {
@@ -42,6 +42,7 @@ const createCard = async(req, res) => {
                 return res.status(201).json( { deck } );
                 }
             ).catch( (error) => {
+                console.log(error.message)
                 return res.status(500).json({msg: error.message})
                 }
             )
@@ -49,7 +50,7 @@ const createCard = async(req, res) => {
         
     }
     catch (error) {
-        console.log(error)
+        console.log(error.message)
         res.status(500).json({error: error.message, deck})
     }
 }

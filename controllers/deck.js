@@ -2,7 +2,7 @@ const DeckMetaData = require('../models/deckMetaData');
 const Card = require('../models/card');
 const Story = require('../models/story')
 
-const createNewDeck = async (deckId, deckName, userId, cardNumber) => {
+const createNewDeck = async (deckId, deckName, userId, cardNumber, deckLang) => {
     try {
         let deck;
         if (deckId) {
@@ -13,6 +13,7 @@ const createNewDeck = async (deckId, deckName, userId, cardNumber) => {
             deck = new DeckMetaData({
                 deckName,
                 creator: userId,
+                deckLang,
                 cardNumber,
                 performance: {
                     correct: [0],
@@ -33,21 +34,18 @@ const createNewDeck = async (deckId, deckName, userId, cardNumber) => {
 
 const getDecks = async(req, res) => {
     try {
-        const { creator } = req.params;
-        console.log(creator)
-        const decks = await DeckMetaData.find(creator ? { creator } : {} );
+        const { creator, language:deckLang } = req.params;
+        console.log('creator: ', creator, 'language: ', deckLang)
+        const filters = {};
+        if (creator !== 'all') filters.creator = creator;
+        if (deckLang !== 'all') filters.deckLang = deckLang;
+        const decks = await DeckMetaData.find(filters);
+        console.log(decks)
         res.status(200).json(decks)
     } catch (error) {
         res.status(500).json({message: 'Error fetching decks', error});
     }
-    // try {
-    //     const pipeline = [{ $group: { _id: '$deckName' } }];
-    //     const deckNamesCursor = await Card.aggregate(pipeline);
-    //     const deckNamesList = deckNamesCursor.map(deck => deck._id)
-    //     res.status(200).json( { deckNamesList })
-    // } catch (error) {
-    //     res.status(500).json( { msg: error } )
-    // }
+    
 }
 
 const getDeckMetaData = async (req, res) => {

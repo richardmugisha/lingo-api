@@ -5,6 +5,12 @@ const DeckMetaDataSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Must provide deck name']
     },
+
+    deckLang: {
+        type: String,
+        required: [true, 'Must provide deck language']
+    },
+
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
