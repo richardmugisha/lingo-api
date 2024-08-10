@@ -6,7 +6,7 @@ const cors = require('cors')
 const session = require('express-session');
 require('dotenv').config()
 
-const authRoutes = require('./routes/auth');
+const { authRoutes, verifyToken} = require('./routes/auth');
 const openaiTest = require('./routes/openaiTest')
 const appMetaData = require('./routes/appMetaData')
 
@@ -24,15 +24,9 @@ app.use(session({
     cookie: { secure: false } // Use true in production with HTTPS
   }));
 
-// routes
-// app.get('/cardHome/:msg', (req, res) => {
-//     res.send(req.params.msg)
-// })
-
-// Routes
 
 app.use('/api/v1/cards/test/openaiApi', openaiTest);
-app.use('/api/auth', authRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 app.use('/api/v1/cards/app', appMetaData)
 app.use('/api/v1/cards', cards, deck)

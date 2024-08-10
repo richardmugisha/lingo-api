@@ -2,9 +2,9 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+require('dotenv').config()
 
 const router = express.Router();
-const JWT_SECRET = 'your_jwt_secret_key';
 
 // Register route
 router.post('/register', async (req, res) => {
@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
     req.session.token = token;
     res.json({ token, user: { userId: user._id, username: user.username, email: user.email } });
   } catch (error) {
@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Middleware to verify JWT
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const token = req.session.token;
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
@@ -55,7 +55,7 @@ const verifyToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.userId = decoded.userId;
+    req.user = await User.findById(decoded.userId).select('-password');
     next();
   } catch (error) {
     res.status(401).json({ message: 'Invalid token' });
@@ -72,4 +72,7 @@ router.get('/profile', verifyToken, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = {
+  authRoutes : router,
+  verifyToken
+};
