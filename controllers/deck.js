@@ -2,19 +2,17 @@ const DeckMetaData = require('../models/deckMetaData');
 const Card = require('../models/card');
 const Story = require('../models/story')
 
-const createNewDeck = async (deckId, deckName, userId, cardNumber, deckLang) => {
+const createNewDeck = async (deckId, deckName, userId, deckLang) => {
     try {
         let deck;
         if (deckId) {
             deck = await DeckMetaData.findById(deckId)
-            deck.cardNumber += cardNumber
         }
         else {
             deck = new DeckMetaData({
                 deckName,
                 creator: userId,
                 deckLang,
-                cardNumber,
                 performance: {
                     correct: [0],
                     performance: [0],
@@ -22,12 +20,10 @@ const createNewDeck = async (deckId, deckName, userId, cardNumber, deckLang) => 
                 }
             });
         }
-
-        deck = await deck.save();
-        console.log('Deck metadata saved:');
         return deck
+
     } catch (error) {
-        console.error('Error saving deck metadata:', error);
+        console.error('Error creating or retrieving deck metadata:', error);
     }
     
 }

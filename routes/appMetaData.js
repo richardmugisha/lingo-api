@@ -6,7 +6,6 @@ const AppMetaData = require('../models/app');
 const getAverageOpenaiTime = async (req, res) => {
     try {
         const app = await AppMetaData.findOne({});
-        console.log(app);
         res.status(200).json({ timePerCard: app ? app.timePerCard : null });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -17,8 +16,6 @@ const getAverageOpenaiTime = async (req, res) => {
 const updateAverageOpenaiTime = async (req, res) => {
     try {
         const { timePerCard } = req.body;
-        console.log('time: ', timePerCard);
-        
         let app = await AppMetaData.findOne({});
         if (!app) {
             app = new AppMetaData({

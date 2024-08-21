@@ -23,21 +23,24 @@ const createCard = async(req, res) => {
         const {userId, deckId, content, deckLang} = req.body
         
         const manualMode = req.body.mode === "manual"
-        const cardNumber = manualMode ? 1 : testAI ? 7: content.length;
+        const cardNumber = manualMode ? 1 : content.split(',').length;
         console.log(userId, deckId, deckName, cardNumber)
         // Check if deck metadata exists
         deck = await createNewDeck(deckId, deckName, userId, cardNumber, deckLang);
-
+        if (!deck) throw new Error(`The deck with id: ${deckName} doesn't exist!`)
         if (manualMode) {
             const card = await Card.create( {
                 deck : deck._id, ...content
             })
+            deck.cardNumber = 1 + (deck.cardNumber || 0)
+            deck.save()
             res.status(201).json( { deck, card } )
         } else {
-            const words = content;
-            const parseData = await openaiProcess(words, 'regular deck', testAI) // true is for testing
-            const cards = parseData.map(card => ({...card, deck: deck._id }))
+            const parsedData = await openaiProcess(content, 'regular deck') // true is for testing
+            const cards = parsedData.map(card => ({...card, deck: deck._id }))
             Card.insertMany(cards)
+            deck.cardNumber = cards.length + (deck.cardNumber || 0)
+            deck.save()
             .then(() => {
                 return res.status(201).json( { deck } );
                 }

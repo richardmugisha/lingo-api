@@ -3,7 +3,6 @@ const DeckMetaData = require('../models/deckMetaData');
 const Card = require('../models/card');
 
 const { openaiProcess } = require('../utils/openaiProcess')
-const testAI = false
 
 const updateTemporary = async (req, res) => {
     try {
@@ -33,7 +32,7 @@ const getTemporary = async(req, res) => {
     console.log(tempId)
     const thisUserTemporaryDeck = await Temporary.findById(tempId);
     try {
-        const parseData = await openaiProcess(thisUserTemporaryDeck.unprocessed, 'temporary deck', testAI) // is for testing
+        const parseData = await openaiProcess(thisUserTemporaryDeck.unprocessed, 'temporary deck')
         const cards = parseData.map(card => ({...card, deck: tempId }))
         await Card.insertMany(cards)
         thisUserTemporaryDeck.cardNumber += thisUserTemporaryDeck.unprocessed.length
