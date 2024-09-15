@@ -1,5 +1,5 @@
 const Temporary = require('../models/temporary');
-const DeckMetaData = require('../models/deckMetaData');
+const Deck = require('../models/deck');
 const Card = require('../models/card');
 
 const { openaiProcess } = require('../utils/openaiProcess')
@@ -52,8 +52,8 @@ const stealFromTemporary = async (req, res) => {
 
     const tempDeck = await Temporary.findOne({ creator: userId })
 
-    const deck = idType === 'deckId' ? await DeckMetaData.findById(id) : 
-        new DeckMetaData({
+    const deck = idType === 'deckId' ? await Deck.findById(id) : 
+        new Deck({
             deckName: id,
             deckLang,
             creator: userId,

@@ -1,6 +1,8 @@
 const express = require('express');
 const cards = require('./routes/cards');
 const deck = require('./routes/deck')
+const words = require('./routes/words')
+const batchRequest = require('./routes/batchRequest')
 const connectDB = require('./db/connect');
 const cors = require('cors')
 const session = require('express-session');
@@ -29,7 +31,9 @@ app.use('/api/v1/cards/test/openaiApi', openaiTest);
 app.use('/api/v1/auth', authRoutes);
 
 app.use('/api/v1/cards/app', appMetaData)
+app.use('/api/v1/batch-request', batchRequest)
 app.use('/api/v1/cards', cards, deck)
+app.use('/api/v1/words', words)
 
 const port = process.env.PORT || 3500;
 

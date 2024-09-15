@@ -1,18 +1,20 @@
-const DeckMetaData = require('../models/deckMetaData');
-const Card = require('../models/card');
-const Story = require('../models/story')
+const Deck = require('../models/deck');
+const getWordModel = require('../models/word/word')
+const Story = require('../models/story');
+const { fullStoryGen, aiCoEditor } = require('../utils/openaiProcess')
 
 const createNewDeck = async (deckId, deckName, userId, deckLang) => {
     try {
         let deck;
         if (deckId) {
-            deck = await DeckMetaData.findById(deckId)
+            deck = await Deck.findById(deckId)
         }
         else {
-            deck = new DeckMetaData({
+            deck = new Deck({
                 deckName,
                 creator: userId,
                 deckLang,
+                words: [],
                 performance: {
                     correct: [0],
                     performance: [0],
@@ -29,14 +31,14 @@ const createNewDeck = async (deckId, deckName, userId, deckLang) => {
 }
 
 const getDecks = async(req, res) => {
+    const { creator, language:deckLang } = req.params;
+    // console.log('creator: ', creator, 'language: ', deckLang, 'none')
     try {
-        const { creator, language:deckLang } = req.params;
-        console.log('creator: ', creator, 'language: ', deckLang)
         const filters = {};
         if (creator !== 'all') filters.creator = creator;
         if (deckLang !== 'all') filters.deckLang = deckLang;
-        const decks = await DeckMetaData.find(filters);
-        console.log(decks)
+        const decks = await Deck.find(filters);
+        // console.log(decks)
         res.status(200).json(decks)
     } catch (error) {
         res.status(500).json({message: 'Error fetching decks', error});
@@ -44,32 +46,38 @@ const getDecks = async(req, res) => {
     
 }
 
-const getDeckMetaData = async (req, res) => {
+const getDeck = async (req, res) => {
     try {
-        const deckName = req.params.deckName;
-        const deckMetaData = await DeckMetaData.findOne({ deckName });
-        return res.status(200).json( { deckMetaData })
+        const { deckId } = req.params;
+        // console.log('deckId', deckId)
+        const deck = await Deck.findById(deckId);
+        if (!deck) throw new Error('deck does not exist!')
+        const WordModel = getWordModel(deck.deckLang)
+        deck.words = await WordModel.find( {'_id': {$in: deck.words} })
+        // console.log(deck)
+        return res.status(200).json( { deck })
     } catch (error) {
+        console.log(error)
         res.status(500).json( { msg: error })
     }
 }
 
-const updateDeckMetaData = async (req, res) => {
+const updateDeck = async (req, res) => {
     try {
-        const deckName = req.params.deckName;
-        let deckMetaData = await DeckMetaData.findOne({ deckName: deckName });
-        if (!deckMetaData) {
+        const deckId = req.params.deckId;
+        let deck = await Deck.findById(deckId);
+        if (!deck) {
             const perform = {
                 correct : [req.body.correct], performance : [req.body.performance], time : [req.body.time]
             }
             const content = { deckName, performance : perform } 
-            deckMetaData = await DeckMetaData.create(content);
-            return res.status(201).json( { deckMetaData } )
+            deck = await Deck.create(content);
+            return res.status(201).json( { deck } )
         }
         // insert the results if exits
         
-        deckMetaData = await DeckMetaData.updateOne(
-            { deckName: deckName },
+        deck = await Deck.findByIdAndUpdate(
+            deckId,
             {
                 $push: {
                     'performance.correct': req.body.correct,
@@ -88,17 +96,17 @@ const updateDeckMetaData = async (req, res) => {
 
 const deleteDecks = async (req, res) => {
     try {
-        const deckIds = req.params.deckName.split(',');
-        // Delete all cards associated with the specified decks
-        const deleteCardResult = await Card.deleteMany({ deck: { $in: deckIds } });
-        console.log(`${deleteCardResult.deletedCount} cards deleted successfully`);
+        const deckIds = req.params.deckId.split(',');
+        // // Delete all cards associated with the specified decks
+        // const deleteCardResult = await Card.deleteMany({ deck: { $in: deckIds } });
+        // console.log(`${deleteCardResult.deletedCount} cards deleted successfully`);
 
         // Delete the specified decks
-        const deleteDeckResult = await DeckMetaData.deleteMany({ _id: { $in: deckIds } });
+        const deleteDeckResult = await Deck.deleteMany({ _id: { $in: deckIds } });
         console.log(`${deleteDeckResult.deletedCount} decks deleted successfully`);
 
         res.status(200).json({
-            msg: `${deleteCardResult.deletedCount} cards and ${deleteDeckResult.deletedCount} decks deleted successfully`
+            msg: `${deleteDeckResult.deletedCount} decks deleted successfully`
         });
     } catch (error) {
         console.log(error.message)
@@ -108,10 +116,23 @@ const deleteDecks = async (req, res) => {
 
 const createStory = async(req, res) => {
     const { deckId } = req.params;
-    const {userId, story, title} = req.body;
+    let {userId, story, title, words, aiAssistance, summary} = req.body;
+    console.log(userId, story, title, words, aiAssistance, summary, '...creating story')
+    if (aiAssistance === 'Ai co-editor') {
+        const genStory = await aiCoEditor(title, summary, words, story);
+        console.log(genStory)
+        return res.json({story: genStory})
+    }
+    else if (aiAssistance === 'Ai for you') {
+        const genStory = await fullStoryGen(title, summary, words)
+        console.log(genStory)
+        ({title, story} = genStory)
+    }
+    const storyTocreate = {story, title, words, deck: deckId}
+    if (userId) storyTocreate.creator = userId
     console.log(deckId, userId, story)
     try {
-        const createdStory = await Story.create(userId ? {creator: userId, deck: deckId, story, title} : {deck: deckId, story, title} )
+        const createdStory = await Story.create(storyTocreate)
         console.log(createdStory)
         res.status(200).json({story: createdStory})
     } catch (error) {
@@ -136,8 +157,8 @@ const getStories = async(req, res) => {
 module.exports = {
     createNewDeck,
     getDecks,
-    getDeckMetaData,
-    updateDeckMetaData,
+    getDeck,
+    updateDeck,
     deleteDecks,
     createStory,
     getStories,

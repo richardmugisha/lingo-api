@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const DeckMetaDataSchema = new mongoose.Schema({
+const Deck = new mongoose.Schema({
     deckName: {
         type: String,
         required: [true, 'Must provide deck name']
@@ -16,10 +16,13 @@ const DeckMetaDataSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    cardNumber: {
-        type: Number,
-        required: [true, 'How many cards are in this deck']
-    },
+    
+    words: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Word'
+        }
+    ],
     performance: {
         correct: {
             type: [Number],
@@ -36,4 +39,4 @@ const DeckMetaDataSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('DeckMetaData', DeckMetaDataSchema);
+module.exports = mongoose.model('Deck', Deck);

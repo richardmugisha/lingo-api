@@ -1,0 +1,2059 @@
+8/21/2024, 5:39:59 PM
+
+[
+    {
+        "root word": "think",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "thinker",
+                "language style": "formal",
+                "meaning": "a person who thinks deeply or reflectively",
+                "example": "The thinker contemplated the meaning of life.",
+                "wordReferenceInExample": "thinker",
+                "synonym": "contemplator",
+                "antonym": "non-thinker"
+            },
+            {
+                "variationType": "noun",
+                "variationWord": "thinking",
+                "language style": "neutral",
+                "meaning": "the process of using one's mind to consider or reason about something",
+                "example": "His thinking led to a breakthrough in the project.",
+                "wordReferenceInExample": "thinking",
+                "synonym": "cognition",
+                "antonym": "non-thinking"
+            },
+            {
+                "variationType": "noun",
+                "variationWord": "thought",
+                "language style": "informal",
+                "meaning": "an idea or opinion produced by thinking, or occurring suddenly in the mind",
+                "example": "I had a sudden thought to call my friend.",
+                "wordReferenceInExample": "thought",
+                "synonym": "idea",
+                "antonym": "blank"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "thinkable",
+                "language style": "informal",
+                "meaning": "able to be thought or conceived",
+                "example": "The solution was just not thinkable at that time.",
+                "wordReferenceInExample": "thinkable",
+                "synonym": "cogitable",
+                "antonym": "unthinkable"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "unthinkable",
+                "language style": "formal",
+                "meaning": "impossible to imagine or believe",
+                "example": "The consequences of his actions were unthinkable.",
+                "wordReferenceInExample": "unthinkable",
+                "synonym": "inconceivable",
+                "antonym": "thinkable"
+            }
+        ]
+    },
+    {
+        "root word": "emerald",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "emeralds",
+                "language style": "neutral",
+                "meaning": "a bright green precious stone which is a variety of beryl",
+                "example": "The emeralds in her necklace shone brightly.",
+                "wordReferenceInExample": "emeralds",
+                "synonym": "green gems",
+                "antonym": "gemstones"
+            }
+        ]
+    },
+    {
+        "root word": "strong",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "stronger",
+                "language style": "neutral",
+                "meaning": "having the power to move heavy weights or perform other physically demanding tasks",
+                "example": "He became even stronger after his workout sessions.",
+                "wordReferenceInExample": "stronger",
+                "synonym": "powerful",
+                "antonym": "weak"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "strongest",
+                "language style": "informal",
+                "meaning": "being the most powerful or effectual",
+                "example": "She proved to be the strongest candidate among all the applicants.",
+                "wordReferenceInExample": "strongest",
+                "synonym": "most powerful",
+                "antonym": "weakest"
+            }
+        ]
+    },
+    {
+        "root word": "alibi",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "alibis",
+                "language style": "formal",
+                "meaning": "a claim or piece of evidence that one was elsewhere when an act, typically a criminal one, is alleged to have taken place",
+                "example": "His alibi for the crime was verified by multiple witnesses.",
+                "wordReferenceInExample": "alibi",
+                "synonym": "excuse",
+                "antonym": "proof of presence"
+            }
+        ]
+    },
+    {
+        "root word": "terrible",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "terribly",
+                "language style": "informal",
+                "meaning": "extremely bad or serious",
+                "example": "The situation was terribly sad for everyone involved.",
+                "wordReferenceInExample": "terribly",
+                "synonym": "horribly",
+                "antonym": "wonderfully"
+            }
+        ]
+    },
+    {
+        "root word": "thunder",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "thunders",
+                "language style": "neutral",
+                "meaning": "to make a loud rumbling sound",
+                "example": "The storm clouds gathered and thundered in the distance.",
+                "wordReferenceInExample": "thunders",
+                "synonym": "roar",
+                "antonym": "whisper"
+            }
+        ]
+    },
+    {
+        "root word": "worry",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "worries",
+                "language style": "informal",
+                "meaning": "a state of anxiety and uncertainty over actual or potential problems",
+                "example": "His constant worries about the future kept him up at night.",
+                "wordReferenceInExample": "worries",
+                "synonym": "concerns",
+                "antonym": "peace"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "worried",
+                "language style": "neutral",
+                "meaning": "feeling or showing concern or anxiety",
+                "example": "She looked worried when she heard the news.",
+                "wordReferenceInExample": "worried",
+                "synonym": "anxious",
+                "antonym": "calm"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "worrying",
+                "language style": "informal",
+                "meaning": "causing anxiety or concern",
+                "example": "The constant rain was worrying for the farmers.",
+                "wordReferenceInExample": "worrying",
+                "synonym": "troubling",
+                "antonym": "reassuring"
+            }
+        ]
+    },
+    {
+        "root word": "realize",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "realization",
+                "language style": "formal",
+                "meaning": "an act of becoming fully aware of something as a fact",
+                "example": "His realization of his mistake came too late.",
+                "wordReferenceInExample": "realization",
+                "synonym": "comprehension",
+                "antonym": "denial"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realizes",
+                "language style": "neutral",
+                "meaning": "to become fully aware of something as a fact",
+                "example": "She finally realizes the importance of time management.",
+                "wordReferenceInExample": "realizes",
+                "synonym": "understands",
+                "antonym": "ignores"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realized",
+                "language style": "informal",
+                "meaning": "to become fully aware of something as a fact in the past",
+                "example": "He realized his dream of becoming a pilot at a young age.",
+                "wordReferenceInExample": "realized",
+                "synonym": "achieved",
+                "antonym": "overlooked"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realizing",
+                "language style": "informal",
+                "meaning": "to bring into concrete existence",
+                "example": "The artist is realizing his vision for the new sculpture.",
+                "wordReferenceInExample": "realizing",
+                "synonym": "actualizing",
+                "antonym": "neglecting"
+            }
+        ]
+    },
+    {
+        "root word": "thing",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "things",
+                "language style": "neutral",
+                "meaning": "an object that one need not, cannot, or does not wish to give a specific name to",
+                "example": "She packed her favorite things for the trip.",
+                "wordReferenceInExample": "things",
+                "synonym": "items",
+                "antonym": "nothing"
+            }
+        ]
+    },
+    {
+        "root word": "already",
+        "variations": []
+    },
+    {
+        "root word": "vain",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "vainly",
+                "language style": "formal",
+                "meaning": "in a vain manner : futilely",
+                "example": "He tried vainly to open the locked door.",
+                "wordReferenceInExample": "vainly",
+                "synonym": "futilely",
+                "antonym": "successfully"
+            }
+        ]
+    },
+    {
+        "root word": "terrific",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "terrifically",
+                "language style": "informal",
+                "meaning": "extremely good; excellent",
+                "example": "She sang the song terrifically well during the performance.",
+                "wordReferenceInExample": "terrifically",
+                "synonym": "fantastically",
+                "antonym": "dreadful"
+            }
+        ]
+    },
+    {
+        "root word": "mass",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "masses",
+                "language style": "neutral",
+                "meaning": "a large number of people or objects crowded together",
+                "example": "The masses of people waiting for the concert created a lively atmosphere.",
+                "wordReferenceInExample": "masses",
+                "synonym": "crowds",
+                "antonym": "singles"
+            }
+        ]
+    },
+    {
+        "root word": "weight",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "weights",
+                "language style": "neutral",
+                "meaning": "a body's relative mass or the quantity of matter contained by it",
+                "example": "The weights in the gym were challenging but effective.",
+                "wordReferenceInExample": "weights",
+                "synonym": "masses",
+                "antonym": "lightness"
+            }
+        ]
+    },
+    {
+        "root word": "string",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "strings",
+                "language style": "neutral",
+                "meaning": "a thin piece of twisted fiber that can be used to tie things together",
+                "example": "The musician plucked the strings of the guitar gently.",
+                "wordReferenceInExample": "strings",
+                "synonym": "cords",
+                "antonym": "looseness"
+            }
+        ]
+    },
+    {
+        "root word": "orbit",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "orbits",
+                "language style": "formal",
+                "meaning": "move in an orbit around (a star or planet)",
+                "example": "The Earth orbits the Sun in a nearly circular path.",
+                "wordReferenceInExample": "orbits",
+                "synonym": "revolves",
+                "antonym": "stands still"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "orbital",
+                "language style": "formal",
+                "meaning": "relating to an orbit or orbits",
+                "example": "The satellite was placed in orbital position for better reception.",
+                "wordReferenceInExample": "orbital",
+                "synonym": "circular",
+                "antonym": "linear"
+            }
+        ]
+    },
+    {
+        "root word": "planet",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "planets",
+                "language style": "neutral",
+                "meaning": "a celestial body moving in an elliptical orbit around a star",
+                "example": "The discovery of new planets beyond our solar system was groundbreaking.",
+                "wordReferenceInExample": "planets",
+                "synonym": "celestial bodies",
+                "antonym": "stars"
+            }
+        ]
+    },
+    {
+        "root word": "waffle",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "waffles",
+                "language style": "neutral",
+                "meaning": "a batter cake cooked in a waffle iron",
+                "example": "She enjoyed a delicious breakfast of waffles topped with fresh berries.",
+                "wordReferenceInExample": "waffles",
+                "synonym": "batter cakes",
+                "antonym": "pancakes"
+            }
+        ]
+    },
+    {
+        "root word": "delusion",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "delusions",
+                "language style": "formal",
+                "meaning": "an idiosyncratic belief or impression maintained despite being contradicted by reality or rational argument",
+                "example": "His delusions of grandeur led to unrealistic expectations.',
+                "wordReferenceInExample": "delusions",
+                "synonym": "illusions",
+                "antonym": "realities"
+            }
+        ]
+    },
+    {
+        "root word": "regular",
+        "variations": [
+            {
+                "variationType": "adverb",
+                "variationWord": "regularly",
+                "language style": "neutral",
+                "meaning": "in accordance with rules, procedures, or schedules",
+                "example": "She regularly attends yoga classes to maintain her flexibility.",
+                "wordReferenceInExample": "regularly",
+                "synonym": "consistently",
+                "antonym": "irregularly"
+            }
+        ]
+    },
+    {
+        "root word": "laugh",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "laughs",
+                "language style": "informal",
+                "meaning": "make the spontaneous sounds and movements of the face and body that are the instinctive expressions of lively amusement and sometimes also of contempt or derision",
+                "example": "She laughs heartily at his jokes.",
+                "wordReferenceInExample": "laughs",
+                "synonym": "chuckles",
+                "antonym": "sobs"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "laughed",
+                "language style": "informal",
+                "meaning": "showed that one is amused or that something is funny by making a sound and moving one's face and body in a lively and happy way",
+                "example": "He laughed at the comedian's hilarious performance.",
+                "wordReferenceInExample": "laughed",
+                "synonym": "chuckled",
+                "antonym": "cried"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "laughing",
+                "language style": "informal",
+                "meaning": "showing that one is amused or that something is funny by making sounds and movements with the face and body",
+                "example": "The children were laughing loudly at the funny movie.",
+                "wordReferenceInExample": "laughing",
+                "synonym": "giggling",
+                "antonym": "frowning"
+            }
+        ]
+    },
+    {
+        "root word": "take",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "takes",
+                "language style": "neutral",
+                "meaning": "lay hold of (something) with one's hands; reach for and hold",
+                "example": "He takes a book from the shelf every evening before bedtime.",
+                "wordReferenceInExample": "takes",
+                "synonym": "grabs",
+                "antonym": "releases"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "took",
+                "language style": "informal",
+                "meaning": "past tense of take",
+                "example": "She took the last cookie from the jar without asking.",
+                "wordReferenceInExample": "took",
+                "synonym": "grabbed",
+                "antonym": "returned"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "taken",
+                "language style": "formal",
+                "meaning": "past participle of take",
+                "example": "The opportunity was there, but she had not taken it.",
+                "wordReferenceInExample": "taken",
+                "synonym": "acquired",
+                "antonym": "forgone"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "taking",
+                "language style": "informal",
+                "meaning": "gerund form of take",
+                "example": "He was taking his time understanding the complex instructions.",
+                "wordReferenceInExample": "taking",
+                "synonym": "grabbing",
+                "antonym": "releasing"
+            }
+        ]
+    },
+    {
+        "root word": "keep",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "keeps",
+                "language style": "neutral",
+                "meaning": "have or retain possession of",
+                "example": "She keeps all her important documents in a safe.",
+                "wordReferenceInExample": "keeps",
+                "synonym": "retains",
+                "antonym": "discards"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "kept",
+                "language style": "neutral",
+                "meaning": "past tense of keep",
+                "example": "They kept the secret for many years before revealing it.",
+                "wordReferenceInExample": "kept",
+                "synonym": "retained",
+                "antonym": "discarded"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "keeping",
+                "language style": "informal",
+                "meaning": "continuing to have or do something; not stopping or changing",
+                "example": "He was keeping watch over the entrance until she arrived.",
+                "wordReferenceInExample": "keeping",
+                "[
+    {
+        "root word": "think",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "thinker",
+                "language style": "formal",
+                "meaning": "A person who thinks deeply or reflects on certain subjects",
+                "example": "The great philosopher is known as a profound thinker.",
+                "wordReferenceInExample": "thinker",
+                "synonym": "intellectual",
+                "antonym": "simpleton"
+            },
+            {
+                "variationType": "noun",
+                "variationWord": "thinking",
+                "language style": "informal",
+                "meaning": "The process of considering or reasoning about something",
+                "example": "Her thinking is always rational and logical.",
+                "wordReferenceInExample": "thinking",
+                "synonym": "contemplation",
+                "antonym": "carelessness"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "thought",
+                "language style": "neutral",
+                "meaning": "Past tense of think",
+                "example": "She thought about the problem and came up with a solution.",
+                "wordReferenceInExample": "thought",
+                "synonym": "pondered",
+                "antonym": "ignored"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "thinkable",
+                "language style": "formal",
+                "meaning": "Capable of being considered or imagined",
+                "example": "In war, the unthinkable often becomes reality.",
+                "wordReferenceInExample": "thinkable",
+                "synonym": "conceivable",
+                "antonym": "unimaginable"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "unthinkable",
+                "language style": "neutral",
+                "meaning": "Impossible to consider or believe",
+                "example": "The consequences of such an action are unthinkable.",
+                "wordReferenceInExample": "unthinkable",
+                "synonym": "inconceivable",
+                "antonym": "thinkable"
+            }
+        ]
+    },
+    {
+        "root word": "emerald",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "emeralds",
+                "language style": "neutral",
+                "meaning": "A bright green precious stone",
+                "example": "She wore a necklace decorated with emeralds at the party.",
+                "wordReferenceInExample": "emeralds",
+                "synonym": "jade",
+                "antonym": "diamonds"
+            }
+        ]
+    },
+    {
+        "root word": "strong",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "stronger",
+                "language style": "formal",
+                "meaning": "Having greater physical power or force",
+                "example": "She became stronger after months of intense training.",
+                "wordReferenceInExample": "stronger",
+                "synonym": "powerful",
+                "antonym": "weak"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "strongest",
+                "language style": "informal",
+                "meaning": "Superlative form of strong",
+                "example": "Among the candidates, he was the strongest both physically and mentally.",
+                "wordReferenceInExample": "strongest",
+                "synonym": "mightiest",
+                "antonym": "weakest"
+            }
+        ]
+    },
+    {
+        "root word": "alibi",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "alibis",
+                "language style": "neutral",
+                "meaning": "An excuse or defense used to avoid blame",
+                "example": "He provided a solid alibi for his whereabouts during the crime.",
+                "wordReferenceInExample": "alibis",
+                "synonym": "excuse",
+                "antonym": "accusation"
+            }
+        ]
+    },
+    {
+        "root word": "terrible",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "terribly",
+                "language style": "formal",
+                "meaning": "In a very bad or unpleasant way",
+                "example": "The news of the accident affected her terribly.",
+                "wordReferenceInExample": "terribly",
+                "synonym": "dreadfully",
+                "antonym": "pleasantly"
+            }
+        ]
+    },
+    {
+        "root word": "thunder",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "thunders",
+                "language style": "neutral",
+                "meaning": "A loud rumbling or crashing noise caused by atmospheric conditions",
+                "example": "The thunder could be heard from miles away during the storm.",
+                "wordReferenceInExample": "thunders",
+                "synonym": "rumble",
+                "antonym": "silence"
+            }
+        ]
+    },
+    {
+        "root word": "worry",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "worries",
+                "language style": "formal",
+                "meaning": "Anxiety or concern about actual or potential problems",
+                "example": "Her constant worries about the future affect her present actions.",
+                "wordReferenceInExample": "worries",
+                "synonym": "concerns",
+                "antonym": "calmness"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "worried",
+                "language style": "informal",
+                "meaning": "Feeling anxious or concerned about something",
+                "example": "She worried about her upcoming exams all night.",
+                "wordReferenceInExample": "worried",
+                "synonym": "stressed",
+                "antonym": "relaxed"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "worrying",
+                "language style": "neutral",
+                "meaning": "Causing anxiety or distress; troubling",
+                "example": "The worrying news from the hospital made her anxious.",
+                "wordReferenceInExample": "worrying",
+                "synonym": "distressing",
+                "antonym": "reassuring"
+            }
+        ]
+    },
+    {
+        "root word": "realize",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "realization",
+                "language style": "formal",
+                "meaning": "The act of becoming aware or understanding something",
+                "example": "The realization of her mistake came too late.",
+                "wordReferenceInExample": "realization",
+                "synonym": "awareness",
+                "antonym": "ignorance"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realizes",
+                "language style": "informal",
+                "meaning": "Becoming aware of something; understanding",
+                "example": "She realizes her potential and decides to pursue her dreams.",
+                "wordReferenceInExample": "realizes",
+                "synonym": "recognizes",
+                "antonym": "ignores"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realized",
+                "language style": "neutral",
+                "meaning": "Past tense of realize",
+                "example": "He realized the importance of family after moving away.",
+                "wordReferenceInExample": "realized",
+                "synonym": "understood",
+                "antonym": "misunderstood"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realizing",
+                "language style": "formal",
+                "meaning": "Becoming aware of new possibilities or ideas",
+                "example": "She was realizing her dreams step by step.",
+                "wordReferenceInExample": "realizing",
+                "synonym": "recognizing",
+                "antonym": "neglecting"
+            }
+        ]
+    },
+    {
+        "root word": "thing",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "things",
+                "language style": "informal",
+                "meaning": "Objects, belongings, or items",
+                "example": "She packed all her things in boxes and moved out.",
+                "wordReferenceInExample": "things",
+                "synonym": "items",
+                "antonym": "emptiness"
+            }
+        ]
+    },
+    {
+        "root word": "already",
+        "variations": []
+    },
+    {
+        "root word": "vain",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "vainly",
+                "language style": "neutral",
+                "meaning": "In a way that produces no result; without success",
+                "example": "He tried vainly to repair the broken vase.",
+                "wordReferenceInExample": "vainly",
+                "synonym": "futilely",
+                "antonym": "successfully"
+            }
+        ]
+    },
+    {
+        "root word": "terrific",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "terrifically",
+                "language style": "formal",
+                "meaning": "Extremely good or impressive",
+                "example": "The chef's dessert was terrifically delicious.",
+                "wordReferenceInExample": "terrifically",
+                "synonym": "fantastically",
+                "antonym": "horribly"
+            }
+        ]
+    },
+    {
+        "root word": "mass",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "masses",
+                "language style": "informal",
+                "meaning": "A large number or quantity of something",
+                "example": "The masses gathered in the square to protest against the new law.",
+                "wordReferenceInExample": "masses",
+                "synonym": "crowd",
+                "antonym": "individual"
+            }
+        ]
+    },
+    {
+        "root word": "weight",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "weights",
+                "language style": "formal",
+                "meaning": "A measure of the heaviness of an object",
+                "example": "She lifted the weights effortlessly at the gym.",
+                "wordReferenceInExample": "weights",
+                "synonym": "mass",
+                "antonym": "lightness"
+            }
+        ]
+    },
+    {
+        "root word": "string",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "strings",
+                "language style": "neutral",
+                "meaning": "A thin piece of twisted fiber used for binding or tying things",
+                "example": "She tied the package with a strong string to keep it secure.",
+                "wordReferenceInExample": "strings",
+                "synonym": "cords",
+                "antonym": "looseness"
+            }
+        ]
+    },
+    {
+        "root word": "orbit",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "orbits",
+                "language style": "formal",
+                "meaning": "To move in a circular or elliptical path around a central object",
+                "example": "The Earth orbits the Sun once every year.",
+                "wordReferenceInExample": "orbits",
+                "synonym": "revolves",
+                "antonym": "stands still"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "orbital",
+                "language style": "neutral",
+                "meaning": "Relating to an orbit or orbits",
+                "example": "The spaceship entered the planet's orbital path smoothly.",
+                "wordReferenceInExample": "orbital",
+                "synonym": "circumferential",
+                "antonym": "linear"
+            }
+        ]
+    },
+    {
+        "root word": "planet",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "planets",
+                "language style": "informal",
+                "meaning": "A celestial body that orbits around a star",
+                "example": "The telescope allowed us to observe distant planets in the galaxy.",
+                "wordReferenceInExample": "planets",
+                "synonym": "worlds",
+                "antonym": "stars"
+            }
+        ]
+    },
+    {
+        "root word": "waffle",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "waffles",
+                "language style": "neutral",
+                "meaning": "A batter-based cake cooked in a patterned iron",
+                "example": "She topped the waffles with fresh fruit and maple syrup for breakfast.",
+                "wordReferenceInExample": "waffles",
+                "synonym": "pancakes",
+                "antonym": "cereal"
+            }
+        ]
+    },
+    {
+        "root word": "delusion",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "delusions",
+                "language style": "formal",
+                "meaning": "A belief or impression that is firmly maintained despite being contradicted by reality",
+                "example": "His delusions of grandeur led to risky business decisions.",
+                "wordReferenceInExample": "delusions",
+                "synonym": "illusions",
+                "antonym": "reality"
+            }
+        ]
+    },
+    {
+        "root word": "regular",
+        "variations": [
+            {
+                "variationType": "adverb",
+                "variationWord": "regularly",
+                "language style": "informal",
+                "meaning": "At evenly spaced intervals; often",
+                "example": "She exercises regularly to maintain her fitness.",
+                "wordReferenceInExample": "regularly",
+                "synonym": "consistently",
+                "antonym": "occasionally"
+            }
+        ]
+    },
+    {
+        "root word": "laugh",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "laughs",
+                "language style": "formal",
+                "meaning": "To express amusement or joy with sounds from the mouth",
+                "example": "He laughs heartily at every joke shared with him.",
+                "wordReferenceInExample": "laughs",
+                "synonym": "chuckles",
+                "antonym": "sobs"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "laughed",
+                "language style": "neutral",
+                "meaning": "Past tense of laugh",
+                "example": "She laughed at the funny movie until tears rolled down her cheeks.",
+                "wordReferenceInExample": "laughed",
+                "synonym": "smiled",
+                "antonym": "cried"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "laughing",
+                "language style": "informal",
+                "meaning": "The act of expressing amusement or happiness through laughter",
+                "example": "The children were laughing gleefully at the clown's performance.",
+                "wordReferenceInExample": "laughing",
+                "synonym": "chuckling",
+                "antonym": "frowning"
+            }
+        ]
+    },
+    {
+        "root word": "take",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "takes",
+                "language style": "formal",
+                "meaning": "To lay hold of something; grasp or remove",
+                "example": "She takes the pen from the desk and starts writing.",
+                "wordReferenceInExample": "takes",
+                "synonym": "receives",
+                "antonym": "gives"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "took",
+                "language style": "informal",
+                "meaning": "Past tense of take",
+                "example": "He took his time to investigate the crime scene thoroughly.",
+                "wordReferenceInExample": "took",
+                "synonym": "grabbed",
+                "antonym": "released"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "taken",
+                "language style": "neutral",
+                "meaning": "Past participle of take",
+                "example": "The medication must be taken with food to avoid side effects.",
+                "wordReferenceInExample": "taken",
+                "synonym": "consumed",
+                "antonym": "abstained"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "taking",
+                "language style": "formal",
+                "meaning": "The act of laying hold of something or someone",
+                "example": "She is taking the children to the park for a picnic.",
+                "wordReferenceInExample": "taking",
+                "synonym": "holding",
+                "antonym": "releasing"
+            }
+        ]
+    },
+    {
+        "root word": "keep",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "keeps",
+                "language style": "formal",
+                "meaning": "To have or retain possession of something",
+                "example": "She keeps all her important documents in a safe.",
+                "wordReferenceInExample": "keeps",
+                "synonym": "retains",
+                "antonym": "discards"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "kept",
+                "language style": "neutral",
+                "meaning": "Past tense of keep",
+                "example": "They kept the secret for many years before revealing it.",
+                "wordReferenceInExample": "kept",
+                "synonym": "retained",
+                "antonym": "discarded"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "keeping",
+                "language style": "informal",
+                "meaning": "Continuing to have or do something; not stopping or changing",
+                "example": "He was keeping watch over the entrance until she arrived.",
+                "wordReferenceInExample": "keeping",
+                "synonym": "maintaining",
+                "antonym": "ceasing"
+            }
+        ]
+    },
+    {
+        "root word": "mix",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "mixes",
+                "language style": "formal",
+                "meaning": "To combine or blend different substances into a homogeneous mass",
+                "example": "She mixes the ingredients in a bowl to prepare the cake batter.",
+                "wordReferenceInExample": "mixes",
+                "synonym":[
+    {
+        "root word": "think",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "thinker",
+                "language style": "informal",
+                "meaning": "A person who thinks deeply or carefully",
+                "example": "She is a creative thinker when it comes to problem-solving.",
+                "wordReferenceInExample": "thinker",
+                "synonym": "contemplator",
+                "antonym": "non-thinker"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "thinking",
+                "language style": "casual",
+                "meaning": "Engaging in thoughts or mental processes",
+                "example": "Stop thinking about the past and focus on the present moment.",
+                "wordReferenceInExample": "thinking",
+                "synonym": "contemplating",
+                "antonym": "not thinking"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "thought",
+                "language style": "formal",
+                "meaning": "The past tense of 'think'",
+                "example": "He thought deeply before making a decision.",
+                "wordReferenceInExample": "thought",
+                "synonym": "considered",
+                "antonym": "didn't think"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "thinkable",
+                "language style": "professional",
+                "meaning": "Capable of being considered or imagined",
+                "example": "In this situation, every possible outcome is thinkable.",
+                "wordReferenceInExample": "thinkable",
+                "synonym": "imaginable",
+                "antonym": "unimaginable"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "unthinkable",
+                "language style": "academic",
+                "meaning": "Impossible to consider or imagine",
+                "example": "The number of casualties was unthinkable in such a peaceful area.",
+                "wordReferenceInExample": "unthinkable",
+                "synonym": "inconceivable",
+                "antonym": "thinkable"
+            }
+        ]
+    },
+    {
+        "root word": "emerald",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "emeralds",
+                "language style": "poetic",
+                "meaning": "A bright green precious stone",
+                "example": "She wore emeralds in her necklace to match her outfit.",
+                "wordReferenceInExample": "emeralds",
+                "synonym": "green gem",
+                "antonym": "no emeralds"
+            }
+        ]
+    },
+    {
+        "root word": "strong",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "stronger",
+                "language style": "everyday",
+                "meaning": "Having a great physical or moral power",
+                "example": "He became stronger after months of weight training.",
+                "wordReferenceInExample": "stronger",
+                "synonym": "more powerful",
+                "antonym": "weaker"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "strongest",
+                "language style": "professional",
+                "meaning": "The superlative form of 'strong'",
+                "example": "Among all the competitors, she was the strongest in the weightlifting event.",
+                "wordReferenceInExample": "strongest",
+                "synonym": "most powerful",
+                "antonym": "weakest"
+            }
+        ]
+    },
+    {
+        "root word": "alibi",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "alibis",
+                "language style": "formal",
+                "meaning": "An excuse or defense used to avoid blame",
+                "example": "The suspect provided a solid alibi for the night of the crime.",
+                "wordReferenceInExample": "alibi",
+                "synonym": "excuse",
+                "antonym": "accusation"
+            }
+        ]
+    },
+    {
+        "root word": "terrible",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "terribly",
+                "language style": "casual",
+                "meaning": "To a great extent; extremely",
+                "example": "The weather outside is terribly hot today.",
+                "wordReferenceInExample": "terribly",
+                "synonym": "awfully",
+                "antonym": "wonderfully"
+            }
+        ]
+    },
+    {
+        "root word": "thunder",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "thunders",
+                "language style": "everyday",
+                "meaning": "A loud rumbling or crashing noise heard after a lightning flash due to the expansion of rapidly heated air",
+                "example": "The thunders scared the children during the storm.",
+                "wordReferenceInExample": "thunders",
+                "synonym": "roars",
+                "antonym": "silence"
+            }
+        ]
+    },
+    {
+        "root word": "worry",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "worries",
+                "language style": "informal",
+                "meaning": "Anxious or troubled state of mind",
+                "example": "Her worries about the exam kept her up all night.",
+                "wordReferenceInExample": "worries",
+                "synonym": "concerns",
+                "antonym": "calmness"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "worried",
+                "language style": "formal",
+                "meaning": "Feeling or showing concern or anxiety",
+                "example": "She looked worried when she heard the news.",
+                "wordReferenceInExample": "worried",
+                "synonym": "anxious",
+                "antonym": "relaxed"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "worrying",
+                "language style": "professional",
+                "meaning": "Causing anxiety or concern",
+                "example": "The worrying news affected the stock market.",
+                "wordReferenceInExample": "worrying",
+                "synonym": "troubling",
+                "antonym": "calming"
+            }
+        ]
+    },
+    {
+        "root word": "realize",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "realization",
+                "language style": "academic",
+                "meaning": "The act of becoming fully aware of something",
+                "example": "Her realization of the impact of her actions led to a change in behavior.",
+                "wordReferenceInExample": "realization",
+                "synonym": "awareness",
+                "antonym": "ignorance"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realizes",
+                "language style": "everyday",
+                "meaning": "Becomes fully aware of something",
+                "example": "He realizes the importance of time management in his daily routine.",
+                "wordReferenceInExample": "realizes",
+                "synonym": "understands",
+                "antonym": "ignores"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realized",
+                "language style": "formal",
+                "meaning": "Past tense of 'realize'",
+                "example": "She realized her mistake as soon as she saw the consequences.",
+                "wordReferenceInExample": "realized",
+                "synonym": "recognized",
+                "antonym": "misconceived"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realizing",
+                "language style": "informal",
+                "meaning": "Becoming fully aware of something at a particular moment",
+                "example": "I was realizing the impact of my choices as I grew older.",
+                "wordReferenceInExample": "realizing",
+                "synonym": "recognizing",
+                "antonym": "ignoring"
+            }
+        ]
+    },
+    {
+        "root word": "thing",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "things",
+                "language style": "casual",
+                "meaning": "Objects, situations, or activities that are not specified",
+                "example": "She packed all her favorite things for the trip.",
+                "wordReferenceInExample": "things",
+                "synonym": "items",
+                "antonym": "no things"
+            }
+        ]
+    },
+    {
+        "root word": "already",
+        "variations": []
+    },
+    {
+        "root word": "vain",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "vainly",
+                "language style": "formal",
+                "meaning": "In a way that is excessively proud of one's appearance or achievements",
+                "example": "She looked at herself vainly in the mirror before the party.",
+                "wordReferenceInExample": "vainly",
+                "synonym": "conceitedly",
+                "antonym": "humbly"
+            }
+        ]
+    },
+    {
+        "root word": "terrific",
+        "variations": [
+            {
+                "variationType": "adjective",
+                "variationWord": "terrifically",
+                "language style": "professional",
+                "meaning": "To a great extent or degree; very",
+                "example": "She performed terrifically well in the competition.",
+                "wordReferenceInExample": "terrifically",
+                "synonym": "excellently",
+                "antonym": "poorly"
+            }
+        ]
+    },
+    {
+        "root word": "mass",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "masses",
+                "language style": "everyday",
+                "meaning": "A large number or quantity of something",
+                "example": "The masses gathered in the square to protest against the new law.",
+                "wordReferenceInExample": "masses",
+                "synonym": "crowd",
+                "antonym": "solitude"
+            }
+        ]
+    },
+    {
+        "root word": "weight",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "weights",
+                "language style": "sports",
+                "meaning": "A heavy object used for exercise or as a counterbalance",
+                "example": "He lifted heavy weights at the gym to build muscle.",
+                "wordReferenceInExample": "weights",
+                "synonym": "dumbbells",
+                "antonym": "lightweights"
+            }
+        ]
+    },
+    {
+        "root word": "string",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "strings",
+                "language style": "informal",
+                "meaning": "A thin piece of cord or wire used for fastening or tying objects",
+                "example": "She tied the balloons with colorful strings for the party decoration.",
+                "wordReferenceInExample": "strings",
+                "synonym": "cord",
+                "antonym": "no strings"
+            }
+        ]
+    },
+    {
+        "root word": "orbit",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "orbits",
+                "language style": "technical",
+                "meaning": "The curved path followed by a celestial object around a star, planet, or moon",
+                "example": "The Earth orbits around the Sun in a nearly circular path.",
+                "wordReferenceInExample": "orbits",
+                "synonym": "trajectory",
+                "antonym": "standstill"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "orbital",
+                "language style": "scientific",
+                "meaning": "Relating to or resembling an orbit",
+                "example": "The satellite's orbital path was carefully calculated by the scientists.",
+                "wordReferenceInExample": "orbital",
+                "synonym": "circular",
+                "antonym": "straight"
+            }
+        ]
+    },
+    {
+        "root word": "planet",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "planets",
+                "language style": "educational",
+                "meaning": "A celestial body that revolves around a star",
+                "example": "There are eight planets in our solar system, including Earth.",
+                "wordReferenceInExample": "planets",
+                "synonym": "celestial bodies",
+                "antonym": "stars"
+            }
+        ]
+    },
+    {
+        "root word": "waffle",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "waffles",
+                "language style": "culinary",
+                "meaning": "A batter cake baked in a grid pattern on a waffle iron",
+                "example": "They enjoyed a delicious breakfast of waffles with maple syrup.",
+                "wordReferenceInExample": "waffles",
+                "synonym": "grid cakes",
+                "antonym": "no waffles"
+            }
+        ]
+    },
+    {
+        "root word": "delusion",
+        "variations": [
+            {
+                "variationType": "noun",
+                "variationWord": "delusions",
+                "language style": "psychological",
+                "meaning": "A belief or impression that is firmly maintained despite being contradicted by what is generally accepted as reality or rational argument",
+                "example": "His delusions of grandeur often led him to make irrational decisions.",
+                "wordReferenceInExample": "delusions",
+                "synonym": "misconceptions",
+                "antonym": "realities"
+            }
+        ]
+    },
+    {
+        "root word": "regular",
+        "variations": [
+            {
+                "variationType": "adverb",
+                "variationWord": "regularly",
+                "language style": "formal",
+                "meaning": "In a steady and consistent manner",
+                "example": "He exercises regularly to maintain his fitness levels.",
+                "wordReferenceInExample": "regularly",
+                "synonym": "consistently",
+                "antonym": "irregularly"
+            }
+        ]
+    },
+    {
+        "root word": "laugh",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "laughs",
+                "language style": "everyday",
+                "meaning": "To make the spontaneous sounds and movements of the face and body that are the instinctive expressions of lively amusement and sometimes also of derision",
+                "example": "She laughs heartily at his jokes.",
+                "wordReferenceInExample": "laughs",
+                "synonym": "chuckles",
+                "antonym": "cries"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "laughed",
+                "language style": "literary",
+                "meaning": "Past tense of 'laugh'",
+                "example": "The audience laughed at the comedian's hilarious performance.",
+                "wordReferenceInExample": "laughed",
+                "synonym": "chuckled",
+                "antonym": "frowned"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "laughing",
+                "language style": "casual",
+                "meaning": "Engaging in laughter or amusement",
+                "example": "They were laughing together at a funny movie.",
+                "wordReferenceInExample": "laughing",
+                "synonym": "giggling",
+                "antonym": "serious"
+            }
+        ]
+    },
+    {
+        "root word": "take",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "takes",
+                "language style": "informal",
+                "meaning": "To lay hold of with the hands; to get into one's hands, possession, or control",
+                "example": "She takes the pen to start writing her notes.",
+                "wordReferenceInExample": "takes",
+                "synonym": "grabs",
+                "antonym": "releases"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "took",
+                "language style": "everyday",
+                "meaning": "Past tense of 'take'",
+                "example": "He took a deep breath before speaking in front of the audience.",
+                "wordReferenceInExample": "took",
+                "synonym": "grabbed",
+                "antonym": "relinquished"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "taken",
+                "language style": "formal",
+                "meaning": "Past participle of 'take'",
+                "example": "The decision was taken after thorough consideration by the committee.",
+                "wordReferenceInExample": "taken",
+                "synonym": "acquired",
+                "antonym": "given"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "taking",
+                "language style": "professional",
+                "meaning": "The act of laying hold or grabbing something",
+                "example": "She was taking notes diligently during the lecture.",
+                "wordReferenceInExample": "taking",
+                "synonym": "accepting",
+                "antonym": "rejecting"
+            }
+        ]
+    },
+    {
+        "root word": "keep",
+        "variations": [
+            {
+                "variationType": "verb",
+                "variationWord": "keeps",
+                "language style": "casual",
+                "meaning": "To have or retain possession of",
+                "example": "She keeps a spare key under the doormat for emergencies.",
+                "wordReferenceInExample": "keeps",
+                "synonym": "retains",
+                "antonym": "discards"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "kept",
+                "language style": "everyday",
+                "meaning": "Past tense of 'keep'",
+                "example": "He kept the promise he made to his friend.",
+                "wordReferenceInExample": "kept",
+                "synonym": "maintained",
+                "antonym": "discarded"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "keeping",
+                "language style": "informal",
+                "meaning": "Continuing to have or do something; not stopping or changing",
+                "example": "He was keeping watch over the entrance until she arrived.",
+                "wordReferenceInExample": "keeping",
+                "synonym": "maintaining",
+                "antonym": "ceasing"
+            }
+       [
+    {
+        "root word": "think",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "thinker",
+                "language style": "formal",
+                "meaning": "A person who thinks deeply or in a specified way",
+                "example": "The thinker spent hours contemplating the meaning of life.",
+                "wordReferenceInExample": "thinker",
+                "synonym": "philosopher",
+                "antonym": "simpleton"
+            },
+            {
+                "variationType": "noun",
+                "variationWord": "thinking",
+                "language style": "everyday",
+                "meaning": "The process of considering or reasoning about something",
+                "example": "Her thinking on the matter was clear and logical.",
+                "wordReferenceInExample": "thinking",
+                "synonym": "contemplation",
+                "antonym": "unthinking"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "thought",
+                "language style": "formal",
+                "meaning": "Past tense of 'think'",
+                "example": "She thought deeply before replying to his question.",
+                "wordReferenceInExample": "thought",
+                "synonym": "pondered",
+                "antonym": "disregarded"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "thinkable",
+                "language style": "academic",
+                "meaning": "Able to be considered",
+                "example": "The idea was not only thinkable but also achievable.",
+                "wordReferenceInExample": "thinkable",
+                "synonym": "imaginable",
+                "antonym": "unimaginable"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "unthinkable",
+                "language style": "formal",
+                "meaning": "Impossible to think of; unimaginable",
+                "example": "The consequences of such actions are simply unthinkable.",
+                "wordReferenceInExample": "unthinkable",
+                "synonym": "inconceivable",
+                "antonym": "thinkable"
+            }
+        ]
+    },
+    {
+        "root word": "emerald",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "emeralds",
+                "language style": "everyday",
+                "meaning": "A bright green precious stone",
+                "example": "She wore emeralds as a sign of wealth and prestige.",
+                "wordReferenceInExample": "emeralds",
+                "synonym": "jewels",
+                "antonym": "pebbles"
+            }
+        ]
+    },
+    {
+        "root word": "strong",
+        variations: [
+            {
+                "variationType": "adjective",
+                "variationWord": "stronger",
+                "language style": "informal",
+                "meaning": "Having the power to move heavy weights or perform other physically demanding tasks",
+                "example": "He became stronger after months of rigorous training.",
+                "wordReferenceInExample": "stronger",
+                "synonym": "powerful",
+                "antonym": "weak"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "strongest",
+                "language style": "formal",
+                "meaning": "Having the greatest power or force",
+                "example": "The strongest man in the world could lift unimaginable weights.",
+                "wordReferenceInExample": "strongest",
+                "synonym": "mightiest",
+                "antonym": "weakest"
+            }
+        ]
+    },
+    {
+        "root word": "alibi",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "alibis",
+                "language style": "everyday",
+                "meaning": "A claim or piece of evidence that one was elsewhere when an act, typically a criminal one, is alleged to have taken place",
+                "example": "The suspect presented a solid alibi proving his innocence.",
+                "wordReferenceInExample": "alibis",
+                "synonym": "excuse",
+                "antonym": "guilt"
+            }
+        ]
+    },
+    {
+        "root word": "terrible",
+        variations: [
+            {
+                "variationType": "adjective",
+                "variationWord": "terribly",
+                "language style": "formal",
+                "meaning": "In a terrible manner; horrifically",
+                "example": "The accident scene was terribly gruesome.",
+                "wordReferenceInExample": "terribly",
+                "synonym": "horrendously",
+                "antonym": "pleasantly"
+            }
+        ]
+    },
+    {
+        "root word": "thunder",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "thunders",
+                "language style": "everyday",
+                "meaning": "A loud rumbling or crashing noise heard after a lightning flash due to the expansion of rapidly heated air",
+                "example": "The thunders of a storm could be heard in the distance.",
+                "wordReferenceInExample": "thunders",
+                "synonym": "roars",
+                "antonym": "silence"
+            }
+        ]
+    },
+    {
+        "root word": "worry",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "worries",
+                "language style": "informal",
+                "meaning": "An act of thinking about problems or fears",
+                "example": "His endless worries drained his energy and happiness.",
+                "wordReferenceInExample": "worries",
+                "synonym": "concerns",
+                "antonym": "peace"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "worried",
+                "language style": "formal",
+                "meaning": "Feeling or showing anxiety about something bad that might happen",
+                "example": "She looked worried after hearing the news of the accident.",
+                "wordReferenceInExample": "worried",
+                "synonym": "anxious",
+                "antonym": "calm"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "worrying",
+                "language style": "everyday",
+                "meaning": "Causing anxiety about potential problems or difficulties",
+                "example": "The constant worrying about exams prevented him from sleeping."
+                "wordReferenceInExample": "worrying",
+                "synonym": "stressing",
+                "antonym": "comforting"
+            }
+        ]
+    },
+    {
+        "root word": "realize",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "realization",
+                "language style": "academic",
+                "meaning": "The action of making something real or concrete",
+                "example": "Her realization of her dream was met with tears of joy.",
+                "wordReferenceInExample": "realization",
+                "synonym": "achievement",
+                "antonym": "fantasy"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realizes",
+                "language style": "formal",
+                "meaning": "Becomes fully aware of something",
+                "example": "He realizes the importance of family after being away for so long.",
+                "wordReferenceInExample": "realizes",
+                "synonym": "understands",
+                "antonym": "ignores"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realized",
+                "language style": "informal",
+                "meaning": "Understood or became aware of a particular fact or situation",
+                 "example": "They realized their mistake only after it was too late.",
+                "wordReferenceInExample": "realized",
+                "synonym": "recognized",
+                "antonym": "overlooked"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "realizing",
+                "language style": "everyday",
+                "meaning": "Bringing into reality; making real",
+                "example": "She was realizing her dream of owning her own business.",
+                "wordReferenceInExample": "realizing",
+                "synonym": "accomplishing",
+                "antonym": "neglecting"
+            }
+        ]
+    },
+    {
+        "root word": "thing",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "things",
+                "language style": "everyday",
+                "meaning": "An object that one need not, cannot, or does not wish to give a specific name to",
+                "example": "He had a way of fixing things even when they seemed broken beyond repair.",
+                "wordReferenceInExample": "things",
+                "synonym": "items",
+                "antonym": "nothings"
+            }
+        ]
+    },
+    {
+        "root word": "already",
+        variations: []
+    },
+    {
+        "root word": "vain",
+        variations: [
+            {
+                "variationType": "adjective",
+                "variationWord": "vainly",
+                "language style": "formal",
+                "meaning": "In a way that produces no result; futile",
+                "example": "He tried to console her, but his efforts were vainly wasted.",
+                "wordReferenceInExample": "vainly",
+                "synonym": "fruitlessly",
+                "antonym": "successfully"
+            }
+        ]
+    },
+    {
+        "root word": "terrific",
+        variations: [
+            {
+                "variationType": "adjective",
+                "variationWord": "terrifically",
+                "language style": "everyday",
+                "meaning": "In a way that causes extreme terror; dreadfully",
+                "example": "The movie ended terrifically with a shocking plot twist.",
+                "wordReferenceInExample": "terrifically",
+                "synonym": "horrifically",
+                "antonym": "pleasantly"
+            }
+        ]
+    },
+    {
+        "root word": "mass",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "masses",
+                "language style": "informal",
+                "meaning": "A large amount of material, typically a heavy or dense one",
+                "example": "The masses of people gathered in the square for the protest.",
+                "wordReferenceInExample": "masses",
+                "synonym": "crowds",
+                "antonym": "individuals"
+            }
+        ]
+    },
+    {
+        "root word": "weight",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "weights",
+                "language style": "everyday",
+                "meaning": "A body's relative mass or the quantity of matter contained by it",
+                "example": "He needs to lift weights to build muscle mass.",
+                "wordReferenceInExample": "weights",
+                "synonym": "heaviness",
+                "antonym": "lightness"
+            }
+        ]
+    },
+    {
+        "root word": "string",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "strings",
+                "language style": "formal",
+                "meaning": "A piece of cord, twine, or similar material",
+                "example": "She tied the package with a strong string to ensure it stayed secure.",
+                "wordReferenceInExample": "string",
+                "synonym": "cord",
+                "antonym": "untie"
+            }
+        ]
+    },
+    {
+        "root word": "orbit",
+        variations: [
+            {
+                "variationType": "verb",
+                "variationWord": "orbits",
+                "language style": "academic",
+                "meaning": "Move in an orbit around (a planet, the sun, etc.)",
+                "example": "The moons orbits the planet in a predictable pattern.",
+                "wordReferenceInExample": "orbits",
+                "synonym": "revolves",
+                "antonym": "stands still"
+            },
+            {
+                "variationType": "adjective",
+                "variationWord": "orbital",
+                "language style": "formal",
+                "meaning": "Relating to an orbit or orbits",
+                "example": "The satellite was launched into its orbital path around Earth.",
+                "wordReferenceInExample": "orbital",
+                "synonym": "circular",
+                "antonym": "linear"
+            }
+        ]
+    },
+    {
+        "root word": "planet",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "planets",
+                "language style": "informal",
+                "meaning": "A celestial body moving in an elliptical orbit around a star",
+                "example": "Earth is just one of the many planets in our solar system.",
+                "wordReferenceInExample": "planets",
+                "synonym": "worlds",
+                "antonym": "stars"
+            }
+        ]
+    },
+    {
+        "root word": "waffle",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "waffles",
+                "language style": "everyday",
+                "meaning": "A battercake or pancake with a pattern of deep indentations on each side, formed by a grid-like utensil (waffle iron) used in baking them",
+                "example": "She enjoyed a sweet waffle for breakfast with strawberries and whipped cream.",
+                "wordReferenceInExample": "waffles",
+                "synonym": "grid-cakes",
+                "antonym": "smoothies"
+            }
+        ]
+    },
+    {
+        "root word": "delusion",
+        variations: [
+            {
+                "variationType": "noun",
+                "variationWord": "delusions",
+                "language style": "formal",
+                "meaning": "An idiosyncratic belief or impression that is firmly maintained despite being contradicted by what is generally accepted as reality or rational argument",
+                "example": "His delusions led him to make irrational decisions that harmed his career.",
+                "wordReferenceInExample": "delusions",
+                "synonym": "illusions",
+                "antonym": "reality"
+            }
+        ]
+    },
+    {
+        "root word": "regular",
+        variations: [
+            {
+                "variationType": "adverb",
+                "variationWord": "regularly",
+                "language style": "everyday",
+                "meaning": "At uniform intervals, times, or distances",
+                "example": "He goes to the gym regularly to maintain his fitness.",
+                "wordReferenceInExample": "regularly",
+                "synonym": "consistently",
+                "antonym": "occasionally"
+            }
+        ]
+    },
+    {
+        "root word": "laugh",
+        variations: [
+            {
+                "variationType": "verb",
+                "variationWord": "laughs",
+                "language style": "everyday",
+                "meaning": "Make the spontaneous sounds and movements of the face and body that are the instinctive expressions of lively amusement and sometimes also of contempt or derision",
+                "example": "She laughs heartily at his jokes, even the ones she's heard before.",
+                "wordReferenceInExample": "laughs",
+                "synonym": "chuckles",
+                "antonym": "cries"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "laughed",
+                "language style": "formal",
+                "meaning": "Past tense of 'laugh'",
+                "example": "They laughed together at the silly antics of the children.",
+                "wordReferenceInExample": "laughed",
+                "synonym": "giggled",
+                "antonym": "scowled"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "laughing",
+                "language style": "informal",
+                "meaning": "Showing excitement and amusement through laughter",
+                "example": "The group of friends were laughing uncontrollably at the hilarious story.",
+                "wordReferenceInExample": "laughing",
+                "synonym": "giggling",
+                "antonym": "frowning"
+            }
+        ]
+    },
+    {
+        "root word": "take",
+        variations: [
+            {
+                "variationType": "verb",
+                "variationWord": "takes",
+                "language style": "everyday",
+                "meaning": "To lay hold of by grip or authority",
+                "example": "He takes the job of team leader very seriously.",
+                "wordReferenceInExample": "takes",
+                "synonym": "grasps",
+                "antonym": "releases"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "took",
+                "language style": "formal",
+                "meaning": "Past tense of 'take'",
+                "example": "She took a deep breath before entering the audition room.",
+                "wordReferenceInExample": "took",
+                "synonym": "grasped",
+                "antonym": "let go"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "taken",
+                "language style": "informal",
+                "meaning": "Past participle of 'take'",
+                "example": "The opportunity should not be taken for granted.",
+                "wordReferenceInExample": "taken",
+                "synonym": "seized",
+                "antonym": "released"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "taking",
+                "language style": "academic",
+                "meaning": "The act of laying hold of by authority, as in buying or in the union of claims to be decided by a court",
+                "example": "She was taking over the family business after her father's retirement.",
+                "wordReferenceInExample": "taking",
+                "synonym": "gaining",
+                "antonym": "relinquishing"
+            }
+        ]
+    },
+    {
+        "root word": "keep",
+        variations: [
+            {
+                "variationType": "verb",
+                "variationWord": "keeps",
+                "language style": "academic",
+                "meaning": "To possess or own",
+                "example": "She keeps a journal to document her thoughts and experiences.",
+                "wordReferenceInExample": "keeps",
+                "synonym": "retains",
+                "antonym": "discards"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "kept",
+                "language style": "everyday",
+                "meaning": "Past tense of 'keep'",
+                "example": "He kept the promise he made to his friend.",
+                "wordReferenceInExample": "kept",
+                "synonym": "maintained",
+                "antonym": "discarded"
+            },
+            {
+                "variationType": "verb",
+                "variationWord": "keeping",
+                "language style": "informal",
+                "meaning": "Continuing to have or do something; not stopping or changing",
+                "example": "He was keeping watch

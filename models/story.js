@@ -9,17 +9,17 @@ const StorySchema = mongoose.Schema({
     },
     deck: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'DeckMetaData',
+        ref: 'Deck',
         required: [true, 'must provide deck name']
     },
-    story: {
-        type: String,
-        required: [true, 'must provide a story']
-    },
-    title: {
-        type: String,
-        required: [true, 'must provide the title of the story']
-    }
+    story: [
+        {
+            sentence: String,
+            blanked: String,
+        }
+    ],
+    title: String,
+    words: [String]
 })
 
 module.exports = mongoose.model('Story', StorySchema);
