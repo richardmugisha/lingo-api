@@ -38,8 +38,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-    req.session.token = token;
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '10d' });
     res.json({ token, user: { userId: user._id, username: user.username, email: user.email } });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in' });
@@ -47,18 +46,18 @@ router.post('/login', async (req, res) => {
 });
 
 // Middleware to verify JWT
-const verifyToken = async (req, res, next) => {
-  const token = req.session.token;
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Authorization header
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({ message: 'Unauthorized, no token provided' });
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = await User.findById(decoded.userId).select('-password');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.userId; // Attach userId to request for further use
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Invalid token' });
+    res.status(401).json({ message: 'Invalid or expired token' });
   }
 };
 
