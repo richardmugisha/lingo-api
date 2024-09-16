@@ -125,7 +125,7 @@ const createStory = async(req, res) => {
     }
     else if (aiAssistance === 'Ai for you') {
         const genStory = await fullStoryGen(title, summary, words)
-        console.log(genStory)
+        console.log(genStory);
         ({title, story} = genStory)
     }
     const storyTocreate = {story, title, words, deck: deckId}
