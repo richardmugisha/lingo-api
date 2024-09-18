@@ -1,7 +1,7 @@
 const Deck = require('../models/deck');
 const getWordModel = require('../models/word/word')
 const Story = require('../models/story');
-const { fullStoryGen, aiCoEditor } = require('../utils/openaiProcess')
+const { fullStoryGen, aiCoEditor } = require('../utils/openai-process/storyGenerator')
 
 const createNewDeck = async (deckId, deckName, userId, deckLang) => {
     try {
@@ -97,11 +97,6 @@ const updateDeck = async (req, res) => {
 const deleteDecks = async (req, res) => {
     try {
         const deckIds = req.params.deckId.split(',');
-        // // Delete all cards associated with the specified decks
-        // const deleteCardResult = await Card.deleteMany({ deck: { $in: deckIds } });
-        // console.log(`${deleteCardResult.deletedCount} cards deleted successfully`);
-
-        // Delete the specified decks
         const deleteDeckResult = await Deck.deleteMany({ _id: { $in: deckIds } });
         console.log(`${deleteDeckResult.deletedCount} decks deleted successfully`);
 

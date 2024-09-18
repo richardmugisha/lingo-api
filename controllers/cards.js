@@ -1,7 +1,7 @@
 const Card = require('../models/card');
 const { createNewDeck } = require('./deck')
 
-const { openaiProcess } = require('../utils/openaiProcess')
+const wordDefinition = require('../utils/openai-process/wordDefinition')
 
 const getDeckCards = async (req, res) => {
     try {
@@ -36,7 +36,7 @@ const createCard = async(req, res) => {
             deck.save()
             res.status(201).json( { deck, card } )
         } else {
-            const parsedData = await openaiProcess(content, 'regular deck') // true is for testing
+            const parsedData = await wordDefinition(content, 'regular deck') // true is for testing
             const cards = parsedData.map(card => ({...card, deck: deck._id }))
             Card.insertMany(cards)
             deck.cardNumber = cards.length + (deck.cardNumber || 0)

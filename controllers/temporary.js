@@ -2,7 +2,7 @@ const Temporary = require('../models/temporary');
 const Deck = require('../models/deck');
 const Card = require('../models/card');
 
-const { openaiProcess } = require('../utils/openaiProcess')
+const wordDefinition = require('../utils/openai-process/wordDefinition')
 
 const updateTemporary = async (req, res) => {
     try {
@@ -32,7 +32,7 @@ const getTemporary = async(req, res) => {
     console.log(tempId)
     const thisUserTemporaryDeck = await Temporary.findById(tempId);
     try {
-        const parseData = await openaiProcess(thisUserTemporaryDeck.unprocessed, 'temporary deck')
+        const parseData = await wordDefinition(thisUserTemporaryDeck.unprocessed, 'temporary deck')
         const cards = parseData.map(card => ({...card, deck: tempId }))
         await Card.insertMany(cards)
         thisUserTemporaryDeck.cardNumber += thisUserTemporaryDeck.unprocessed.length

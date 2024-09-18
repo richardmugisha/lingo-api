@@ -1,7 +1,7 @@
 
 const getWordModel = require('../models/word/word')
 const { createNewDeck } = require('./deck')
-const { openaiProcess } = require('../utils/openaiProcess')
+const wordDefinition = require('../utils/openai-process/wordDefinition')
 const Deck = require('../models/deck')
 
 const { closestStringByLength } = require('../utils/stringCompare')
@@ -64,26 +64,29 @@ const wordProcessing = async (app) => {
     try {
         const wordsToProcess = app.new_words_to_add.reduce((acc, currWordObj) => acc.concat(currWordObj.words), [])
         console.log('...........................openai process')
-        const {msg, words: processedWords} = await openaiProcess(wordsToProcess, 'regular deck')
+        const {msg, words: processedWords} = await wordDefinition(wordsToProcess, 'regular deck')
         const savedWords = await dictionaryPopulating(msg, processedWords, app.language)
         let rangeStart = 0
         const ranges = app.new_words_to_add.map(curr => { const rangeEnd = rangeStart + curr.words.length; const newRange = [rangeStart, rangeEnd]; rangeStart = rangeEnd; return newRange})
 
         const eachDeck = async (wordObj, savedWords, range) => {
             try {
-                const deckHere = await Deck.findById(wordObj.deck)
                 const deckNewWords = wordObj.words.map((inputWord, i) => {
-                    const createdWords = savedWords[range[0] + i]
-                    return closestStringByLength(inputWord, createdWords) 
-                }
-                )
-                deckHere.words = deckHere.words.concat( deckNewWords )
-                await deckHere.save()
+                    const createdWords = savedWords[range[0] + i];
+                    return closestStringByLength(inputWord, createdWords);
+                });
+        
+                // Use $push with $each to add the new words
+                await Deck.findByIdAndUpdate(
+                    wordObj.deck,
+                    { $push: { words: { $each: deckNewWords } } },
+                    { new: true }
+                );
             } catch (error) {
-                console.log(error)
+                console.log(`error with adding words to deck: ${wordObj.deck} \n${error}`);
             }
-        }
-
+        };
+        
         await Promise.all(app.new_words_to_add.map(async (wordObj, i) => eachDeck(wordObj, savedWords, ranges[i])))
         return {msg: 'success'}
     }
