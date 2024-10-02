@@ -113,20 +113,21 @@ const createStory = async(req, res) => {
     const { deckId } = req.params;
     let {userId, story, title, words, aiAssistance, summary} = req.body;
     console.log(userId, story, title, words, aiAssistance, summary, '...creating story')
-    if (aiAssistance === 'Ai co-editor') {
-        const genStory = await aiCoEditor(title, summary, words, story);
-        console.log(genStory)
-        return res.json({story: genStory})
-    }
-    else if (aiAssistance === 'Ai for you') {
-        const genStory = await fullStoryGen(title, summary, words)
-        console.log(genStory);
-        ({title, story} = genStory)
-    }
-    const storyTocreate = {story, title, words, deck: deckId}
-    if (userId) storyTocreate.creator = userId
-    console.log(deckId, userId, story)
     try {
+        if (aiAssistance === 'Ai co-editor') {
+            const genStory = await aiCoEditor(title, summary, words, story);
+            console.log(genStory)
+            return res.json({story: genStory})
+        }
+        else if (aiAssistance === 'Ai for you') {
+            const genStory = await fullStoryGen(title, summary, words)
+            console.log(genStory);
+            ({title, story} = genStory)
+        }
+        const storyTocreate = {story, title, words, deck: deckId}
+        if (userId) storyTocreate.creator = userId
+        console.log(deckId, userId, story)
+    
         const createdStory = await Story.create(storyTocreate)
         console.log(createdStory)
         res.status(200).json({story: createdStory})
