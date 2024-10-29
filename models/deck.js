@@ -22,21 +22,7 @@ const Deck = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Word'
         }
-    ],
-    performance: {
-        correct: {
-            type: [Number],
-            required: [true, 'Must provide correct ratio']
-        },
-        performance: {
-            type: [Number],
-            required: [true, 'Must provide performance ratio']
-        },
-        time: {
-            type: [Number],
-            required: [true, 'Must provide time taken']
-        }
-    }
+    ]
 });
 
 module.exports = mongoose.model('Deck', Deck);

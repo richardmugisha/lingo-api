@@ -10,7 +10,7 @@ const { closestStringByLength } = require('../utils/stringCompare')
 const getWords = async (req, res) => {
     try {
         const { language, word } = req.params;
-        const WordModel = getWordModel('English');
+        const WordModel = getWordModel(language);
         const searchWords = await WordModel.find({ word: new RegExp(`^${word}`, 'i') });
 
         // Return the found words as a response
@@ -28,9 +28,10 @@ const addWordToDeck = async (body) => {
         const { deckName, deckId, userId, deckLang, words } = body
         deck = await createNewDeck(deckId, deckName, userId, deckLang);
         if (!deck) throw new Error(`The deck with id: ${deckName} doesn't exist!`)
-        const WordModel = getWordModel(deckLang);
-        const wordsToSave = await WordModel.find({ word: {$in: words}})
-        deck.words = deck.words.concat(wordsToSave)
+        // const WordModel = getWordModel(deckLang);
+        // const wordsToSave = await WordModel.find({ word: {$in: words}})
+        // deck.words = deck.words.concat(wordsToSave)
+        deck.words = deck.words.concat(words)
         await deck.save()
         console.log('......................success with add to word deck')
         return {msg: 'success', deck: {name: deck.deckName, id: deck._id}}

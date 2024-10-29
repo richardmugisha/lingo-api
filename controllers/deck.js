@@ -3,6 +3,8 @@ const getWordModel = require('../models/word/word')
 const Story = require('../models/story');
 const { fullStoryGen, aiCoEditor } = require('../utils/openai-process/storyGenerator')
 
+const { Learning, WordMastery, newLearning }  = require('../models/learning/learning')
+
 const createNewDeck = async (deckId, deckName, userId, deckLang) => {
     try {
         let deck;
@@ -48,13 +50,29 @@ const getDecks = async(req, res) => {
 
 const getDeck = async (req, res) => {
     try {
-        const { deckId } = req.params;
-        // console.log('deckId', deckId)
-        const deck = await Deck.findById(deckId);
+        const { deckId, userId } = req.params;
+        console.log('deckId', deckId)
+        const deck = (await Deck.findById(deckId)).toObject();
         if (!deck) throw new Error('deck does not exist!')
         const WordModel = getWordModel(deck.deckLang)
-        deck.words = await WordModel.find( {'_id': {$in: deck.words} })
-        // console.log(deck)
+        const deckWordIdList = deck.words
+        deck.words = await WordModel.find( {'_id': {$in: deckWordIdList} })
+        const existingLearning = (await Learning.findOne({ user: userId }))?.toObject()
+        let createdLearning, wordMasteries;
+        if (!existingLearning) {
+            ( { createdLearning, wordMasteries} = await newLearning(deckId, userId, deckWordIdList) )
+        }
+        const learning = existingLearning || createdLearning
+        const learningDeck = learning?.decks?.find(deckHere => {if (deckHere.deckId.toString() === deckId) return {words: deckHere.words, performance: deckHere.performance, chunkIndex: deckHere.chunkIndex } }) || {}
+        const learningWords = deck.words.filter( word => learningDeck.words?.some(wordId => wordId.equals(word._id)) )
+        const learningWordMasteries = wordMasteries || await WordMastery.find({'wordId': {$in: learningDeck.words } })
+
+        console.log(learningWords?.length, learningWordMasteries?.length, wordMasteries, await WordMastery.find({'wordId': {$in: learningDeck.words } }), '....end')
+        deck.learning = {
+            ...learningDeck,
+            words: learningWords?.map((word, i) => ({...word.toObject(), level: learningWordMasteries[i] }) )
+        }
+        console.log(deck.learning)
         return res.status(200).json( { deck })
     } catch (error) {
         console.log(error)
