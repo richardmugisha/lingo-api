@@ -21,6 +21,10 @@ const getWords = async (req, res) => {
     }
 }
 
+const updateWordMastery = async (req, res) => {
+
+}
+
 const addWordToDeck = async (body) => {
     let deck;
     try {

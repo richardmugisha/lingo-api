@@ -3,7 +3,7 @@ const getWordModel = require('../models/word/word')
 const Story = require('../models/story');
 const { fullStoryGen, aiCoEditor } = require('../utils/openai-process/storyGenerator')
 
-const { Learning, WordMastery, newLearning }  = require('../models/learning/learning')
+const { Learning, WordMastery, newLearning, wordMasteryUpdate, patchLearningDeck, pushNewDeck }  = require('../models/learning/learning')
 
 const createNewDeck = async (deckId, deckName, userId, deckLang) => {
     try {
@@ -49,20 +49,24 @@ const getDecks = async(req, res) => {
 }
 
 const getDeck = async (req, res) => {
+    const { deckId, userId } = req.query;
+    console.log('deckId', deckId)
     try {
-        const { deckId, userId } = req.params;
-        console.log('deckId', deckId)
         const deck = (await Deck.findById(deckId)).toObject();
         if (!deck) throw new Error('deck does not exist!')
         const WordModel = getWordModel(deck.deckLang)
         const deckWordIdList = deck.words
         deck.words = await WordModel.find( {'_id': {$in: deckWordIdList} })
         const existingLearning = (await Learning.findOne({ user: userId }))?.toObject()
-        let createdLearning, wordMasteries;
+        let createdLearning, wordMasteries, updatedLearning;
         if (!existingLearning) {
             ( { createdLearning, wordMasteries} = await newLearning(deckId, userId, deckWordIdList) )
         }
-        const learning = existingLearning || createdLearning
+        else if (!existingLearning.decks.find(deck => deck.deckId.toString() === deckId)) {
+            ( { updatedLearning, wordMasteries} = await pushNewDeck(deckId, userId, deckWordIdList) )
+        }
+
+        const learning = updatedLearning || existingLearning || createdLearning
         const learningDeck = learning?.decks?.find(deckHere => {if (deckHere.deckId.toString() === deckId) return {words: deckHere.words, performance: deckHere.performance, chunkIndex: deckHere.chunkIndex } }) || {}
         const learningWords = deck.words.filter( word => learningDeck.words?.some(wordId => wordId.equals(word._id)) )
         const learningWordMasteries = wordMasteries || await WordMastery.find({'wordId': {$in: learningDeck.words } })
@@ -80,41 +84,29 @@ const getDeck = async (req, res) => {
     }
 }
 
-const updateDeck = async (req, res) => {
+const updateMastery = async (req, res) => {
+    console.log(req.query)
     try {
-        const deckId = req.params.deckId;
-        let deck = await Deck.findById(deckId);
-        if (!deck) {
-            const perform = {
-                correct : [req.body.correct], performance : [req.body.performance], time : [req.body.time]
-            }
-            const content = { deckName, performance : perform } 
-            deck = await Deck.create(content);
-            return res.status(201).json( { deck } )
+        const { deckId, userId } = req.query
+        const { wordsMasteriesList, deckLearnChunk } = req.body
+        console.log(req.query, deckLearnChunk._id)
+        const updatedMasteries = await wordMasteryUpdate(wordsMasteriesList)
+        const { updatedLearning, newWordMasteries } = await patchLearningDeck(userId, deckLearnChunk)
+        if (newWordMasteries && updatedLearning && updatedMasteries ) {
+            return res.status(200).json({ msg: 'Mastery updated successfully, and user leveled up' })            
         }
-        // insert the results if exits
-        
-        deck = await Deck.findByIdAndUpdate(
-            deckId,
-            {
-                $push: {
-                    'performance.correct': req.body.correct,
-                    'performance.performance': req.body.performance,
-                    'performance.time': req.body.time
-                }
-            }
-        )
-        return res.status(200).json({ msg: 'Perform items pushed successfully' })
-
+        if (updatedMasteries && updatedLearning) {
+            return res.status(200).json({ msg: 'Mastery updated successfully' })
+        }
     } catch (error) {
-        //console.log(error)
+        console.log(error)
         return res.status(500).json( { msg: error })
     }
 }
 
 const deleteDecks = async (req, res) => {
     try {
-        const deckIds = req.params.deckId.split(',');
+        const deckIds = req.query.deckId.split(',');
         const deleteDeckResult = await Deck.deleteMany({ _id: { $in: deckIds } });
         console.log(`${deleteDeckResult.deletedCount} decks deleted successfully`);
 
@@ -172,7 +164,7 @@ module.exports = {
     createNewDeck,
     getDecks,
     getDeck,
-    updateDeck,
+    updateMastery,
     deleteDecks,
     createStory,
     getStories,

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { deleteDecks, getDeck, updateDeck, createStory, getStories, getDecks } = require('../controllers/deck')
+const { deleteDecks, getDeck, updateMastery, createStory, getStories, getDecks } = require('../controllers/deck')
 
-router.route('/deck/:deckId/:userId').get(getDeck).patch(updateDeck).delete(deleteDecks)
+router.route('/deck').get(getDeck).patch(updateMastery).delete(deleteDecks)
 router.route('/decks/:creator/:language').get(getDecks)
 router.route('/story-time/:deckId').post(createStory).get(getStories);
 
