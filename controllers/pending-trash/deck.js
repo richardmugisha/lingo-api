@@ -17,6 +17,11 @@ const createNewDeck = async (deckId, deckName, userId, deckLang) => {
                 creator: userId,
                 deckLang,
                 words: [],
+                performance: {
+                    correct: [0],
+                    performance: [0],
+                    time: [0]
+                }
             });
         }
         return deck
@@ -35,11 +40,9 @@ const getDecks = async(req, res) => {
         if (creator !== 'all') filters.creator = creator;
         if (deckLang !== 'all') filters.deckLang = deckLang;
         const decks = await Deck.find(filters);
-        const existingLearning = (await Learning.findOne({ user: creator }))?.toObject()
         // console.log(decks)
-        res.status(200).json({decks, userLearning: existingLearning || {}})
+        res.status(200).json(decks)
     } catch (error) {
-        console.log(error)
         res.status(500).json({message: 'Error fetching decks', error});
     }
     
@@ -47,19 +50,10 @@ const getDecks = async(req, res) => {
 
 const getDeck = async (req, res) => {
     const { deckId, userId } = req.query;
-    try {
-        const deck = await retrieveDeckInfo(deckId, userId)
-        return res.status(200).json( { deck })
-    } catch (error) {
-        res.status(500).json( { msg: error })
-    }
-}
-const retrieveDeckInfo = async (deckId, userId) => {
     console.log('deckId', deckId)
     try {
-        let deck = (await Deck.findById(deckId));
+        const deck = (await Deck.findById(deckId)).toObject();
         if (!deck) throw new Error('deck does not exist!')
-        deck = deck.toObject()
         const WordModel = getWordModel(deck.deckLang)
         const deckWordIdList = deck.words
         deck.words = await WordModel.find( {'_id': {$in: deckWordIdList} })
@@ -83,10 +77,10 @@ const retrieveDeckInfo = async (deckId, userId) => {
             words: learningWords?.map((word, i) => ({...word.toObject(), level: learningWordMasteries[i] }) )
         }
         console.log(deck.learning)
-        return deck
+        return res.status(200).json( { deck })
     } catch (error) {
-        console.log(error, '---------------85')
-        throw error
+        console.log(error)
+        res.status(500).json( { msg: error })
     }
 }
 
@@ -99,12 +93,10 @@ const updateMastery = async (req, res) => {
         const updatedMasteries = await wordMasteryUpdate(wordsMasteriesList)
         const { updatedLearning, newWordMasteries } = await patchLearningDeck(userId, deckLearnChunk)
         if (newWordMasteries && updatedLearning && updatedMasteries ) {
-            const deck = await retrieveDeckInfo(deckId, userId)
-            return res.status(200).json({ deck, msg: 'Mastery updated successfully, and user leveled up' })            
+            return res.status(200).json({ msg: 'Mastery updated successfully, and user leveled up' })            
         }
         if (updatedMasteries && updatedLearning) {
-            const deck = await retrieveDeckInfo(deckId, userId)
-            return res.status(200).json({ deck, msg: 'Mastery updated successfully' })
+            return res.status(200).json({ msg: 'Mastery updated successfully' })
         }
     } catch (error) {
         console.log(error)
