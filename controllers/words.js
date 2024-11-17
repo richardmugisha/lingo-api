@@ -26,21 +26,21 @@ const updateWordMastery = async (req, res) => {
 }
 
 const addWordToDeck = async (body) => {
-    let deck;
     try {
         console.log('........................add to word deck')
         const { deckName, deckId, userId, deckLang, words } = body
-        deck = await createNewDeck(deckId, deckName, userId, deckLang);
+        const deck = await createNewDeck(deckId, deckName, userId, deckLang);
         if (!deck) throw new Error(`The deck with id: ${deckName} doesn't exist!`)
-        // const WordModel = getWordModel(deckLang);
-        // const wordsToSave = await WordModel.find({ word: {$in: words}})
-        // deck.words = deck.words.concat(wordsToSave)
-        deck.words = deck.words.concat(words)
+        const WordModel = getWordModel(deckLang);
+        const wordsToSave = await WordModel.find({ word: {$in: words}})
+        deck.words = deck.words.concat(wordsToSave)
+        // deck.words = deck.words.concat(words)
+        console.log(deck, '........different issue')
         await deck.save()
         console.log('......................success with add to word deck')
         return {msg: 'success', deck: {name: deck.deckName, id: deck._id}}
     } catch (error) {
-        console.log(error)
+        console.log(error.message)
         return { msg: 'error', error: error.message}
     }
 }
@@ -59,7 +59,7 @@ const addToWishList = async (body, app) => {
         console.log('....................success with add to wish')
         return {msg: 'success', deck: deck._id}
     } catch (error) {
-        console.log(error)
+        console.log(error.message)
         return {msg: 'error', error: error.message}
     }
 }

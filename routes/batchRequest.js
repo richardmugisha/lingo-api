@@ -18,9 +18,9 @@ const batchRequest = async (req, res) => {
             if (route === 'toAdd') {
                 const results = await Promise.all(body.map(async wordBody => await addWordToDeck(wordBody)));
                 let success = true;
-                for (const res of results) {
-                    deckAcquiredIds[res.deck.name] = res.deck.id;
-                    if (res.msg === 'error') success = false
+                for (const result of results) {
+                    if (result.msg === 'error') success = false
+                    else deckAcquiredIds[result.deck.name] = result.deck.id;
                 }
                 successRequests.toAdd = success 
             }
