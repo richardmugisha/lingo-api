@@ -9,11 +9,10 @@ const { closestStringByLength } = require('../utils/stringCompare')
 
 const getWords = async (req, res) => {
     try {
-        const { language, word } = req.params;
+        const { language, word } = req.query;
+        console.log(language, word)
         const WordModel = getWordModel(language);
         const searchWords = await WordModel.find({ word: new RegExp(`^${word}`, 'i') });
-
-        // Return the found words as a response
         res.json({searchWords});
 
     } catch (error) {
@@ -27,6 +26,8 @@ const updateWordMastery = async (req, res) => {
 
 const addWordToDeck = async (body) => {
     try {
+        // ! Need to clearn these console.logs
+        // TODO: make sure you remove those
         console.log('........................add to word deck')
         const { deckName, deckId, userId, deckLang, words } = body
         const deck = await createNewDeck(deckId, deckName, userId, deckLang);
@@ -34,7 +35,7 @@ const addWordToDeck = async (body) => {
         const WordModel = getWordModel(deckLang);
         const wordsToSave = await WordModel.find({ word: {$in: words}})
         deck.words = deck.words.concat(wordsToSave)
-        // deck.words = deck.words.concat(words)
+        // //deck.words = deck.words.concat(words)
         console.log(deck, '........different issue')
         await deck.save()
         console.log('......................success with add to word deck')

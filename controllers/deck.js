@@ -28,12 +28,11 @@ const createNewDeck = async (deckId, deckName, userId, deckLang) => {
 }
 
 const getDecks = async(req, res) => {
-    const { creator, language:deckLang } = req.params;
-    // console.log('creator: ', creator, 'language: ', deckLang, 'none')
+    const { creator, language:deckLang } = req.query;
     try {
         const filters = {};
-        if (creator !== 'all') filters.creator = creator;
-        if (deckLang !== 'all') filters.deckLang = deckLang;
+        if (creator) filters.creator = creator;
+        if (deckLang) filters.deckLang = deckLang;
         const decks = await Deck.find(filters);
         const existingLearning = (await Learning.findOne({ user: creator }))?.toObject()
         // console.log(decks)
@@ -114,12 +113,13 @@ const updateMastery = async (req, res) => {
 
 const deleteDecks = async (req, res) => {
     try {
-        const deckIds = req.query.deckId.split(',');
+        console.log('deleting................')
+        const deckIds = req.query.deckIds.split(',');
         const deleteDeckResult = await Deck.deleteMany({ _id: { $in: deckIds } });
         console.log(`${deleteDeckResult.deletedCount} decks deleted successfully`);
 
         res.status(200).json({
-            msg: `${deleteDeckResult.deletedCount} decks deleted successfully`
+            msg: `${deleteDeckResult.deletedCount} deck${deleteDeckResult.deletedCount && 's'} deleted successfully`
         });
     } catch (error) {
         console.log(error.message)
