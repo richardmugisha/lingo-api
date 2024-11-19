@@ -28,18 +28,20 @@ const createNewDeck = async (deckId, deckName, userId, deckLang) => {
 }
 
 const getDecks = async(req, res) => {
-    const { creator, language:deckLang } = req.query;
+    const { user, creator, language:deckLang } = req.query;
     try {
         const filters = {};
-        if (creator) filters.creator = creator;
+        if (creator) filters.creator = user;
         if (deckLang) filters.deckLang = deckLang;
         const decks = await Deck.find(filters);
-        const existingLearning = (await Learning.findOne({ user: creator }))?.toObject()
-        // console.log(decks)
-        res.status(200).json({decks, userLearning: existingLearning || {}})
+        try {
+            const existingLearning = (await Learning.findOne({ user }))?.toObject()
+            res.status(200).json({decks, userLearning: existingLearning || {}})
+        } catch (error) {
+            res.status(404).json({ message: "Error with fetching the learning plan for this user"})
+        }
     } catch (error) {
-        console.log(error)
-        res.status(500).json({message: 'Error fetching decks', error});
+        res.status(500).json(error);
     }
     
 }
