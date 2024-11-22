@@ -37,12 +37,15 @@ const batchRequest = async (req, res) => {
                     //const appCopy = JSON.parse(JSON.stringify(app));
                     const langApp = {language, new_words_to_add: setsToProcess}
                     // Remove this specific language key from the original app
-                    app.new_words_to_add.delete(language);
-                    await app.save()
+                    
                     console.log('......................processing starting');
                     wordProcessing(langApp)
-                        .then(d => console.log(d.msg, '...................processing done'))
-                        .catch(err => console.error(`Processing error for ${language}: `, err));
+                        .then(d => {
+                            console.log(d.msg, '...................processing done');
+                            app.new_words_to_add.delete(language);
+                            app.save();
+                        })
+                        .catch(err => console.error(`\n-----Processing error for ${language}: `, err));
 
                 }
                 //await app.save();  // Ensure app is saved after toWish logic

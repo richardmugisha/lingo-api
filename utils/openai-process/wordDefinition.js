@@ -38,7 +38,8 @@ const wordFamilyGenerator = async (words) => {
         return JSON.parse(openaiRes)
     }
     catch (error) {
-        throw new Error("error generating the list of variations: ", error)
+        console.log(error.message)
+        throw new Error("\n-----error generating the list of variations: ", error)
     }
 }
 
@@ -65,11 +66,9 @@ const wordDefinition = async (words, regularOrTemporaryDeck) => {
         processTimeLogger(processStartTime)
         return result
     } catch (error) {
-        console.log(error)
+        console.log(error.message)
+        throw new Error(`\n-----Error with word definition process: ${error}`)
         // return {msg: `Error processing the words: ${error}`, words: generateData}
-    }
-    finally {
-        
     }
 }
 

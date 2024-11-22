@@ -57,7 +57,7 @@ const addToWishList = async (body, app) => {
 
         app.new_words_to_add.get(deckLang).push({ creator: userId, deck: deck._id, words: words })
         await app.save()
-        console.log('....................success with add to wish')
+        console.log('....................success with add to wish', app)
         return {msg: 'success', deck: deck._id}
     } catch (error) {
         console.log(error.message)
@@ -89,7 +89,7 @@ const wordProcessing = async (app) => {
                     { new: true }
                 );
             } catch (error) {
-                console.log(`error with adding words to deck: ${wordObj.deck} \n${error}`);
+                throw new Error(`\n-----error with adding words to deck: ${wordObj.deck} \n${error}`);
             }
         };
         
@@ -98,6 +98,7 @@ const wordProcessing = async (app) => {
     }
     catch (error) {
         console.log(error)
+        throw new Error(`\n-----Error with word processing: ${error}`)
         return {msg: 'error', error: error.message}
     }
 }

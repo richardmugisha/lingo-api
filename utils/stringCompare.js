@@ -1,5 +1,5 @@
 function findClosestStringByLength(inputString, stringList) {
-    console.log('....string comparison', inputString, stringList)
+    // console.log('....string comparison', inputString, stringList)
     try {
         const initialClosest = stringList[0]
         const initialDist = Math.abs(inputString.length - initialClosest.word.length)
@@ -9,7 +9,7 @@ function findClosestStringByLength(inputString, stringList) {
             return newDist < oldDist ? [newDist, currWordObj] : [oldDist, oldClosest]
             }, [initialDist, initialClosest]
         )
-        console.log('....string comparison done', inputString, overallClosest.word)
+        // console.log('....string comparison done', inputString, overallClosest.word)
         return overallClosest
     } catch (error) {
         console.log(error)
