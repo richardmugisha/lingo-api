@@ -75,7 +75,7 @@ const retrieveDeckInfo = async (deckId, userId) => {
 
         const learning = updatedLearning || existingLearning || createdLearning
         const learningDeck = learning?.decks?.find(deckHere => {if (deckHere.deckId.toString() === deckId) return {words: deckHere.words, performance: deckHere.performance, chunkIndex: deckHere.chunkIndex } }) || {}
-        const learningWords = deck.words.filter( word => learningDeck.words?.some(wordId => wordId.equals(word._id)) )
+        const learningWords = deck.words.filter( word => learningDeck.words?.some(wordId => wordId?.equals(word._id)) )
         const learningWordMasteries = wordMasteries || await WordMastery.find({'wordId': {$in: learningDeck.words } })
 
         console.log(learningWords?.length, learningWordMasteries?.length, wordMasteries, await WordMastery.find({'wordId': {$in: learningDeck.words } }), '....end')

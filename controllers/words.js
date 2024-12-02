@@ -33,7 +33,9 @@ const addWordToDeck = async (body) => {
         const deck = await createNewDeck(deckId, deckName, userId, deckLang);
         if (!deck) throw new Error(`The deck with id: ${deckName} doesn't exist!`)
         const WordModel = getWordModel(deckLang);
-        const wordsToSave = await WordModel.find({ word: {$in: words}})
+        const query = words.map(w => ({ word: w.word, example: w.context }));
+        const wordsToSave = await WordModel.find({ $or: query });
+        // const wordsToSave = await WordModel.find({ word: {$in: words}})
         deck.words = deck.words.concat(wordsToSave)
         // //deck.words = deck.words.concat(words)
         console.log(deck, '........different issue')
@@ -55,7 +57,7 @@ const addToWishList = async (body, app) => {
         await deck.save()
         if (!app.new_words_to_add.has(deckLang)) app.new_words_to_add.set(deckLang, [])
 
-        app.new_words_to_add.get(deckLang).push({ creator: userId, deck: deck._id, words: words })
+        app.new_words_to_add.get(deckLang).push({ creator: userId, deck: deck._id, words: words.map(w => ({ word: w.word, example: w.context })) })
         await app.save()
         console.log('....................success with add to wish', app)
         return {msg: 'success', deck: deck._id}
@@ -77,9 +79,9 @@ const wordProcessing = async (app) => {
 
         const eachDeck = async (wordObj, savedWords, range) => {
             try {
-                const deckNewWords = wordObj.words.map((inputWord, i) => {
+                const deckNewWords = wordObj.words.map((inputWordObj, i) => {
                     const createdWords = savedWords[range[0] + i];
-                    return closestStringByLength(inputWord, createdWords);
+                    return closestStringByLength(inputWordObj.word, createdWords);
                 });
         
                 // Use $push with $each to add the new words

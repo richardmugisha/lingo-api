@@ -9,11 +9,13 @@ const wordDefiner = async (words, regularOrTemporaryDeck) => {
         const reusable = async () => {
             delete wordObject['root word']
             let related_words = []
-            Object.values(wordObject).map(expressions => { related_words = [...related_words, ...expressions] })
+            Object.values(wordObject).map(expressions => { related_words = [...related_words, ...(expressions.map(obj => obj.word).filter(a => a))] })
             for (const [k, v] of Object.entries(wordObject)) {if (!v.length) delete wordObject[k]}
             const prompt = promptMaker(JSON.stringify(wordObject), regularOrTemporaryDeck)
-            const openaiRes = await openaiRequest("gpt-3.5-turbo", prompt)
-            return JSON.parse(openaiRes).map(obj => ({...obj, 'related words': related_words } ))
+            const openaiRes = await openaiRequest("gpt-3.5-turbo-1106", prompt)
+            const { definitions } = JSON.parse(openaiRes)
+            console.log('--------- word definer result: \n', definitions.map(obj => ({...obj, 'related words': related_words } )))
+            return definitions.map(obj => ({...obj, 'related words': related_words } ))
         }
         for (let i = 0; i < 3; i++) {
             try { return await reusable()} 
@@ -34,7 +36,8 @@ const wordDefiner = async (words, regularOrTemporaryDeck) => {
 const wordFamilyGenerator = async (words) => {
     try {
         const prompt = initial(words)
-        const openaiRes = await openaiRequest("gpt-3.5-turbo", prompt)
+        const openaiRes = await openaiRequest("gpt-4o", prompt)
+        console.log(openaiRes)
         return JSON.parse(openaiRes)
     }
     catch (error) {
@@ -57,8 +60,10 @@ const processTimeLogger = (time) => {
 const wordDefinition = async (words, regularOrTemporaryDeck) => {
     try {
         let processStartTime = processTimeLogger()
-        const wordFamilies = await wordFamilyGenerator(words)
-        console.log('words families', wordFamilies.length)
+        const response = await wordFamilyGenerator(words)
+        const wordFamilies = response["word families"]
+        // console.log('words families', wordFamilies.length)
+        console.log('-----words families: ', wordFamilies)
         processTimeLogger(processStartTime); 
         processStartTime = processTimeLogger()
         console.log('.....now proper openai starts')

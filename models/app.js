@@ -9,7 +9,13 @@ const AppSchema = new mongoose.Schema({
             {
                 creator: { type: mongoose.Types.ObjectId, ref: 'User' },
                 deck: { type: mongoose.Types.ObjectId, ref: 'Deck' },
-                words: { type: [String], default: [] } // Array of words as strings
+                words: { 
+                    type: [{
+                        word: String,
+                        example: String
+                    }], 
+                    default: [] 
+                } // Array of words as strings
             }
         ],
         default: {}
