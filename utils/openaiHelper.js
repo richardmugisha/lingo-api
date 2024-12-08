@@ -1,35 +1,35 @@
 
-const promptMaker = (wordObject, regularOrTemporaryDeck) => {
-    const regular = regularOrTemporaryDeck === 'regular deck';
-    return regularPrompt(wordObject)
-    // return regular ? regularPrompt(wordObject) : tempPrompt(wordObject)
-    }
 
-const regularPrompt = (wordObject) => `1. You are given an object containing nouns, ..., proverbs and I want you to define them for my flash card app. 
-                            A typical output is a json with that follows this structure, with more variations inside of course: 
+const wordDefinitionPromptConstruct = (wordObject) => 
+    `1. You are given an object containing nouns, ..., proverbs and I want you to define them for my flash card app. 
+                    A typical output is a json with that follows this structure, with more variations inside of course: 
+                        {
+                            definitions: [
                                 {
-                                    definitions: [
-                                        {
-                                            type: "verb",
-                                            word: "the verb",
-                                            "language style": "formal",
-                                            "meaning": "The meaning",
-                                            "example": "The example given to you in the inputs",
-                                            "blanked example": "The example with blanks in the place of the key word in the {word, example} input",
-                                            "synonym": "A synonym",
-                                            "antonym": "An antonym"
-                                        }, 
-                                        {...}, 
-                                        {...}
-                                    ]
-                                }
-            1. Use the examples given to you in the inputs as they help the user recall which movie, article, or book they read the word/expression in.
-            2. Strictly respect the names of the object keys I gave you, and all the values are required per my db schema (!!! That means all the fields should be filled).
-            3. Ensure the output is a valid json that can be JSON.parsed without errors. Do not include any additional text or comments.
-            4. Input : ${wordObject}`
+                                    type: "verb",
+                                    word: "the verb",
+                                    "example": "The example given to you in the inputs",
+                                    "blanked example": "Take the example the {word, example} input, and replace the word with blanks like _____",
+                                    "language style": "The style used in this example: pick from (formal, neutral, informal, jargon, slang)",
+                                    "meaning": "The meaning strictly in the context of the example given to you",
+                                    "synonym": "A synonym",
+                                    "antonym": "An antonym"
+                                }, 
+                                {...}, 
+                                {...}
+                            ]
+                        }
+    1. Use the examples given to you in the inputs as they help the user recall which movie, article, or book they read the word/expression in.
+    2. Strictly respect the names of the object keys I gave you, and all the values are required per my db schema (!!! That means all the fields should be filled).
+    3. Ensure the output is a valid json that can be JSON.parsed without errors. Do not include any additional text or comments.
+    4. Input : ${wordObject}`
 
 
-const initial = (words) => `I am giving you a list of comma-separated objects of type = {word: 'a word or expression', example: 'a contextual sentence for the word/expression'}. First, deduce the root/ base forms (usually the verb inside) from them (if no verb, find the form that is the most likely to be the root of the expression). Then use each root word to compute its word family as an object followed by phrasal verbs, idioms, proverbs, etc. Strictly only reply with a json. e.g:
+const wordFamilyGenerationPromptConstruct = (words) => 
+    `I am giving you a list of comma-separated objects of type = {word: 'a word or expression', example: 'a contextual sentence for the word/expression'}. First, deduce the root/ base forms of the word/expression (usually the verb inside word/expression). (if no verb, find the form that is the most likely to be the root of the expression). Then use each root word to compute its word family as an object followed by phrasal verbs, idioms, proverbs, etc. 
+    Don't over-stretch and add a word/expression that is not in the family.
+    You can correct minor user typos and grammar mistakes in the {word, example} input from the user.
+    Strictly only reply with a json. e.g:
     {
         "word families": [
             { "root word" : speak,
@@ -63,6 +63,36 @@ const chunkStoryPrompt = (title, summary, words, currentStory) => `You are co-wr
 The output should be a valid json object that will not throw an error when passed through JSON.parse in my api. e.g: { title: ${title || 'generate a suitable title'}, aiSentence: { sentence: "your sentence", blanked: the same sentence, but with the word(s) blanked out}}.
 Make sure your sentence includes one or two of the words given to you, but not words that have alread been used in the story.
 `
+
+const wordFamilySystemMsg = 
+`
+You are language teacher for non-natives.
+1. You should try to use a simple language (instead of unnecessary sophistication) every time it is applicable
+2. Try to use well-know words/expression and don't invent or derive any non-existent expressions.
+`
+const wordDefinitionSystemMsg = 
+`
+You are language teacher for non-natives.
+1. You should try to use a simple language (instead of unnecessary sophistication) every time it is applicable
+2. Try to use well-know words/expression and don't invent or derive any non-existent expressions.
+`
+const chunkStorySystemMsg = 
+`
+You are language teacher for non-natives.
+1. You should try to use a simple language (instead of unnecessary sophistication) every time it is applicable
+2. Try to use well-know words/expression and don't invent or derive any non-existent expressions.
+`
+const fullStorySystemMsg = 
+`
+You are language teacher for non-natives.
+1. You should try to use a simple language (instead of unnecessary sophistication) every time it is applicable
+2. Try to use well-know words/expression and don't invent or derive any non-existent expressions.
+`
  
 
-module.exports = {promptMaker, initial, fullStoryPrompt, chunkStoryPrompt}
+module.exports = {
+    wordDefinitionPromptConstruct, wordFamilyGenerationPromptConstruct, 
+    fullStoryPrompt, chunkStoryPrompt,
+    wordFamilySystemMsg, wordDefinitionSystemMsg,
+    chunkStorySystemMsg, fullStorySystemMsg
+}

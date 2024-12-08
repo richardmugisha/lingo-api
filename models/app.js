@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
 const AppSchema = new mongoose.Schema({
-    timePerCard: { type: [Number], required: [true, 'how long did the openai process take?']},
-    max_wishes: { type: Number, default: 5 },
+    max_wishes: { type: Number, default: 1 },
     new_words_to_add: {
         type: Map,
         of: [

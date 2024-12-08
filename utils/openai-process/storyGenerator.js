@@ -1,12 +1,14 @@
 
 const openaiRequest = require('./openaiRequest')
 
-const {fullStoryPrompt, chunkStoryPrompt} = require('../openaiHelper')
+const {fullStoryPrompt, chunkStoryPrompt,
+        fullStorySystemMsg, chunkStorySystemMsg
+} = require('../openaiHelper')
 
 const fullStoryGen = async (title, summary, words) => {
     try {
         const prompt = fullStoryPrompt(title, summary, words)
-        const story = await openaiRequest("gpt-4o", prompt)
+        const story = await openaiRequest("gpt-4o", fullStorySystemMsg, prompt)
         console.log(story)
         return JSON.parse(story)
     } catch (error) {
@@ -17,7 +19,7 @@ const fullStoryGen = async (title, summary, words) => {
 const aiCoEditor = async (title, summary, words, currentStory) => {
     try {
         const prompt = chunkStoryPrompt(title, summary, words, currentStory);
-        const halfStoryObj = await openaiRequest("gpt-4o", prompt)
+        const halfStoryObj = await openaiRequest("gpt-4o", chunkStoryPrompt, prompt)
         console.log(halfStoryObj)
         return JSON.parse(halfStoryObj)
     } catch (error) {

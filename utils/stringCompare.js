@@ -1,23 +1,33 @@
-function findClosestStringByLength(inputString, stringList) {
-    // console.log('....string comparison', inputString, stringList)
+function findMostLikelyWord(inputWord, outputWords) {
     try {
-        const initialClosest = stringList[0]
-        const initialDist = Math.abs(inputString.length - initialClosest.word.length)
+        const inputExampleSplitWordsList = inputWord.example.split(' ')
 
-        const [overallDist, overallClosest] = stringList.reduce(([oldDist, oldClosest], currWordObj) => {
-            const newDist = Math.abs(currWordObj.word.length - inputString.length)
-            return newDist < oldDist ? [newDist, currWordObj] : [oldDist, oldClosest]
-            }, [initialDist, initialClosest]
+        const listOfOutputWordExampleAgainstInputWordExampleComparisons = outputWords.map(
+            outputWord => ({
+                outputWord,
+                similarityCount: findSimilarityInExamples(inputExampleSplitWordsList, outputWord.example)
+            })
         )
-        // console.log('....string comparison done', inputString, overallClosest.word)
+
+        const orderedComparisonResults = listOfOutputWordExampleAgainstInputWordExampleComparisons.sort((a, b) => a.similarityCount - b.similarityCount)
+
+        const mostSimilarWord = orderedComparisonResults[orderedComparisonResults.length - 1]
+
+        return mostSimilarWord.outputWord
+
         return overallClosest
     } catch (error) {
-        console.log(error)
-        return stringList[0]
+        throw error
     }
     
 }
 
+const findSimilarityInExamples = (inputExampleSplitWordsList, outputWordExample) => {
+    const similarWordsList = inputExampleSplitWordsList.filter(word => outputWordExample?.includes(word))
+    const similarityCount = similarWordsList.length / inputExampleSplitWordsList.length
+    return similarityCount
+}
+
 module.exports = {
-    closestStringByLength: findClosestStringByLength
+    matchingInputWordToProbableOuput: findMostLikelyWord
 }

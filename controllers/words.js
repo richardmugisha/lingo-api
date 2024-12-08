@@ -4,7 +4,7 @@ const { createNewDeck } = require('./deck')
 const wordDefinition = require('../utils/openai-process/wordDefinition')
 const Deck = require('../models/deck')
 
-const { closestStringByLength } = require('../utils/stringCompare')
+const { matchingInputWordToProbableOuput } = require('../utils/stringCompare')
 
 
 const getWords = async (req, res) => {
@@ -81,7 +81,7 @@ const wordProcessing = async (app) => {
             try {
                 const deckNewWords = wordObj.words.map((inputWordObj, i) => {
                     const createdWords = savedWords[range[0] + i];
-                    return closestStringByLength(inputWordObj.word, createdWords);
+                    return matchingInputWordToProbableOuput(inputWordObj, createdWords);
                 });
         
                 // Use $push with $each to add the new words

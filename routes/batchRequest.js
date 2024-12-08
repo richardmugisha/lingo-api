@@ -26,7 +26,10 @@ const batchRequest = async (req, res) => {
             }
             
             if (route === 'toWish') {
-                const app = await AppMetaData.findOne({});
+                let app = await AppMetaData.findOne({});
+                if (!app) {
+                    app = new AppMetaData({});
+                }
                 const results = await Promise.all(body.map(async wordBody => await addToWishList({...wordBody, deckId: (wordBody.deckName && !wordBody.deckId && deckAcquiredIds[wordBody.deckName]) ?  deckAcquiredIds[wordBody.deckName]: wordBody.deckId}, app)));
                 successRequests.toWish = !results.some(res => res.msg === 'error');  // true if none is error
                 const appLangsToProcess = Array.from(app.new_words_to_add.entries())

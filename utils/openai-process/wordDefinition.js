@@ -1,6 +1,8 @@
 require('dotenv').config()
 
-const {promptMaker, initial} = require('../openaiHelper')
+const {wordDefinitionPromptConstruct, wordFamilyGenerationPromptConstruct,
+        wordFamilySystemMsg, wordDefinitionSystemMsg,
+} = require('../openaiHelper')
 
 const openaiRequest = require('./openaiRequest')
 
@@ -11,10 +13,10 @@ const wordDefiner = async (words, regularOrTemporaryDeck) => {
             let related_words = []
             Object.values(wordObject).map(expressions => { related_words = [...related_words, ...(expressions.map(obj => obj.word).filter(a => a))] })
             for (const [k, v] of Object.entries(wordObject)) {if (!v.length) delete wordObject[k]}
-            const prompt = promptMaker(JSON.stringify(wordObject), regularOrTemporaryDeck)
-            const openaiRes = await openaiRequest("gpt-3.5-turbo-1106", prompt)
+            const prompt = wordDefinitionPromptConstruct(JSON.stringify(wordObject))
+            const openaiRes = await openaiRequest("gpt-3.5-turbo", wordDefinitionSystemMsg, prompt)
             const { definitions } = JSON.parse(openaiRes)
-            console.log('--------- word definer result: \n', definitions.map(obj => ({...obj, 'related words': related_words } )))
+            // console.log('--------- word definer result: \n', definitions.map(obj => ({...obj, 'related words': related_words } )))
             return definitions.map(obj => ({...obj, 'related words': related_words } ))
         }
         for (let i = 0; i < 3; i++) {
@@ -35,8 +37,8 @@ const wordDefiner = async (words, regularOrTemporaryDeck) => {
 
 const wordFamilyGenerator = async (words) => {
     try {
-        const prompt = initial(words)
-        const openaiRes = await openaiRequest("gpt-4o", prompt)
+        const prompt = wordFamilyGenerationPromptConstruct(words)
+        const openaiRes = await openaiRequest("gpt-4o", wordFamilySystemMsg, prompt)
         console.log(openaiRes)
         return JSON.parse(openaiRes)
     }

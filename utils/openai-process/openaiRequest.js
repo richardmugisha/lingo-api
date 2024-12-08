@@ -4,23 +4,16 @@ const OpenAI = require('openai')
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY}); 
 
-const openaiRequest = async (MODEL, prompt) => {
-    console.log('----------inside openai request', prompt)
+const openaiRequest = async (MODEL, systemMsg, prompt) => {
     try {
         const chatCompletion = await openai.chat.completions.create(
-            MODEL === 'gpt-4o' ?
-            {
-                model: MODEL,
-                response_format: {"type": "json_object"},
-                messages: [
-                    { role: "user", content: prompt}
-                ]
-            } :
             {
                 model: MODEL,
                 messages: [
+                    { role: "system", content: systemMsg},
                     { role: "user", content: prompt}
-                ]
+                ],
+                ...(MODEL === 'gpt-4o' && { response_format: { type: "json_object" } })
             }
     )
 
