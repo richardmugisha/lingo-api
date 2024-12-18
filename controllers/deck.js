@@ -56,7 +56,7 @@ const getDeck = async (req, res) => {
     }
 }
 const retrieveDeckInfo = async (deckId, userId) => {
-    console.log('deckId', deckId)
+    // console.log('deckId', deckId)
     try {
         let deck = (await Deck.findById(deckId));
         if (!deck) throw new Error('deck does not exist!')
@@ -78,12 +78,12 @@ const retrieveDeckInfo = async (deckId, userId) => {
         const learningWords = deck.words.filter( word => learningDeck.words?.some(wordId => wordId?.equals(word._id)) )
         const learningWordMasteries = wordMasteries || await WordMastery.find({'wordId': {$in: learningDeck.words } })
 
-        console.log(learningWords?.length, learningWordMasteries?.length, wordMasteries, await WordMastery.find({'wordId': {$in: learningDeck.words } }), '....end')
+        // console.log(learningWords?.length, learningWordMasteries?.length, wordMasteries, await WordMastery.find({'wordId': {$in: learningDeck.words } }), '....end')
         deck.learning = {
             ...learningDeck,
             words: learningWords?.map((word, i) => ({...word.toObject(), level: learningWordMasteries[i] }) )
         }
-        console.log(deck.learning)
+        // console.log(deck.learning)
         return deck
     } catch (error) {
         console.log(error, '---------------85')

@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.4",
     "mongoose-unique-validator": "^5.0.1",
-    "openai": "^4.52.2"
+    "openai": "^4.52.2",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
