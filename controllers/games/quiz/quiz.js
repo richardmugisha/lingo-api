@@ -1,6 +1,7 @@
 
 const { getWebSocketServer } = require("../../../websocket")
-
+const { createStoryHandler } = require("../../deck")
+ 
 const avatars = [
     "https://res.cloudinary.com/dtkxmg1yk/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1733702185/Flashcards/avatars/brandon-zacharias-ITo4f_z3wNM-unsplash_dkbftg.jpg",
     "https://res.cloudinary.com/dtkxmg1yk/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1733702184/Flashcards/avatars/oguz-yagiz-kara-uTlMt9o7SHE-unsplash_syoyny.jpg",
@@ -54,7 +55,7 @@ const wss = getWebSocketServer()
 wss.on("connection", (ws) => {
     console.log('Client connected via web socket');
 
-    ws.on("message", (message) => {
+    ws.on("message", async(message) => {
         const response = JSON.parse(message)
         const { method, payload } = response
         console.log("........... method: ", method)
@@ -152,6 +153,77 @@ wss.on("connection", (ws) => {
             gameBroadcast(gameToJoin, "playing-update", {players: playersUpdate})
 
             Object.values(players).forEach(player => { player.played = false })
+        }
+
+        else if (method === "title-and-summary") {
+            console.log("....coming", payload)
+            const {gameID, playerID, storyGameUtils, players} = payload
+            const gameToJoin = games[gameID]
+            if (!gameToJoin) return ws.emit(JSON.stringify({method:"play", payload: { status: 404, message: 'Game not found' }}))
+            // console.log("game utils: ", storyGameUtils)
+            gameBroadcast(gameToJoin, "waiting-room-update", {storyGameUtils, players})
+        }
+
+        else if (method === "add-new-sentence") {
+            const { gameID, playerID, storyGameUtils } = payload;
+            const gameToJoin = games[gameID]
+            if (!gameToJoin) return ws.send(JSON.stringify({method:"playing-update", payload: { status: 404, message: 'Game not found' }}))
+            
+            if (!gameToJoin.currSentences) gameToJoin.currSentences = [];
+            gameToJoin.currSentences.push(storyGameUtils.currSentence)
+            const player = players[playerID]
+            player.addedNewSentence = true
+            const playersUpdate = gameToJoin.players.map( playerID => players[playerID] )
+            const allPlayed = playersUpdate.every(player => player.addedNewSentence === true)
+            allPlayed && console.log('all wrote')
+            if (!allPlayed) return
+
+            gameBroadcast(gameToJoin, "all-players-wrote", {currSentences: gameToJoin.currSentences})
+
+            Object.values(players).forEach(player => { player.addedNewSentence = false })
+        }
+        
+        else if (method === "voting-best-sentence") {
+            const { gameID, playerID, bestSentence } = payload;
+            const gameToJoin = games[gameID]
+            if (!gameToJoin) return ws.send(JSON.stringify({method:"playing-update", payload: { status: 404, message: 'Game not found' }}))
+            
+            const player = players[playerID]
+            player.voted = true
+
+            if (!gameToJoin.votedSentences) gameToJoin.votedSentences = {}
+            const previousVote = gameToJoin.votedSentences[bestSentence]
+            gameToJoin.votedSentences[bestSentence] = previousVote ? previousVote + 1 : 1
+
+            const playersUpdate = gameToJoin.players.map( playerID => players[playerID] )
+            const allPlayed = playersUpdate.every(player => player.voted === true)
+            allPlayed && console.log('all voted')
+            if (!allPlayed) return
+
+            const highestVote = Object.entries(gameToJoin.votedSentences).sort((a, b) => b[1] - a[1])[0]
+
+            gameBroadcast(gameToJoin, "voted-sentence", {votedSentence: gameToJoin.currSentences[highestVote[0]]})
+
+            Object.values(players).forEach(player => { player.voted = false })
+            delete gameToJoin.currSentences
+            delete gameToJoin.votedSentences
+        }
+        else if (method === "switch-activity") {
+            const { gameID, playerID, activity } = payload;
+            console.log("activity: ", activity, playerID)
+            const gameToJoin = games[gameID]
+            if (!gameToJoin) return ws.send(JSON.stringify({method:"playing-update", payload: { status: 404, message: 'Game not found' }}))
+            
+            if (activity === "uploading") {
+                const { title, summary, story, words, leadAuthor, coAuthors} = payload;
+                const createdStory = await createStoryHandler(null, { title, summary, story, leadAuthor, coAuthors, words: words || []})
+                console.log(createdStory)
+                return gameBroadcast(gameToJoin, "switch-activity", {activity: "", story: createdStory})
+            }
+            gameBroadcast(gameToJoin, "switch-activity", {activity})
+        }
+        else if (method === "disconnect") {
+            // !Todo  Handling this later. removing the player when disconnected
         }
         
     })

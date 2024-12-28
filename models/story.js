@@ -2,15 +2,19 @@
 const mongoose = require('mongoose')
 
 const StorySchema = mongoose.Schema({
-    creator: {
+    leadAuthor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false
     },
+    coAuthors: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    }],
     deck: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Deck',
-        required: [true, 'must provide deck name']
+        ref: 'Deck' 
     },
     story: [
         {

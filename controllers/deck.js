@@ -129,31 +129,44 @@ const deleteDecks = async (req, res) => {
     }
 };
 
-const createStory = async(req, res) => {
-    const { deckId } = req.params;
-    let {userId, story, title, words, aiAssistance, summary} = req.body;
+const createStory = async (req, res) => {
+    try {
+        const { deckId } = req.params;
+        const story = createStoryHandler(deckId, req.body)
+        res.status(200).json({story})
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+const createStoryHandler = async(deckId, body) => {
+    let {userId, leadAuthor, coAuthors, story, title, words, aiAssistance, summary} = body;
     console.log(userId, story, title, words, aiAssistance, summary, '...creating story')
     try {
         if (aiAssistance === 'Ai co-editor') {
             const genStory = await aiCoEditor(title, summary, words, story);
             console.log(genStory)
-            return res.json({story: genStory})
+            return genStory
         }
         else if (aiAssistance === 'Ai for you') {
             const genStory = await fullStoryGen(title, summary, words)
             console.log(genStory);
             ({title, story} = genStory)
         }
-        const storyTocreate = {story, title, words, deck: deckId}
-        if (userId) storyTocreate.creator = userId
+        const storyTocreate = {story, title, words}
+        if (userId) storyTocreate.leadAuthor = userId;
+        if (leadAuthor) storyTocreate.leadAuthor = leadAuthor;
+        if (coAuthors?.length) storyTocreate.coAuthors = coAuthors;
+        if (deckId) storyTocreate.deck = deckId
         console.log(deckId, userId, story)
     
         const createdStory = await Story.create(storyTocreate)
-        console.log(createdStory)
-        res.status(200).json({story: createdStory})
+        // console.log(createdStory)
+        return createdStory
     } catch (error) {
         console.log(error.message)
-        res.status(500).json({ msg: error.message });
+        throw error
     }
 }
 
@@ -161,7 +174,7 @@ const getStories = async(req, res) => {
     const { deckId } = req.params;
     try {
         const stories = await Story.find({ deck: deckId })
-        console.log(stories)
+        // console.log(stories)
         res.status(200).json({ stories })
 
     } catch (error) {
@@ -177,5 +190,6 @@ module.exports = {
     updateMastery,
     deleteDecks,
     createStory,
+    createStoryHandler,
     getStories,
 };
