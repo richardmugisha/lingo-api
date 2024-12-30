@@ -19,7 +19,7 @@ const server = http.createServer(app)
 
 // WebSocket setup
 initializeWebSocketServer(server)
-require("./controllers/games/quiz/quiz")
+require("./controllers/games/game")
 
 // middleware 
 app.use(cors())
