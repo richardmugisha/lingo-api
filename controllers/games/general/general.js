@@ -2,10 +2,10 @@
 const { gameBroadcast } = require("../utils/utils")
 
 const createGame = ({Game, Player, games, players, ws, connections, payload}) => {
-    const newGame = new Game()
+    const { playerID, playerName, avatar, typeOfGame } = payload
+    const newGame = new Game(typeOfGame)
     console.log(newGame)
-    const { playerID, playerName, avatar } = payload
-    const creatorPlayer = new Player({ playerID, playerName })
+    const creatorPlayer = new Player({ playerID, playerName, typeOfGame })
     newGame.addPlayer({playerID: creatorPlayer.playerID, isCreator: true})
     games[newGame.gameID] = newGame
 
@@ -32,7 +32,7 @@ const joinGame = ({ games, Player, players, ws, connections, payload}) => {
     players[playerID] = newPlayer
     
     connections[connectionID] = ws
-    ws.send(JSON.stringify({ method: "join", payload: { playerID: newPlayer.playerID, gameID: gameToJoin.gameID, players: gameToJoin.players} }))
+    ws.send(JSON.stringify({ method: "join", payload: { playerID: newPlayer.playerID, gameID: gameToJoin.gameID, players: gameToJoin.players, typeOfGame: gameToJoin.typeOfGame} }))
     gameBroadcast(gameToJoin, "waiting-room-update", connections, {players: gameToJoin.players.map(playerID => players[playerID]), gameID: gameToJoin.gameID, playerID})
         
 }

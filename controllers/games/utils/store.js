@@ -23,8 +23,9 @@ class Player {
 class Game {
     static ID = 0
     static MAX_PLAYER_COUNT = 5
-    constructor () {
+    constructor (typeOfGame) {
         this.gameID = generateId(Game.ID++)
+        this.typeOfGame = typeOfGame
         this.creator = ""
         this.players = []
         this.player_count = this.players.length
