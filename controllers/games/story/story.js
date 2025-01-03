@@ -63,7 +63,12 @@ const switchActivity = async ({ games, ws, payload, connections}) => {
     
     if (activity === "uploading") {
         const { title, summary, story, words, leadAuthor, coAuthors} = payload;
-        const createdStory = await createStoryHandler(null, { title, summary, story, leadAuthor, coAuthors, words: words || []})
+        const createdStory = await createStoryHandler(
+            null, 
+            { title, summary, story, leadAuthor: gameToJoin.creator, 
+            coAuthors: gameToJoin.players.filter(player => player !== gameToJoin.creator), words: words || []
+            }
+        )
         console.log(createdStory)
         return gameBroadcast(gameToJoin, "switch-activity", connections, {activity: "", story: createdStory})
     }

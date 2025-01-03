@@ -132,7 +132,7 @@ const deleteDecks = async (req, res) => {
 const createStory = async (req, res) => {
     try {
         const { deckId } = req.params;
-        const story = createStoryHandler(deckId, req.body)
+        const story = await createStoryHandler(deckId, req.body)
         res.status(200).json({story})
     } catch (error) {
         console.log(error.message)
