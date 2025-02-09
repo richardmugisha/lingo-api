@@ -88,11 +88,77 @@ You are language teacher for non-natives.
 1. You should try to use a simple language (instead of unnecessary sophistication) every time it is applicable
 2. Try to use well-know words/expression and don't invent or derive any non-existent expressions.
 `
- 
+
+const blanksPrompt = (paragraphs) => `
+Take these paragraphs of an article and return me a list of words for my Language learners to 
+practice. There are 3 classes of vocabulary learners (A: beginners, B: intermediate, C: advanced). So, now I want you to
+focus on advanced students. That means you only extract words that would be relevant for advanced students.
+I want at most 15 selected words. And this is the expected output format.
+
+{ words: [
+        {
+            word: the exact extracted word/expression (I insist on no mistake or oversight),
+            fools: [ a list of 3 random words that can grammatically subtitute the extracted word, but would change the meaning of the sentence entirely]
+        },
+            
+        {
+            word: the exact extracted word/expression (I insist on no mistake or oversight),
+            fools: [ a list of 3 random words that can grammatically subtitute the extracted word, but would change the meaning of the sentence entirely]
+        },
+        ...
+    ]
+}
+
+Rules: 
+1. The word you pluck has to be in the paragraph whose index you provide,
+2. fools have to be incorrect, but close enough for a probability of the student mistaking one of them for the correct word
+3. Output must strictly be a valid json
+input: 
+${paragraphs}
+`
+
+const quizPrompt = (paragraphs, title) => `
+Take these paragraphs of an article and return me a quiz as a list. The quiz is for me to evaluate the comprehension of the article by my students.
+The quiz will contain a list of objects containing one question and 4 answer options, with only 1 correct answer.
+The format of the quiz is as follows:
+{
+    individual: {
+        paragraph_1: {
+            question: The question on that paragraph, but follows the theme of the article
+            answer: The most accurate answer to the question
+            false_answers: [
+                false answer 1, false answer 2, false answer 3
+            ]
+        },
+        paragraph_2: ...,
+        ...
+    },
+    summary: {
+        question: a question on the article in general to guage the understanding of the whole article
+        answer: The most accurate answer to the question
+        false_answers: [
+                false answer 1, false answer 2, false answer 3
+        ]
+    }
+}
+
+Rules:
+1. Make sure all paragraphs have corresponding questions
+2. false_answers should be wrong but follow the theme of the article
+3. The output must strictly be a valid json
+
+Input:
+  The title of the article is : ${title}
+  The paragraphs are : 
+  [
+    ${paragraphs}
+  ]
+`
 
 module.exports = {
     wordDefinitionPromptConstruct, wordFamilyGenerationPromptConstruct, 
     fullStoryPrompt, chunkStoryPrompt,
     wordFamilySystemMsg, wordDefinitionSystemMsg,
-    chunkStorySystemMsg, fullStorySystemMsg
+    chunkStorySystemMsg, fullStorySystemMsg,
+    blanksPrompt, quizPrompt
 }

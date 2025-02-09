@@ -14,6 +14,8 @@ const { authRoutes, verifyToken} = require('./routes/auth');
 const openaiTest = require('./routes/openaiTest')
 const appMetaData = require('./routes/appMetaData')
 
+const extension = require('./routes/extension')
+
 const app = express();
 const server = http.createServer(app)
 
@@ -37,6 +39,8 @@ app.use(express.json());
 app.use('/api/v1/protected-route', verifyToken, (req, res) => {
     res.json({ message: 'Access granted to protected route' });
 });
+
+app.use('/api/v1/extension', extension)
 
 app.use('/api/v1/cards/test/openaiApi', openaiTest);
 app.use('/api/v1/auth', authRoutes);
