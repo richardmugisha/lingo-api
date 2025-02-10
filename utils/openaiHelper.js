@@ -152,9 +152,7 @@ Rules:
 Input:
   The title of the article is : ${title}
   The paragraphs are : 
-  [
-    ${paragraphs}
-  ]
+    ${paragraphs.map((paragraph, index) => `paragraph_${index}: ${paragraph}\n`) }
 `
 
 module.exports = {
