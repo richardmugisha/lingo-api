@@ -124,7 +124,7 @@ The format of the quiz is as follows:
 {
     individual: {
         paragraph_1: {
-            question: The question on that paragraph, but follows the theme of the article
+            question: The question on that paragraph, but follows the theme of the article (the context is only the title and the previous paragraphs, but NOT the coming paragraphs)
             answer: The most accurate answer to the question
             false_answers: [
                 false answer 1, false answer 2, false answer 3
@@ -146,6 +146,8 @@ Rules:
 1. Make sure all paragraphs have corresponding questions
 2. false_answers should be wrong but follow the theme of the article
 3. The output must strictly be a valid json
+4. Most importantly, with all insistance, a paragraph question should draw context from only the title and previous paragraphs. 
+    We don't want the answer to be in the paragraphs, the user hasn't read yet. That would be CATASTROPHIC!!!!!!
 
 Input:
   The title of the article is : ${title}
