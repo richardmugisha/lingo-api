@@ -17,8 +17,15 @@ const wordDefiner = async (words, regularOrTemporaryDeck) => {
             const openaiRes = await openaiRequest("gpt-3.5-turbo", wordDefinitionSystemMsg, prompt)
             const { definitions } = JSON.parse(openaiRes)
             // console.log('--------- word definer result: \n', definitions.map(obj => ({...obj, 'related words': related_words } )))
-            return definitions.map(obj => ({...obj, 'related words': related_words } ))
+            return definitions.map(defObj => {
+                const blankWords = defObj["blanked example"].split(" ");
+                const acceptableNumOfBlanks = 1
+                const oddBlanks = blankWords.filter(bl => !defObj["example"].includes(bl)).length > acceptableNumOfBlanks
+                if (oddBlanks) throw new Error("Some word have odd blanked-examples that don't match the example!")
+                return {...defObj, 'related words': related_words}
+            })
         }
+
         for (let i = 0; i < 3; i++) {
             try { return await reusable()} 
             catch (error) {
@@ -26,7 +33,7 @@ const wordDefiner = async (words, regularOrTemporaryDeck) => {
                 return await reusable()
             }
         }
-        throw new Error('Kept trying to run openai process by the response kept beging rejected by JSON parse')
+        throw new Error('Kept trying to run openai process but the response kept being rejected by JSON parse')
     }
     const promises = words.map((wordObject, index) => parent(wordObject, regularOrTemporaryDeck).then(response => ({ response, index })) )
     const results = await Promise.all(promises);

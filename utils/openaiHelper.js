@@ -7,19 +7,19 @@ const wordDefinitionPromptConstruct = (wordObject) =>
                             definitions: [
                                 {
                                     type: "verb",
-                                    word: "the verb",
-                                    "example": "The example given to you in the inputs",
-                                    "blanked example": "Take the example the {word, example} input, and replace the word with blanks like _____",
-                                    "language style": "The style used in this example: pick from (formal, neutral, informal, jargon, slang)",
-                                    "meaning": "The meaning strictly in the context of the example given to you",
-                                    "synonym": "A synonym",
-                                    "antonym": "An antonym"
+                                    word: the verb,
+                                    "example": The example given to you in the inputs,
+                                    "blanked example": "Take the example you just created, and replace all references of the word with blanks like _____",
+                                    "language style": "The style used in the example: pick from (formal, neutral, informal, jargon, slang)",
+                                    "meaning": The meaning strictly in the context of the example,
+                                    "synonym": A synonym of the word/expression in the context of the example,
+                                    "antonym": An antonym of he word/expression in the context of teh example
                                 }, 
                                 {...}, 
                                 {...}
                             ]
                         }
-    1. Use the examples given to you in the inputs as they help the user recall which movie, article, or book they read the word/expression in.
+    1. Use the examples given to you (where applicable) in the inputs as they help the user recall which movie, article, or book they read the word/expression in.
     2. Strictly respect the names of the object keys I gave you, and all the values are required per my db schema (!!! That means all the fields should be filled).
     3. Ensure the output is a valid json that can be JSON.parsed without errors. Do not include any additional text or comments.
     4. Input : ${wordObject}`
