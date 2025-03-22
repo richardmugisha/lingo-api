@@ -2,12 +2,15 @@
 const { gameBroadcast } = require("../utils/utils")
 
 const createGame = ({Game, Player, games, players, ws, connections, payload}) => {
-    const { playerID, playerName, avatar, typeOfGame } = payload
-    const newGame = new Game(typeOfGame)
-    console.log(newGame)
+    if (!payload) return
+    const { playerID, playerName, avatar, typeOfGame, words } = payload
+    const alreadyExisingGame = Object.values(games).find(game => game.creator === playerID)
+    if (alreadyExisingGame) return joinGame({...payload, gameID: alreadyExisingGame.gameID})
+    const newGame = new Game(typeOfGame, words)
     const creatorPlayer = new Player({ playerID, playerName, typeOfGame })
     newGame.addPlayer({playerID: creatorPlayer.playerID, isCreator: true})
     games[newGame.gameID] = newGame
+    console.log(newGame)
 
     players[playerID] = creatorPlayer
     connections[creatorPlayer.playerID] = ws
@@ -15,6 +18,7 @@ const createGame = ({Game, Player, games, players, ws, connections, payload}) =>
 }
 
 const joinGame = ({ games, Player, players, ws, connections, payload}) => {
+    if (!payload) return
     const { gameID, playerID , playerName, mode, avatar} = payload
     let gameToJoin;
     if (mode === "random") {
@@ -26,14 +30,17 @@ const joinGame = ({ games, Player, players, ws, connections, payload}) => {
         gameToJoin = games[gameID]
     }
     if (!gameToJoin) return ws.send(JSON.stringify({method:"join", payload: { status: 404, message: 'Game not found' }}))
-    const newPlayer = new Player({playerID, playerName})
-    gameToJoin.addPlayer({playerID : newPlayer.playerID, isCreator: false } )
-    const connectionID = newPlayer.playerID
-    players[playerID] = newPlayer
+    if (!gameToJoin.players.find(player_id => player_id === playerID)) {
+        const newPlayer = new Player({playerID, playerName})
+        gameToJoin.addPlayer({playerID : newPlayer.playerID, isCreator: false } )
+        players[playerID] = newPlayer
+    }
+
+    const connectionID = playerID
     
     connections[connectionID] = ws
-    ws.send(JSON.stringify({ method: "join", payload: { playerID: newPlayer.playerID, gameID: gameToJoin.gameID, players: gameToJoin.players, typeOfGame: gameToJoin.typeOfGame} }))
-    gameBroadcast(gameToJoin, "waiting-room-update", connections, {players: gameToJoin.players.map(playerID => players[playerID]), gameID: gameToJoin.gameID, playerID})
+    ws.send(JSON.stringify({ method: "join", payload: { playerID, gameID: gameToJoin.gameID, words: gameToJoin.words, players: gameToJoin.players, typeOfGame: gameToJoin.typeOfGame} }))
+    gameBroadcast(gameToJoin, "waiting-room-update", connections, {players: gameToJoin.players.map(playerID => players[playerID]), gameID: gameToJoin.gameID, playerID })
         
 }
 

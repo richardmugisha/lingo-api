@@ -23,11 +23,12 @@ class Player {
 class Game {
     static ID = 0
     static MAX_PLAYER_COUNT = 5
-    constructor (typeOfGame) {
+    constructor (typeOfGame, words) {
         this.gameID = generateId(Game.ID++)
         this.typeOfGame = typeOfGame
         this.creator = ""
         this.players = []
+        this.words = words
         this.player_count = this.players.length
         this.state = {
             status: "waiting"
