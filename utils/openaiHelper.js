@@ -166,8 +166,8 @@ So:
     -> Use both this title and the summary to guide you in the script generation
 3. Each item of the script should indicate whether it's actor line or a scene cue or indication given by a narrator (which means this won't be spoken by an actor)
 4.  Use these player names. Players may sometimes reference each other, so use these names (once in a while you can be cheezy and nickname them using their actual names). The names are also used as keys (lowercase) for each actor line to know who's speaking the line
-    Players: ${players.map(player => player.playerName)}
-    Key players: ${players.filter(player => player.isKeyPlayer).map(player => player.playerName)}
+    Players: ${players.map(player => player.name)}
+    Key players: ${players.filter(player => player.isMain).map(player => player.name)}
     -> Only key players will have lines that contain the words (because is practice is basically tailored towards them since their are learning. The rest are just supporting).
 5.  Since this is for the students to practice, the words they are practicing should be not be used anywhere (title, summary).
     When it comes to the script, for each line that contains one of the words, provide a rephrased fied, where the line is rephrased around the area where the word is used
@@ -196,7 +196,7 @@ So:
             type: line,
             actor: mugisha,
             line: Come on Rod. Be nice. He's had his own share of misery.
-            repharased: Come on Rod. Be nice. He's not had it easy lately either.
+            rephrased: Come on Rod. Be nice. He's not had it easy lately either.
             // notice how there is rephrased field because this is a key player / student
         }
     ]

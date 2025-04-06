@@ -2,6 +2,7 @@ import Deck from '../../models/deck.js';
 import getWordModel from '../../models/word/word.js'
 import Story from '../../models/story.js';
 import { fullStoryGen, aiCoEditor } from '../../utils/openai-process/storyGenerator.js'
+import scriptGen from "../../utils/openai-process/actingScriptGenerator.js"
 
 import { Learning, WordMastery, newLearning, wordMasteryUpdate, patchLearningDeck, pushNewDeck } 
 from '../../models/learning/learning.js'
@@ -172,6 +173,17 @@ const createStoryHandler = async(deckId, body) => {
     }
 }
 
+const createScript = async (req, res) => {
+    try {
+        const { title, summary, words, players } = req.body
+        console.log(req.body)
+        const script = await scriptGen(title, summary, words, players)
+        res.status(201).json({script})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 const getStories = async(req, res) => {
     const { deckId } = req.params;
     try {
@@ -193,5 +205,6 @@ export {
     deleteDecks,
     createStory,
     createStoryHandler,
+    createScript,
     getStories,
 };

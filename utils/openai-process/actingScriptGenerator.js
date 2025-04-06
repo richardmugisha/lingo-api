@@ -8,8 +8,8 @@ import { fullScriptPrompt,
 const fullScriptGen = async (title, summary, words, players) => {
     try {
         const prompt = fullScriptPrompt(title, summary, words, players)
-        //console.log(fullScriptSystemMsg, "full")
-        //console.log(prompt)
+        console.log(fullScriptSystemMsg, "full")
+        console.log(prompt)
         const script = await openaiRequest("gpt-4o", fullScriptSystemMsg, prompt)
         //console.log(script)
         return JSON.parse(script)
@@ -20,6 +20,4 @@ const fullScriptGen = async (title, summary, words, players) => {
 
 
 
-export {
-    fullScriptGen,
-}
+export default fullScriptGen
