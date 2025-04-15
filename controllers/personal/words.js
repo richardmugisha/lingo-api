@@ -20,10 +20,6 @@ const getWords = async (req, res) => {
     }
 }
 
-const updateWordMastery = async (req, res) => {
-
-}
-
 const addWordToDeck = async (body) => {
     try {
         // ! Need to clearn these console.logs
@@ -70,16 +66,18 @@ const addToWishList = async (body, app) => {
 //if (app.new_words_to_add.length >= app.max_wishes) 
 const wordProcessing = async (app) => {
     try {
+        if (app.new_words_to_add?.length > 20) return console.log("T..........oo many words. max is 20")
         const wordsToProcess = app.new_words_to_add.reduce((acc, currWordObj) => acc.concat(currWordObj.words), [])
-        //console.log('...........................openai process')
+        console.log('...........................openai process', wordsToProcess.length)
         const {msg, words: processedWords} = await wordDefinition(wordsToProcess, 'regular deck')
+        console.log(processedWords.length, 'xxxxxxxxxxxxxxxxxxxxxxxx processed words')
         const savedWords = await dictionaryPopulating(msg, processedWords, app.language)
         let rangeStart = 0
         const ranges = app.new_words_to_add.map(curr => { const rangeEnd = rangeStart + curr.words.length; const newRange = [rangeStart, rangeEnd]; rangeStart = rangeEnd; return newRange})
-
         const eachDeck = async (wordObj, savedWords, range) => {
             try {
                 const deckNewWords = wordObj.words.map((inputWordObj, i) => {
+                    if (savedWords) console.log('range', range, savedWords)
                     const createdWords = savedWords[range[0] + i];
                     return matchingInputWordToProbableOuput(inputWordObj, createdWords);
                 });

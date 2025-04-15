@@ -49,7 +49,7 @@ const wordFamilyGenerationPromptConstruct = (words) =>
     3. Attention here!!!! One of the examples used must be the input example.
     3. For verbs. Don't add any conjugated forms: past tense or participle, -ing form...  
     4. A phrasal verb is base verb + a preposition like: up, out, for, in, of, against, into, through...
-    5. Input: ${words}`
+    5. Input: ${JSON.stringify(words)}`
 
 const fullStoryPrompt = (title, summary, words) => `
 Your task is to develop a story using this set of words: ${words}. Build a story such that it can be summarized like this : ${summary}. The output should be a valid javascript json with title, and story keys. The story key should be valid js list of objects with sentences and blanks. For each of the input words, provide a sentence containing the word, and the same sentence with the word blanked out. The output should be strictly a valid JavaScript object and it is going straight to my api and parse through JSON.parse automatically. So don't add anything that may hinder that., e.g., { title: ${title || 'generate a suitable title'}, story:[{sentence: 'I am the king of England', blanked: 'I am the ____ of England'}, {...}] }. 
@@ -157,17 +157,17 @@ Input:
 
 const fullScriptPrompt = (title, summary, words, players) => `
 I am creating an English learning platform, and this particular feature consists of vocabulary mastering using role playing,
-and your task is to generate a fun script to keep the learners engaged and excited to master the vocabulary
+and your task is to generate a fun and simple script (no unnecessarily complicated words) to keep the learners engaged and excited to master the vocabulary
 
 So:
-1. Using this list of words (${words}), create a script that contains, and it's the players' job to use these words inside.
+1. Using this list of words (${words}), create a script that contains one word in a line, and it's the players' job to use these words inside.
 2.  title:  ${title || "Generate a title for the story of the script"}
     summary: ${summary || "Generate a summary for the story of the script"}
     -> Use both this title and the summary to guide you in the script generation
 3. Each item of the script should indicate whether it's actor line or a scene cue or indication given by a narrator (which means this won't be spoken by an actor)
-4.  Use these player names. Players may sometimes reference each other, so use these names (once in a while you can be cheezy and nickname them using their actual names). The names are also used as keys (lowercase) for each actor line to know who's speaking the line
-    Players: ${players.map(player => player.name)}
-    Key players: ${players.filter(player => player.isMain).map(player => player.name)}
+4.  Use these player names. Players may sometimes reference each other, so use these names (once in a while you can be cheezy and nickname them using their actual names).
+    Key actors: ${players.filter(player => player.isMain).map(player => player.name.toLowerCase())}
+    Supporting characters: ${players.filter(player => !player.isMain).map(player => player.name.toLowerCase())}
     -> Only key players will have lines that contain the words (because is practice is basically tailored towards them since their are learning. The rest are just supporting).
 5.  Since this is for the students to practice, the words they are practicing should be not be used anywhere (title, summary).
     When it comes to the script, for each line that contains one of the words, provide a rephrased fied, where the line is rephrased around the area where the word is used
@@ -180,7 +180,7 @@ So:
     title: The title of the story,
     summary: a summary of the story,
     words: random, potential, misery
-    script: [
+    details: [
         {
             type: line, // or narration if it is a narration
             actor: jayce or null if it's a narration,
@@ -207,11 +207,41 @@ const fullScriptSystemMsg = `
  You are an amazing script writer for movies and cartoons. You write fun and engaging scripts for actors. And today, you are tasked to create a script for English learners to practice their vocabulary using role playing.
 `
 
+const deckGenerationPrompt = (fields) => `
+Generate a roadmap of topics to help english learners learn the most important words and expressions (idioms, proverbs, ..., verbs, adverbs) in different areas of life, industries, academic fields,...
+Basically, we are trying to engineer the most fluent, eloquent English-as-Second-Language James Bond, who has all necessary words and expressions at their finger tips.
+To clarify, you are generate a tree of decks/bookmarks/directories. The exact words and expressions on each topic are not priority for now.
+
+typical json output:
+
+{
+    "engineering": [ "aerospace engineering", "software engineering", ...],
+    "transport": {
+        "public transport": ["buses", "trains"],
+        "uber": [..., ..., ...]
+    },
+    ...
+}
+
+1. Don't limit yourself on how deep a branch can go, but also don't go to deep on not so relevant areas (although this seems subjective, try your best. You are the best shot I got)
+2. The output basically a json object. And you don't have to use the topics in this example
+${
+    fields &&
+    "3. The user provided a list of topic(s) they are interested in. That means they will be parent/root nodes in the place of engineering, transport, and tourism in the example I gave you. Then you can develop these fields and scaffold sub branches (only if N/A). The topic(s): " + fields
+}
+`
+const deckSystmMsg = `
+Imagine yourself like a curriculum/roadmap designer, only this time, you are planning a roadmap for english learner to learn all the necessary words/expressions they need to excell in life, career, and prosper.
+Think of this as roadmap of topics within topics within topics. Such that a user can exhaust a topic and be fluent about it (just vocabulary)
+`
+
+
 export {
     wordDefinitionPromptConstruct, wordFamilyGenerationPromptConstruct, 
     fullStoryPrompt, chunkStoryPrompt,
     wordFamilySystemMsg, wordDefinitionSystemMsg,
     chunkStorySystemMsg, fullStorySystemMsg,
     blanksPrompt, quizPrompt,
-    fullScriptPrompt, fullScriptSystemMsg
+    fullScriptPrompt, fullScriptSystemMsg,
+    deckGenerationPrompt, deckSystmMsg
 }

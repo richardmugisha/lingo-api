@@ -17,6 +17,7 @@ function findMostLikelyWord(inputWord, outputWords) {
 
         return overallClosest
     } catch (error) {
+        console.log(error)
         throw error
     }
     

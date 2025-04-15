@@ -10,6 +10,10 @@ import network from "./routes/network/index.js";
 import connectDB from "./db/connect.js";
 import cors from "cors"
 import dotenv from "dotenv"
+
+import path from "path";
+import { fileURLToPath } from "url";
+
 dotenv.config()
 
 import  { authRoutes, verifyToken} from './routes/personal/auth.js'
@@ -46,6 +50,8 @@ app.use('/api/v1/cards/app', appMetaData)
 app.use('/api/v1/batch-request', batchRequest)
 app.use('/api/v1/cards', cards, deck)
 app.use('/api/v1/words', words)
+
+// app.use('/api/v1/script/audio', express.static(path.join(process.cwd(), "public/audio")))
 
 const port = process.env.PORT || 3500;
 
