@@ -1,0 +1,602 @@
+import Topic from '../../models/topic.js';
+import getWordModel from '../../models/word/word.js'
+import Story from '../../models/story.js';
+import { fullStoryGen, aiCoEditor } from '../../utils/openai-process/storyGenerator.js'
+import scriptGen from "../../utils/openai-process/actingScriptGenerator.js"
+import generateAudioForScript from '../../utils/openai-process/generateAudio.js';
+import Script from '../../models/script.js';
+import generateTopics from '../../utils/openai-process/generateTopics.js';
+import generateWords from '../../utils/openai-process/generateWords.js';
+import createCascadingTopics from '../../utils/insertTopics.js';
+import { wordProcessing } from './words.js';
+
+import { Learning, WordMastery, newLearning, wordMasteryUpdate, patchLearningTopic, pushNewTopic } 
+from '../../models/learning/learning.js'
+import topic from '../../models/topic.js';
+
+const createNewTopic = async (id, name, userId, language, parent, isAiGenerated) => {
+    try {
+        let topic;
+        if (id) {
+            topic = await Topic.findById(id)
+        }
+        else {
+            topic = new Topic({
+                name,
+                creator: userId,
+                language,
+                parent,
+                isAiGenerated,
+                words: [],
+            });
+        }
+        return topic
+
+    } catch (error) {
+        console.error('Error creating or retrieving topic metadata:', error);
+    }
+    
+}
+
+const saveTopics = async (req, res) => {
+    try {
+        const { parent, language, creator, topics } = req.body
+        console.log( parent, language, creator, topics)
+        await createCascadingTopics(creator, language, topics, parent)
+        res.status(200).json({msg: "success"})
+        // console.log(topics)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getSuggestions = async(req, res) => {
+    const { path, topic, number, type, excluded } = req.query
+    console.log(path, topic, number)
+    try {
+        const { suggestions } = type === "words" ? await generateWords(path, topic, number, excluded) : await generateTopics(path, topic, number, excluded)
+        // console.log(suggestions)
+        res.status(200).json({suggestions})
+    } catch (error) {
+        console.log()
+    }
+}
+
+const getTopics = async(req, res) => {
+    const { user, creator, language, parent } = req.query;
+    try {
+        const filters = { parent }
+        if (creator) filters.creator = user;
+        if (language) filters.language = language;
+        const topics = await Topic.find(filters);
+        res.status(200).json({topics})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error);
+    }
+    
+}
+
+
+/*
+if (parent) {
+            console.log('parent: ', parent, user)
+            const words = (await retrieveTopicInfo(parent, user))?.words
+            console.log(words)
+            res.status(200).json({topics, words})
+        } else {
+            console.log(filters, creator)
+            try {
+                const existingLearning = (await Learning.findOne({ user }))?.toObject()
+                res.status(200).json({topics, userLearning: existingLearning || {}})
+            } catch (error) {
+                res.status(404).json({ message: "Error with fetching the learning plan for this user"})
+            }
+*/
+
+const getTopic = async (req, res) => {
+    const { id, userId } = req.query;
+    try {
+        const topic = await retrieveTopicInfo(id, userId)
+        return res.status(200).json( { topic })
+    } catch (error) {
+      console.log(error)
+        res.status(500).json( { msg: error })
+    }
+}
+
+const getLearning = async (req, res) => {
+    try {
+        const { user, topic, words } = req.query
+        const wordIdList = words.split(",")
+        const [ retrievedLearning, wordMasteries ] = await Promise.all([
+            Learning.findOne({ user, topic }),
+            WordMastery.find({ word: { $in: wordIdList}})
+        ])
+        if (!retrievedLearning) return res.status(404).json({ msg: "No learning plan found" })
+        const learning = retrievedLearning.toObject()
+        learning.words = wordMasteries.map(mastery => ({_id: mastery.word, level: mastery.level}))
+        console.log(learning)
+        res.json({learning})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json("Error retrieving learning plan")
+    }
+}
+
+const createLearning = async (req, res) => {
+    try {
+        const { user, topic, words } = req.body
+        await newLearning(topic, user, words)
+        res.json("success")
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json("Error creating learning plan")
+    }
+}
+
+const retrieveTopicInfo = async (id, userId) => {
+    try {
+        let topic = await Topic.findById(id);
+        if (!topic) {
+            throw new Error('Topic does not exist!');
+        }
+
+        topic = topic.toObject();
+
+        const WordModel = getWordModel(topic.language);
+
+        const [words, learning, wordMasteries] = await Promise.all([
+            WordModel.find({ _id: { $in: topic.words } }),
+            Learning.findOne({ user: userId }),
+            WordMastery.find({ wordId: { $in: topic.words } }),
+        ]);
+
+        console.log(words, learning, wordMasteries)
+        topic.words = words
+        if (learning && wordMasteries?.length) {
+            topic.learning = {
+                ...learning, words: words.map((word, i) => ({...word.toObject(), level: wordMasteries[i].level }))
+            }
+        } else {
+            // newLearning(id, userId, topic.words);
+        }
+
+        return topic;
+
+    } catch (error) {
+        console.error('Error retrieving topic information:', error);
+        throw error;
+    }
+}
+
+
+const updateMastery = async (req, res) => {
+    //console.log(req.query)
+    try {
+        const { topic: topicID, user } = req.query
+        const { wordsMasteriesList, topicLearnChunk } = req.body
+        console.log(req.query, topicLearnChunk._id)
+        const updatedMasteries = await wordMasteryUpdate(wordsMasteriesList)
+        const { updatedLearning, newWordMasteries } = await patchLearningTopic(user, topicLearnChunk)
+        if (newWordMasteries && updatedLearning && updatedMasteries ) {
+            // const topic = await retrieveTopicInfo(topicLearnChunk.topic, user)
+            return res.status(200).json({ msg: 'Mastery updated successfully, and user leveled up' })            
+        }
+        if (updatedMasteries && updatedLearning) {
+            // const topic = await retrieveTopicInfo(topicID, user)
+            return res.status(200).json({ msg: 'Mastery updated successfully' })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json( { msg: error })
+    }
+}
+
+const deleteTopics = async (req, res) => {
+    try {
+        //console.log('deleting................')
+        const topicIds = req.query.topicIds.split(',');
+        const deleteTopicResult = await Topic.deleteMany({ _id: { $in: topicIds } });
+        //console.log(`${deleteTopicResult.deletedCount} topics deleted successfully`);
+
+        res.status(200).json({
+            msg: `${deleteTopicResult.deletedCount} topic${deleteTopicResult.deletedCount && 's'} deleted successfully`
+        });
+    } catch (error) {
+        //console.log(error.message)
+        res.status(500).json({ msg: error.message });
+    }
+};
+
+const createStory = async (req, res) => {
+    try {
+        const { topicId } = req.params;
+        const story = await createStoryHandler(topicId, req.body)
+        res.status(200).json({story})
+    } catch (error) {
+        //console.log(error.message)
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+const createStoryHandler = async(topicId, body) => {
+    let {userId, leadAuthor, coAuthors, details, title, words, aiAssistance, summary} = body;
+    //console.log(userId, details, title, words, aiAssistance, summary, '...creating story')
+    try {
+        if (aiAssistance === 'Ai co-editor') {
+            const genStory = await aiCoEditor(title, summary, words, details);
+            //console.log(genStory)
+            return genStory
+        }
+        else if (aiAssistance === 'Ai for you') {
+            const genStory = await fullStoryGen(title, summary, words)
+            //console.log(genStory);
+            ({title, details} = genStory)
+        }
+        const storyTocreate = {details, title, words}
+        if (userId) storyTocreate.leadAuthor = userId;
+        if (leadAuthor) storyTocreate.leadAuthor = leadAuthor;
+        if (coAuthors?.length) storyTocreate.coAuthors = coAuthors;
+        if (topicId) storyTocreate.topic = topicId
+        //console.log(topicId, userId, details)
+    
+        const createdStory = await Story.create(storyTocreate)
+        // //console.log(createdStory)
+        return createdStory
+    } catch (error) {
+        //console.log(error.message)
+        throw error
+    }
+}
+
+const createScript = async (req, res) => {
+    try {
+        const topic = req.params.topicId
+        const { title, summary, words, players, writer, coWriters } = req.body
+        console.log(req.body)
+        const script = await scriptGen(title, summary, words, players)
+        Script.create({
+            writer, coWriters: coWriters || [], topic, words, title: script.title, summary: script.summary, details: script.details
+        })
+        res.status(201).json({script})
+        generateAudioForScript(script, players)
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getStories = async(req, res) => {
+    const { topicId } = req.params;
+    try {
+        const stories = await Story.find({ topic: topicId })
+        // //console.log(stories)
+        res.status(200).json({ stories })
+
+    } catch (error) {
+        //console.log(error.message)
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+const getScripts = async(req, res) => {
+    const { topicId } = req.params;
+    try {
+        const stories = await Script.find({ topic: topicId })
+        // //console.log(stories)
+        res.status(200).json({ stories })
+
+    } catch (error) {
+        //console.log(error.message)
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+export {
+    createNewTopic,
+    getTopics,
+    getLearning, createLearning,
+    updateMastery,
+    deleteTopics,
+    createStory,
+    createStoryHandler,
+    createScript,
+    getStories,
+    getScripts,
+    getSuggestions,
+    saveTopics
+};
+
+const bringSample = () => (
+    {
+        "life_skills": {
+          "communication": [
+            "public speaking",
+            "negotiation",
+            "persuasion",
+            "debate",
+            "conflict resolution",
+            "nonverbal communication"
+          ],
+          "emotions_and_relationships": [
+            "friendship",
+            "romantic relationships",
+            "family",
+            "empathy",
+            "apologies and forgiveness",
+            "gratitude and compliments"
+          ],
+          "critical_thinking": [
+            "reasoning",
+            "decision-making",
+            "problem-solving",
+            "evaluating arguments"
+          ],
+          "financial_literacy": [
+            "budgeting",
+            "saving and investing",
+            "credit and loans",
+            "financial planning",
+            "insurance",
+            "taxes"
+          ],
+          "personal_development": [
+            "goal setting",
+            "self-discipline",
+            "confidence and self-esteem",
+            "productivity",
+            "time management"
+          ]
+        },
+        "career_and_professional_life": {
+          "job_search_and_interviews": [
+            "resumes and cover letters",
+            "job interviews",
+            "networking",
+            "salary negotiation"
+          ],
+          "workplace_vocabulary": [
+            "teamwork",
+            "leadership",
+            "project management",
+            "conflict at work",
+            "meetings and presentations",
+            "corporate jargon"
+          ],
+          "entrepreneurship": [
+            "startups",
+            "pitching ideas",
+            "fundraising",
+            "business plans",
+            "customer development"
+          ],
+          "business_and_management": {
+            "finance": [
+              "accounting",
+              "investments",
+              "banking",
+              "economics"
+            ],
+            "marketing": [
+              "branding",
+              "advertising",
+              "market research",
+              "social media"
+            ],
+            "operations": [
+              "supply chain",
+              "logistics",
+              "quality control"
+            ],
+            "human_resources": [
+              "recruitment",
+              "training and development",
+              "performance review"
+            ]
+          }
+        },
+        // "industries_and_domains": {
+        //   "engineering": {
+        //     "software_engineering": [
+        //       "coding",
+        //       "debugging",
+        //       "agile methodologies",
+        //       "version control"
+        //     ],
+        //     "mechanical_engineering": [
+        //       "thermodynamics",
+        //       "machine design",
+        //       "manufacturing processes"
+        //     ],
+        //     "civil_engineering": [
+        //       "construction vocabulary",
+        //       "materials",
+        //       "urban planning"
+        //     ],
+        //     "electrical_and_electronics": [
+        //       "circuits",
+        //       "power systems",
+        //       "semiconductors"
+        //     ],
+        //     "aerospace": [
+        //       "aerodynamics",
+        //       "spacecraft",
+        //       "navigation"
+        //     ]
+        //   },
+        //   "health_and_medicine": {
+        //     "general_health": [
+        //       "body parts",
+        //       "illnesses and symptoms",
+        //       "medications",
+        //       "first aid"
+        //     ],
+        //     "hospital_and_clinic": [
+        //       "check-ups",
+        //       "emergency",
+        //       "appointments",
+        //       "surgery"
+        //     ],
+        //     "mental_health": [
+        //       "stress",
+        //       "therapy",
+        //       "emotions"
+        //     ],
+        //     "healthcare_professions": [
+        //       "doctor-patient communication",
+        //       "nurses",
+        //       "medical research"
+        //     ]
+        //   },
+        //   "law_and_government": {
+        //     "legal_basics": [
+        //       "contracts",
+        //       "lawsuits",
+        //       "rights and obligations"
+        //     ],
+        //     "politics": [
+        //       "elections",
+        //       "policies",
+        //       "debates",
+        //       "parties"
+        //     ],
+        //     "international_relations": [
+        //       "diplomacy",
+        //       "treaties",
+        //       "conflict resolution"
+        //     ]
+        //   },
+        //   "education": {
+        //     "academic_skills": [
+        //       "reading comprehension",
+        //       "writing essays",
+        //       "note-taking",
+        //       "research methods"
+        //     ],
+        //     "teaching_and_learning": [
+        //       "classroom language",
+        //       "instruction methods",
+        //       "student-teacher interaction"
+        //     ],
+        //     "fields_of_study": {
+        //       "science": [
+        //         "biology",
+        //         "physics",
+        //         "chemistry",
+        //         "earth science"
+        //       ],
+        //       "humanities": [
+        //         "history",
+        //         "philosophy",
+        //         "literature"
+        //       ],
+        //       "mathematics": [
+        //         "algebra",
+        //         "geometry",
+        //         "statistics"
+        //       ]
+        //     }
+        //   },
+        //   "technology": {
+        //     "computing_basics": [
+        //       "hardware",
+        //       "software",
+        //       "networks",
+        //       "internet"
+        //     ],
+        //     "data_science_and_ai": [
+        //       "machine learning",
+        //       "data analysis",
+        //       "big data"
+        //     ],
+        //     "cybersecurity": [
+        //       "threats",
+        //       "protection methods",
+        //       "encryption"
+        //     ],
+        //     "web_and_mobile_development": [
+        //       "frontend",
+        //       "backend",
+        //       "UI/UX",
+        //       "apps"
+        //     ]
+        //   },
+        //   "media_and_entertainment": {
+        //     "film_and_tv": [
+        //       "genres",
+        //       "production terms",
+        //       "criticism"
+        //     ],
+        //     "music": [
+        //       "genres",
+        //       "instruments",
+        //       "performance terms"
+        //     ],
+        //     "journalism": [
+        //       "reporting",
+        //       "editorials",
+        //       "interviews"
+        //     ],
+        //     "literature_and_poetry": [
+        //       "literary devices",
+        //       "genres",
+        //       "analysis terms"
+        //     ]
+        //   },
+        //   "travel_and_transport": {
+        //     "air_travel": [
+        //       "boarding",
+        //       "customs",
+        //       "in-flight experience"
+        //     ],
+        //     "urban_transport": [
+        //       "buses",
+        //       "trains",
+        //       "ride-hailing apps"
+        //     ],
+        //     "hospitality": [
+        //       "hotels",
+        //       "reservations",
+        //       "customer service"
+        //     ],
+        //     "tourism": [
+        //       "sightseeing",
+        //       "itineraries",
+        //       "cultural etiquette"
+        //     ]
+        //   },
+        //   "environment_and_sustainability": [
+        //     "climate change",
+        //     "renewable energy",
+        //     "pollution",
+        //     "conservation",
+        //     "green technology"
+        //   ]
+        // },
+        // "culture_and_society": {
+        //   "religion_and_philosophy": [
+        //     "belief systems",
+        //     "moral values",
+        //     "life and death"
+        //   ],
+        //   "traditions_and_customs": [
+        //     "weddings",
+        //     "funerals",
+        //     "holidays",
+        //     "rites of passage"
+        //   ],
+        //   "diversity_and_inclusion": [
+        //     "equality",
+        //     "bias",
+        //     "representation"
+        //   ],
+        //   "slang_and_informal_speech": [
+        //     "teen slang",
+        //     "regional dialects",
+        //     "pop culture references"
+        //   ]
+        // }
+      }
+      
+)

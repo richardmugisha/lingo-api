@@ -38,8 +38,8 @@ const handleQuizRelated = (gameInfo, isCorrect, io, gameScoreKeeper, source) => 
 }
 
 const sendToLobby = (io, gameInfo) => {
-    console.log(gameInfo.data.deck.learning.words.length, gameInfo.card, gameInfo.data.deck.learning.words.length === gameInfo.card)
-    if (gameInfo.data.deck.learning.words.length === gameInfo.card) {
+    console.log(gameInfo.data.topic.learning.words.length, gameInfo.card, gameInfo.data.topic.learning.words.length === gameInfo.card)
+    if (gameInfo.data.topic.learning.words.length === gameInfo.card) {
         setTimeout(() => {
             gameInfo.status = "lobby"
             gameInfo.data.step = "onboarding"

@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const CardSchema = new mongoose.Schema({
-    deck: {
+    topic: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'DeckMetaData',
-        required: [true, 'must provide deck name']
+        ref: 'TopicMetaData',
+        required: [true, 'must provide topic name']
     },
     'root word': {type: String,required: [true, 'must provide the word item']},
     variations: [
@@ -27,9 +27,9 @@ export default mongoose.model('Card', CardSchema)
 
 /*
 const CardSchema = new mongoose.Schema({
-    deckName: {
+    topicName: {
         type: String,
-        required: [true, 'must provide deck name']
+        required: [true, 'must provide topic name']
     },
     word: {
         type: String,

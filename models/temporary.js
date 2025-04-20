@@ -9,7 +9,7 @@ const TemporarySchema = mongoose.Schema({
     },
     cardNumber: {
         type: Number,
-        required: [true, 'How many cards are in this deck']
+        required: [true, 'How many cards are in this topic']
     },
     unprocessed: {
         type: [{

@@ -13,9 +13,9 @@ const ScriptSchema = mongoose.Schema({
         default: [],
         required: false
     }],
-    deck: {
+    topic: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Deck' 
+        ref: 'Topic' 
     },
     details: [Object],
     title: String,

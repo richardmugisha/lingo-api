@@ -1,5 +1,5 @@
 
-import { createStoryHandler } from "../../personal/deck.js"
+import { createStoryHandler } from "../../personal/topic.js"
 
 export default async({ games, socket, io, payload}) => {
     const gameInfo = payload

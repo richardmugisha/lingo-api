@@ -30,5 +30,5 @@ const findSimilarityInExamples = (inputExampleSplitWordsList, outputWordExample)
 }
 
 export {
-    findMostLikelyWord as matchingInputWordToProbableOuput
+    findMostLikelyWord as searchThrough
 }

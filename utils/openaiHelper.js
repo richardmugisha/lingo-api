@@ -58,6 +58,36 @@ Your task is to develop a story using this set of words: ${words}. Build a story
 3. Make sure you follow the rules of English, and avoid tautology or any other weaknesses in your story.
 4. Most importantly, write a story that makes sense, with coherence and no repetition.
 `
+const simpleDefinitionPromptConstruct = (wordsArray) => `
+You are given an array of objects, each containing a word or expression and a contextual example.
+
+Your job is to return a JSON object like this:
+{
+  "definitions": [
+    {
+      "word": "example word",
+      "type": "noun | verb | adjective | adverb | idiom | expression | proverb",
+      "example": "The example from the input",
+      "blanked example": "Same example but the word is blanked out with _____",
+      "language style": "Pick from: formal, neutral, informal, jargon, slang",
+      "meaning": "The contextual meaning of the word in the example",
+      "synonym": "A synonym in this context",
+      "antonym": "An antonym in this context"
+    },
+    ...
+  ]
+}
+
+Make sure:
+- Each word gets one full definition object.
+- Do not leave any field empty.
+- Your output must be **valid JSON** that can be parsed with JSON.parse.
+- No extra explanation or comments. Just the JSON.
+
+Input: ${JSON.stringify(wordsArray, null, 2)}
+`
+const simpleDefinitionSystemMsg = "You are an expert lexicographer creating high-quality definitions for vocabulary learners. Always return clean JSON responses only."
+
 
 const chunkStoryPrompt = (title, summary, words, currentStory) => `You are co-writing a story with a user, adding one sentence at a time. Use one or two of these words${currentStory && ", but don't repeat what has already been used in ongoing story"}: ${words} and follow the summary: "${summary}". ${currentStory ? 'Avoid repeating previous sentences or ideas and continue logically from: ' + currentStory: "Provide the starting sentence"}. 
 The output should be a valid json object that will not throw an error when passed through JSON.parse in my api. e.g: { title: ${title || 'generate a suitable title'}, aiSentence: { sentence: "your sentence", blanked: the same sentence, but with the word(s) blanked out}}.
@@ -207,32 +237,59 @@ const fullScriptSystemMsg = `
  You are an amazing script writer for movies and cartoons. You write fun and engaging scripts for actors. And today, you are tasked to create a script for English learners to practice their vocabulary using role playing.
 `
 
-const deckGenerationPrompt = (fields) => `
-Generate a roadmap of topics to help english learners learn the most important words and expressions (idioms, proverbs, ..., verbs, adverbs) in different areas of life, industries, academic fields,...
+const topicGenerationPrompt = (path, topic, number, excluded) => `
+Generate a list of topics to help english learners learn the most important words and expressions (idioms, proverbs, ..., verbs, adverbs) in different areas of life, industries, academic fields,...
 Basically, we are trying to engineer the most fluent, eloquent English-as-Second-Language James Bond, who has all necessary words and expressions at their finger tips.
-To clarify, you are generate a tree of decks/bookmarks/directories. The exact words and expressions on each topic are not priority for now.
+To clarify, you are generating a list of topics.
 
 typical json output:
 
 {
-    "engineering": [ "aerospace engineering", "software engineering", ...],
-    "transport": {
-        "public transport": ["buses", "trains"],
-        "uber": [..., ..., ...]
-    },
-    ...
+    suggestions: ["engineering", "transport", "tourism", ...]
 }
 
-1. Don't limit yourself on how deep a branch can go, but also don't go to deep on not so relevant areas (although this seems subjective, try your best. You are the best shot I got)
-2. The output basically a json object. And you don't have to use the topics in this example
+1. The output basically a json object. And you don't have to use the topics in this example
+2. ${
+    topic ? "You are suggesting a list of " + (number || 5) + " essential topics within this topic: " + topic :
+    "You are suggesting " + (number || 5) + " most essential topics that encompass all the topics in the universe"
+}
+3. Just to be precise, ${ path ? "this the genealogy or context within which the topics you are suggesting should fit: " + path : "You are generating the most fundamental topics from which all topics of the universe are branch"
+}
 ${
-    fields &&
-    "3. The user provided a list of topic(s) they are interested in. That means they will be parent/root nodes in the place of engineering, transport, and tourism in the example I gave you. Then you can develop these fields and scaffold sub branches (only if N/A). The topic(s): " + fields
+    excluded?.length && "4. This is a list of already used topics by the user. Skip them and any topic even remotely related to them. \
+    e.g: Don't give me negotiation, if communication is in the list of topics to exclude. Here is the list of those to be excluded: " + excluded
 }
 `
-const deckSystmMsg = `
-Imagine yourself like a curriculum/roadmap designer, only this time, you are planning a roadmap for english learner to learn all the necessary words/expressions they need to excell in life, career, and prosper.
-Think of this as roadmap of topics within topics within topics. Such that a user can exhaust a topic and be fluent about it (just vocabulary)
+const topicSystmMsg = `
+Imagine yourself like a curriculum designer, only this time, you are planning a roadmap for english learner to learn all the necessary words/expressions they need to excell in life, career, and prosper.
+Think of this as a way to help someone exhaust a topic and be fluent about it (just vocabulary)
+`
+const wordGenerationPrompt = (path, topic, number, excluded) => `
+Generate a roadmap of topics to help english learners learn the most important words and expressions (idioms, proverbs, ..., verbs, adverbs) in different areas of life, industries, academic fields,...
+Basically, we are trying to engineer the most fluent, eloquent English-as-Second-Language James Bond, who has all necessary words and expressions at their finger tips.
+To clarify, you are to generate a list of the ${number || 10} most important words/expressions around a given topic
+
+typical json output:
+
+{
+    suggestions: [
+        {
+            word: one of the must-know words/expressions on this topic
+            context: a real-life sentence that uses this word/expression. This shouldn't be a definition or a low-effort generated sentence.
+        },
+        {...}, ...
+    ]
+}
+
+1. The output basically a json object. And you don't have to use the topics in this example
+2. The user is interested in this topic: ${topic}
+${ path && "3. This is the precise description of the topic whose word family you are generating: " + path
+}
+${ excluded?.length && "4. These are the words to exclude, because the user already has them saved. So think of any other words/expressions. list: " + excluded}
+`
+const wordSystmMsg = `
+Imagine yourself like a curriculum designer, only this time, you are helping an english learner to learn all the necessary words/expressions they need to excell in life, career, and prosper.
+You are helping a user to exhaust a topic and be fluent about it (just vocabulary)
 `
 
 
@@ -243,5 +300,7 @@ export {
     chunkStorySystemMsg, fullStorySystemMsg,
     blanksPrompt, quizPrompt,
     fullScriptPrompt, fullScriptSystemMsg,
-    deckGenerationPrompt, deckSystmMsg
+    topicGenerationPrompt, topicSystmMsg,
+    wordGenerationPrompt, wordSystmMsg,
+    simpleDefinitionPromptConstruct, simpleDefinitionSystemMsg
 }

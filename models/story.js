@@ -12,9 +12,9 @@ const StorySchema = mongoose.Schema({
         ref: 'User',
         required: false
     }],
-    deck: {
+    topic: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Deck' 
+        ref: 'Topic' 
     },
     details: [
         {

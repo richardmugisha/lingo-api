@@ -1,4 +1,4 @@
-const { createStoryHandler } = require("../../deck")
+const { createStoryHandler } = require("../../topic")
 const { gameBroadcast } = require("../utils/utils")
 
 const titleAndSummary = ({ games, ws, payload, connections}) => {

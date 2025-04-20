@@ -2,7 +2,7 @@
 class Quiz {
     constructor(setup) {
         this.step = "onboarding"
-        this.deck = setup.deck || {}
+        this.topic = setup.topic || {}
     }
 }
 

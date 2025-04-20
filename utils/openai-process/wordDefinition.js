@@ -2,13 +2,13 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import {wordDefinitionPromptConstruct, wordFamilyGenerationPromptConstruct,
-        wordFamilySystemMsg, wordDefinitionSystemMsg,
+        wordFamilySystemMsg, wordDefinitionSystemMsg, simpleDefinitionPromptConstruct, simpleDefinitionSystemMsg
 } from '../openaiHelper.js'
 
 import openaiRequest from './openaiRequest.js'
 
-const wordDefiner = async (words, regularOrTemporaryDeck) => {
-    const parent = async (wordObject, regularOrTemporaryDeck) => {    
+const wordDefiner = async (words, regularOrTemporaryTopic) => {
+    const parent = async (wordObject, regularOrTemporaryTopic) => {    
         const reusable = async () => {
             delete wordObject['root word']
             let related_words = []
@@ -36,7 +36,7 @@ const wordDefiner = async (words, regularOrTemporaryDeck) => {
         }
         throw new Error('Kept trying to run openai process but the response kept being rejected by JSON parse')
     }
-    const promises = words.map((wordObject, index) => parent(wordObject, regularOrTemporaryDeck).then(response => ({ response, index })) )
+    const promises = words.map((wordObject, index) => parent(wordObject, regularOrTemporaryTopic).then(response => ({ response, index })) )
     const results = await Promise.all(promises);
     const orderedResults = results.sort((a, b) => a.index - b.index);
     const generateData = orderedResults.map(result => result.response);
@@ -68,18 +68,18 @@ const processTimeLogger = (time) => {
     }
 }
 
-const wordDefinition = async (words, regularOrTemporaryDeck) => {
+const wordDefinition = async (words, regularOrTemporaryTopic) => {
     try {
-        // console.log('words: ', words)
+        console.log('words: ', words)
         let processStartTime = processTimeLogger()
         const response = await wordFamilyGenerator(words)
         const wordFamilies = response["word families"]
         console.log('words families', wordFamilies.length, words.length)
-        //console.log('-----words families: ', wordFamilies)
+        console.log('-----words families: ', wordFamilies)
         processTimeLogger(processStartTime); 
         processStartTime = processTimeLogger()
         console.log('.....now proper openai starts')
-        const result = await wordDefiner(wordFamilies, regularOrTemporaryDeck)
+        const result = await wordDefiner(wordFamilies, regularOrTemporaryTopic)
         processTimeLogger(processStartTime)
         return result
     } catch (error) {
@@ -89,7 +89,28 @@ const wordDefinition = async (words, regularOrTemporaryDeck) => {
     }
 }
 
+const simpleWordDefiner = async (wordExamples) => {
+    const chunkSize = 10;
+    const allDefinitions = [];
+
+    try {
+        for (let i = 0; i < wordExamples.length; i += chunkSize) {
+            const chunk = wordExamples.slice(i, i + chunkSize);
+            const prompt = simpleDefinitionPromptConstruct(chunk);
+            const openaiRes = await openaiRequest("gpt-4o", simpleDefinitionSystemMsg, prompt);
+            const { definitions } = JSON.parse(openaiRes);
+            allDefinitions.push(...definitions);
+        }
+
+        return allDefinitions;
+    } catch (error) {
+        console.error("Error in simpleWordDefiner:", error.message);
+        throw new Error("Failed to define words: " + error.message);
+    }
+};
 
 
-export default wordDefinition
+
+
+export default simpleWordDefiner
 

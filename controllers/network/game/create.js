@@ -4,7 +4,7 @@ export default ({ GameFactory, games, io, socket, payload }) => {
 
     //console.log(GameFactory, games, payload)
 
-    const { userID, username, avatar, type, words, deck } = payload
+    const { userID, username, avatar, type, words, topic } = payload
 
     const alreadyExisingGame = [...games.values()].find(game => game.creator === userID && game.type === type)
     if (alreadyExisingGame) {

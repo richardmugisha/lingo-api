@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
 const AppSchema = new mongoose.Schema({
-    max_wishes: { type: Number, default: 1 },
+    max_wishes: { type: Number, default: 5 },
     new_words_to_add: {
         type: Map,
         of: [
             {
                 creator: { type: mongoose.Types.ObjectId, ref: 'User' },
-                deck: { type: mongoose.Types.ObjectId, ref: 'Deck' },
+                topic: { type: mongoose.Types.ObjectId, ref: 'Topic' },
                 words: { 
                     type: [{
                         word: String,

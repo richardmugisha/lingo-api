@@ -4,23 +4,24 @@ const router = express.Router();
 import AppMetaData from '../../models/app.js'
 
 import {
-    addWordToDeck,
+    addWordToTopic,
     addToWishList,
     wordProcessing
 } from "../../controllers/personal/words.js"
 
 const batchRequest = async (req, res) => {
     const successRequests = {};
+    console.log('batch request hit')
     try {
         const totalRequest = [...req.body.requests];
-        const deckAcquiredIds = {}
+        const topicAcquiredIds = {}
         for (const { route, body } of totalRequest) {
             if (route === 'toAdd') {
-                const results = await Promise.all(body.map(async wordBody => await addWordToDeck(wordBody)));
+                const results = await Promise.all(body.map(async wordBody => await addWordToTopic(wordBody)));
                 let success = true;
                 for (const result of results) {
                     if (result.msg === 'error') success = false
-                    else deckAcquiredIds[result.deck.name] = result.deck.id;
+                    else topicAcquiredIds[result.topic.name] = result.topic.id;
                 }
                 successRequests.toAdd = success 
             }
@@ -30,7 +31,7 @@ const batchRequest = async (req, res) => {
                 if (!app) {
                     app = new AppMetaData({});
                 }
-                const results = await Promise.all(body.map(async wordBody => await addToWishList({...wordBody, deckId: (wordBody.deckName && !wordBody.deckId && deckAcquiredIds[wordBody.deckName]) ?  deckAcquiredIds[wordBody.deckName]: wordBody.deckId}, app)));
+                const results = await Promise.all(body.map(async wordBody => await addToWishList({...wordBody, id: (wordBody.name && !wordBody.id && topicAcquiredIds[wordBody.name]) ?  topicAcquiredIds[wordBody.name]: wordBody.id}, app)));
                 successRequests.toWish = !results.some(res => res.msg === 'error');  // true if none is error
                 const appLangsToProcess = Array.from(app.new_words_to_add.entries())
                                             .filter(([language, setsToProcess]) => 

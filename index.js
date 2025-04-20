@@ -1,7 +1,6 @@
 import express from "express"
 import http from "http"
-import cards from "./routes/personal/cards.js"
-import deck from "./routes/personal/deck.js"
+import topic from "./routes/personal/topic.js"
 import words from "./routes/personal/words.js"
 import batchRequest from "./routes/personal/batchRequest.js"
 
@@ -11,8 +10,6 @@ import connectDB from "./db/connect.js";
 import cors from "cors"
 import dotenv from "dotenv"
 
-import path from "path";
-import { fileURLToPath } from "url";
 
 dotenv.config()
 
@@ -21,7 +18,6 @@ import  { authRoutes, verifyToken} from './routes/personal/auth.js'
 // import "./controllers/games/game"
 
 import openaiTest from "./routes/personal/openaiTest.js"
-import appMetaData from "./routes/personal/appMetaData.js"
 
 import extension from "./routes/personal/extension.js"
 
@@ -46,12 +42,10 @@ app.use('/api/v1/extension', extension)
 app.use('/api/v1/cards/test/openaiApi', openaiTest);
 app.use('/api/v1/auth', authRoutes);
 
-app.use('/api/v1/cards/app', appMetaData)
 app.use('/api/v1/batch-request', batchRequest)
-app.use('/api/v1/cards', cards, deck)
+app.use('/api/v1/cards', topic)
 app.use('/api/v1/words', words)
 
-// app.use('/api/v1/script/audio', express.static(path.join(process.cwd(), "public/audio")))
 
 const port = process.env.PORT || 3500;
 

@@ -2,7 +2,7 @@
 import mongoose from "mongoose"
 
 const wordMastery = new mongoose.Schema({
-    wordId: {
+    word: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Word',
         unique: true
@@ -17,41 +17,30 @@ const learning = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        unique: true
+        required: true
     },
-    decks: [
+    topic: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Topic',
+        required: true
+    },
+    words: [
         {
-            deckId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Deck'
-            },
-            words: [
-                {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Word'
-                }
-            ],
-            chunkIndex: {
-                type: Number,
-                default: 0
-            },
-            level: {
-                type: Number,
-                default: 0
-            }
-        }
-    ],
-    unifiedDeck: {
-        words: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Word'
-        }],
-        level: {
-            type: Number,
-            default: 0
-        } 
+        }
+    ],
+    chunkIndex: {
+        type: Number,
+        default: 0
+    },
+    level: {
+        type: Number,
+        default: 0
     }
 })
+
+learning.index({ user: 1, topic: 1 }, { unique: true });
 
 const WordMastery = mongoose.model('WordMastery', wordMastery)
 const Learning = mongoose.model('Learning', learning)
@@ -69,77 +58,101 @@ const masteryUpdation = async (wordMasteries) => {
 
 }
 
-const newLearning = async (deckId, user, wordIds) => {
-    const createdLearning = await Learning.create(
+// const newLearning = async (topic, user, words) => {
+//     const createdLearning = await Learning.create(
+//         {
+//             user, 
+//             topic,
+//             chunkIndex: 0,
+//             level: 0,
+//             words: words.slice(0, 10),
+//         }
+//     )
+
+//     let wordMasteries = words.slice(0, 10)?.map(word => ({word, level: 0}))
+//     wordMasteries = await masteryUpdation(wordMasteries)
+//     // //console.log(createdLearning, wordMasteries, '............')
+
+//     return {createdLearning: createdLearning.toObject(), wordMasteries}
+// }
+
+const newLearning = async (topic, user, words) => {
+    const initialWords = words.slice(0, 10);
+
+    const createdLearning = await Learning.findOneAndUpdate(
+        { user, topic },
         {
-            user, 
-            decks: [{deckId, chunkIndex: 0, level: 0, words: wordIds.slice(0, 10)}],
-            unifiedDeck: {
-                words: wordIds.slice(0, 10),
-                level: 0
+            $setOnInsert: {
+                chunkIndex: 0,
+                level: 0,
+                words: initialWords,
             }
-        }
-    )
+        },
+        { new: true, upsert: true } // creates only if not exists
+    ).lean();
 
-    let wordMasteries = wordIds.slice(0, 10)?.map(wordId => ({wordId, level: 0}))
-    wordMasteries = await masteryUpdation(wordMasteries)
-    // //console.log(createdLearning, wordMasteries, '............')
+    let wordMasteries = initialWords.map(word => ({ word, level: 0 }));
+    wordMasteries = await masteryUpdation(wordMasteries);
 
-    return {createdLearning: createdLearning.toObject(), wordMasteries}
-}
+    return { createdLearning, wordMasteries };
+};
 
-const pushNewDeck = async (deckId, user, wordIds) => {
+
+const pushNewTopic = async (topicId, user, words) => {
     const updatedLearning = await Learning.findOneAndUpdate(
         {user}, 
-        {$push: { decks: [{deckId, chunkIndex: 0, level: 0, words: wordIds.slice(0, 10)}] } },
+        {$push: { topics: [{topicId, chunkIndex: 0, level: 0, words: words.slice(0, 10)}] } },
         { new: true}
     )
 
-    let wordMasteries = wordIds.slice(0, 10)?.map(wordId => ({wordId, level: 0}))
+    let wordMasteries = words.slice(0, 10)?.map(word => ({word, level: 0}))
     wordMasteries = await masteryUpdation(wordMasteries)
 
     return { updatedLearning: updatedLearning.toObject(), wordMasteries }
 }
 
 const wordMasteryUpdate = async (wordMasteryList) => {
-    const updatePromises = wordMasteryList.map(word => WordMastery.findByIdAndUpdate(word._id, {$set: {level: word.level}}, {new: true} ) )
+    console.log(wordMasteryList)
+    const updatePromises = wordMasteryList.map(mastery => WordMastery.findOneAndUpdate({word: mastery.word}, {level: mastery.level}, {new: true} ) )
     const updatedWordMasteries = await Promise.all(updatePromises)
     return updatedWordMasteries
 }
 
 
-const patchLearningDeck = async (userId, updateData) => {
-    // Find the specific deck in the decks array by userId and deckId
-    const updatedLearning = await Learning.findOneAndUpdate(
-        { user: userId, "decks._id": updateData._id }, // Match user and deckId
-        { 
-            $set: { 
-                "decks.$.words": updateData.words, // Updates the words array in the specified deck
-                "decks.$.chunkIndex": updateData.chunkIndex, // Updates the chunkIndex in the specified deck
-                "decks.$.level": updateData.level // Updates the level in the specified deck
-            } 
+const patchLearningTopic = async (userId, updateData) => {
+    const updatedLearning = await Learning.findByIdAndUpdate(
+        updateData._id, // Correct: this is the Learning document's _id
+        {
+            words: updateData.words,
+            chunkIndex: updateData.chunkIndex,
+            level: updateData.level
         },
-        { new: true } // Return the updated document
+        { new: true }
     );
 
-    if (!updatedLearning) {
-        throw new Error("Learning document or specified deck not found.");
+    if (!updatedLearning || updatedLearning.user.toString() !== userId.toString()) {
+        throw new Error("Learning document not found or does not belong to the user.");
     }
 
     let wordMasteries;
     if (updateData.levelUp) {
-        wordMasteries = updateData.words.slice(0, 10)?.map(wordId => ({wordId, level: 0}))
-        wordMasteries = await masteryUpdation(wordMasteries)
+        wordMasteries = updateData.words.slice(0, 10)?.map(word => ({ word, level: 0 }));
+        wordMasteries = await masteryUpdation(wordMasteries);
     }
-    return { updatedLearning, newWordMasteries: wordMasteries } ;
+
+    return {
+        updatedLearning: updatedLearning.toObject(),
+        newWordMasteries: wordMasteries
+    };
 };
+
 
 export {
     WordMastery,
     Learning,
     newLearning,
     wordMasteryUpdate,
-    patchLearningDeck,
-    pushNewDeck
+    patchLearningTopic,
+    pushNewTopic
 }
 

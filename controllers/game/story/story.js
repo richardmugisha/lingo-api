@@ -1,4 +1,4 @@
-const { createStoryHandler }from "../../deck")
+const { createStoryHandler }from "../../topic")
 const { gameBroadcast }from "../utils/utils")
 const { switchActivity: switchLine }from "../chat/chat")
 
