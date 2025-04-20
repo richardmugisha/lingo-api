@@ -113,7 +113,7 @@ const getLearning = async (req, res) => {
             Learning.findOne({ user, topic }),
             WordMastery.find({ word: { $in: wordIdList}})
         ])
-        if (!retrievedLearning) return res.status(404).json({ msg: "No learning plan found" })
+        if (!retrievedLearning) return res.status(404).json({ message: "No learning plan found" })
         const learning = retrievedLearning.toObject()
         learning.words = wordMasteries.map(mastery => ({_id: mastery.word, level: mastery.level}))
         console.log(learning)
