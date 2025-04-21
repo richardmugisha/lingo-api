@@ -1,18 +1,6 @@
 
 import mongoose from "mongoose"
 
-const wordMastery = new mongoose.Schema({
-    word: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Word',
-        unique: true
-    },
-    level: {
-        type: Number,
-        default: 0
-    }
-})
-
 const learning = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -26,76 +14,56 @@ const learning = new mongoose.Schema({
     },
     words: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Word'
+            word: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Word',
+                required: true
+            },
+            level: {
+                type: Number,
+                default: 0
+            }
         }
     ],
     chunkIndex: {
         type: Number,
         default: 0
     },
-    level: {
+    chunkLevel: {
+        type: Number,
+        default: 0
+    },
+    topicLevel: {
         type: Number,
         default: 0
     }
-})
+});
+
 
 learning.index({ user: 1, topic: 1 }, { unique: true });
 
-const WordMastery = mongoose.model('WordMastery', wordMastery)
 const Learning = mongoose.model('Learning', learning)
 
-const masteryUpdation = async (wordMasteries) => {
-    try {
-        return await WordMastery.insertMany(wordMasteries, { ordered: false }); // ordered: false allows continuing on duplicates
-    } catch (error) {
-        if (error.code === 11000) {
-            //console.log("Duplicate wordId found and skipped.");
-        } else {
-            throw error;
-        }
-    }
+const newLearning = async (topic, user, wordIds) => {
+    const initialWords = wordIds.slice(0, 10);
 
-}
+    // Directly embed word masteries into the learning document
+    const wordMasteries = initialWords.map(wordId => ({
+        word: wordId,
+        level: 0
+    }));
 
-// const newLearning = async (topic, user, words) => {
-//     const createdLearning = await Learning.create(
-//         {
-//             user, 
-//             topic,
-//             chunkIndex: 0,
-//             level: 0,
-//             words: words.slice(0, 10),
-//         }
-//     )
+    // Create the Learning document with embedded word masteries
+    const createdLearning = await Learning.create({
+        user,
+        topic,
+        words: wordMasteries
+    });
 
-//     let wordMasteries = words.slice(0, 10)?.map(word => ({word, level: 0}))
-//     wordMasteries = await masteryUpdation(wordMasteries)
-//     // //console.log(createdLearning, wordMasteries, '............')
-
-//     return {createdLearning: createdLearning.toObject(), wordMasteries}
-// }
-
-const newLearning = async (topic, user, words) => {
-    const initialWords = words.slice(0, 10);
-
-    const createdLearning = await Learning.findOneAndUpdate(
-        { user, topic },
-        {
-            $setOnInsert: {
-                chunkIndex: 0,
-                level: 0,
-                words: initialWords,
-            }
-        },
-        { new: true, upsert: true } // creates only if not exists
-    ).lean();
-
-    let wordMasteries = initialWords.map(word => ({ word, level: 0 }));
-    wordMasteries = await masteryUpdation(wordMasteries);
-
-    return { createdLearning, wordMasteries };
+    return createdLearning;
 };
+
+
 
 
 const pushNewTopic = async (topicId, user, words) => {
@@ -121,34 +89,30 @@ const wordMasteryUpdate = async (wordMasteryList) => {
 
 const patchLearningTopic = async (userId, updateData) => {
     const updatedLearning = await Learning.findByIdAndUpdate(
-        updateData._id, // Correct: this is the Learning document's _id
-        {
-            words: updateData.words,
-            chunkIndex: updateData.chunkIndex,
-            level: updateData.level
-        },
-        { new: true }
+      updateData._id,
+      {
+        words: updateData.words,
+        chunkIndex: updateData.chunkIndex,
+        chunkLevel: updateData.chunkLevel,
+        topicLevel: updateData.topicLevel
+      },
+      { new: true }
     );
-
+  
+    // Ensure it's the correct user
     if (!updatedLearning || updatedLearning.user.toString() !== userId.toString()) {
-        throw new Error("Learning document not found or does not belong to the user.");
+      throw new Error("Learning document not found or does not belong to the user.");
     }
-
-    let wordMasteries;
-    if (updateData.levelUp) {
-        wordMasteries = updateData.words.slice(0, 10)?.map(word => ({ word, level: 0 }));
-        wordMasteries = await masteryUpdation(wordMasteries);
-    }
-
+  
     return {
-        updatedLearning: updatedLearning.toObject(),
-        newWordMasteries: wordMasteries
+      updatedLearning: updatedLearning.toObject()
     };
 };
+  
+
 
 
 export {
-    WordMastery,
     Learning,
     newLearning,
     wordMasteryUpdate,

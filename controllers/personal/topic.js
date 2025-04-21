@@ -8,11 +8,9 @@ import Script from '../../models/script.js';
 import generateTopics from '../../utils/openai-process/generateTopics.js';
 import generateWords from '../../utils/openai-process/generateWords.js';
 import createCascadingTopics from '../../utils/insertTopics.js';
-import { wordProcessing } from './words.js';
 
-import { Learning, WordMastery, newLearning, wordMasteryUpdate, patchLearningTopic, pushNewTopic } 
+import { Learning, newLearning, wordMasteryUpdate, patchLearningTopic, pushNewTopic } 
 from '../../models/learning/learning.js'
-import topic from '../../models/topic.js';
 
 const createNewTopic = async (id, name, userId, language, parent, isAiGenerated) => {
     try {
@@ -62,60 +60,47 @@ const getSuggestions = async(req, res) => {
     }
 }
 
-const getTopics = async(req, res) => {
-    const { user, creator, language, parent } = req.query;
+const getTopics = async (req, res) => {
+    const { user, creator, language, parent, myLearning } = req.query;
+
     try {
-        const filters = { parent }
+        if (myLearning) {
+            const learnings = await fetchLearnings(user);
+
+            const topicIds = learnings.map(l => l.topic.toString());
+            const topics = await Topic.find({ _id: { $in: topicIds } }).lean();
+
+            // Attach matching learning to each topic
+            const topicsWithLearning = topics.map(topic => {
+                const learning = learnings.find(l => l.topic.toString() === topic._id.toString());
+                return { ...topic, learning };
+            });
+
+            return res.status(200).json({ topics: topicsWithLearning });
+        }
+
+        // Regular topic query
+        const filters = { parent };
         if (creator) filters.creator = user;
         if (language) filters.language = language;
+
         const topics = await Topic.find(filters);
-        res.status(200).json({topics})
+        res.status(200).json({ topics });
+
     } catch (error) {
-        console.log(error)
-        res.status(500).json(error);
+        console.log(error);
+        res.status(500).json({ error: error.message || "Error fetching topics" });
     }
-    
-}
+};
 
 
-/*
-if (parent) {
-            console.log('parent: ', parent, user)
-            const words = (await retrieveTopicInfo(parent, user))?.words
-            console.log(words)
-            res.status(200).json({topics, words})
-        } else {
-            console.log(filters, creator)
-            try {
-                const existingLearning = (await Learning.findOne({ user }))?.toObject()
-                res.status(200).json({topics, userLearning: existingLearning || {}})
-            } catch (error) {
-                res.status(404).json({ message: "Error with fetching the learning plan for this user"})
-            }
-*/
-
-const getTopic = async (req, res) => {
-    const { id, userId } = req.query;
-    try {
-        const topic = await retrieveTopicInfo(id, userId)
-        return res.status(200).json( { topic })
-    } catch (error) {
-      console.log(error)
-        res.status(500).json( { msg: error })
-    }
-}
 
 const getLearning = async (req, res) => {
     try {
-        const { user, topic, words } = req.query
-        const wordIdList = words.split(",")
-        const [ retrievedLearning, wordMasteries ] = await Promise.all([
-            Learning.findOne({ user, topic }),
-            WordMastery.find({ word: { $in: wordIdList}})
-        ])
-        if (!retrievedLearning) return res.status(404).json({ message: "No learning plan found" })
-        const learning = retrievedLearning.toObject()
-        learning.words = wordMasteries.map(mastery => ({_id: mastery.word, level: mastery.level}))
+        const { user, topic } = req.query
+        const learnings = await fetchLearnings(user, topic)
+        const learning = learnings[0]
+        if (!learning?.topic) return res.status(404).json("Learning plan not found")
         console.log(learning)
         res.json({learning})
     } catch (error) {
@@ -124,10 +109,26 @@ const getLearning = async (req, res) => {
     }
 }
 
+const fetchLearnings = async (userId, topicID = null) => {
+    const query = { user: userId };
+    if (topicID) query.topic = topicID;
+
+    try {
+        const learnings = await Learning.find(query);
+        return learnings;
+    } catch (error) {
+        console.error('Error fetching learnings:', error);
+        throw error;
+    }
+};
+
+
+
 const createLearning = async (req, res) => {
     try {
         const { user, topic, words } = req.body
         await newLearning(topic, user, words)
+        console.log("success")
         res.json("success")
     } catch (error) {
         console.log(error.message)
@@ -149,7 +150,7 @@ const retrieveTopicInfo = async (id, userId) => {
         const [words, learning, wordMasteries] = await Promise.all([
             WordModel.find({ _id: { $in: topic.words } }),
             Learning.findOne({ user: userId }),
-            WordMastery.find({ wordId: { $in: topic.words } }),
+            // WordMastery.find({ wordId: { $in: topic.words } }),
         ]);
 
         console.log(words, learning, wordMasteries)
@@ -172,26 +173,29 @@ const retrieveTopicInfo = async (id, userId) => {
 
 
 const updateMastery = async (req, res) => {
-    //console.log(req.query)
     try {
-        const { topic: topicID, user } = req.query
-        const { wordsMasteriesList, topicLearnChunk } = req.body
-        console.log(req.query, topicLearnChunk._id)
-        const updatedMasteries = await wordMasteryUpdate(wordsMasteriesList)
-        const { updatedLearning, newWordMasteries } = await patchLearningTopic(user, topicLearnChunk)
-        if (newWordMasteries && updatedLearning && updatedMasteries ) {
-            // const topic = await retrieveTopicInfo(topicLearnChunk.topic, user)
-            return res.status(200).json({ msg: 'Mastery updated successfully, and user leveled up' })            
+        const { user } = req.query;
+        const { topicLearnChunk } = req.body;
+
+        console.log("Incoming update:", req.query, topicLearnChunk);
+
+        const { updatedLearning } = await patchLearningTopic(user, topicLearnChunk);
+
+        if (updatedLearning) {
+            return res.status(200).json({ 
+                msg: 'Mastery updated successfully',
+                updatedLearning
+            });            
         }
-        if (updatedMasteries && updatedLearning) {
-            // const topic = await retrieveTopicInfo(topicID, user)
-            return res.status(200).json({ msg: 'Mastery updated successfully' })
-        }
+
+        return res.status(404).json({ msg: 'No matching learning document found' });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json( { msg: error })
+        console.error("Error in updateMastery:", error);
+        return res.status(500).json({ msg: 'Internal server error', error });
     }
-}
+};
+
+
 
 const deleteTopics = async (req, res) => {
     try {
