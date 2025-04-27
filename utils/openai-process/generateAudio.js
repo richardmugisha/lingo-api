@@ -6,20 +6,19 @@ dotenv.config()
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY}); 
 
-const generateAudioForScript = async (script, players) => {
-    
+const generateAudioForScript = async (script) => {
+
     const voices = {
         'F': ["alloy", "coral", "nova", "sage", "shimmer"],
         "M": ["ash", "ballad", "echo", "fable", "onyx", "verse"]
     }
 
     const playersObj = {}
-
-    players.map(p => {
-        const pVoiceIndex = Math.floor(Math.random() * voices[p.sex || "F"].length)
-        const pVoice = voices[p.sex || "F"][pVoiceIndex] || "ballad"
-        voices[p.sex || "F"].splice(pVoiceIndex, 1)
-        playersObj[p.name.toLowerCase()] = {...p, voice: pVoice}
+    script.characters.map(p => {
+        const pVoiceIndex = Math.floor(Math.random() * voices[sexCoarcing(p.sex)].length)
+        const pVoice = voices[sexCoarcing(p.sex)][pVoiceIndex] || "ballad"
+        voices[sexCoarcing(p.sex)].splice(pVoiceIndex, 1)
+        playersObj[p.firstName.toLowerCase()] = {...p, voice: pVoice}
     })
 
 
@@ -58,3 +57,10 @@ const generateAudioForLine = async (lineObj, lineIndex, voice, title) => {
 }
 
 export default generateAudioForScript
+
+const sexCoarcing = (sex) => {
+    if (sex === "M" || sex === "F") return sex
+    if (sex?.startsWith("M")) return "M"
+    if (sex?.startsWith("F")) return "F"
+    return "F"
+}

@@ -257,14 +257,14 @@ const createStoryHandler = async(topicId, body) => {
 const createScript = async (req, res) => {
     try {
         const topic = req.params.topicId
-        const { title, summary, words, players, writer, coWriters } = req.body
+        const { title, summary, words, writer, coWriters, players } = req.body
         console.log(req.body)
         const script = await scriptGen(title, summary, words, players)
         Script.create({
-            writer, coWriters: coWriters || [], topic, words, title: script.title, summary: script.summary, details: script.details
+            writer, coWriters: coWriters || [], topic, words, title: script.title, summary: script.summary, details: script.details, characters: script.characters
         })
         res.status(201).json({script})
-        generateAudioForScript(script, players)
+        generateAudioForScript(script)
         
     } catch (error) {
         console.log(error)

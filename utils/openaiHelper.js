@@ -185,57 +185,107 @@ Input:
     ${paragraphs.map((paragraph, index) => `paragraph_${index}: ${paragraph}\n`) }
 `
 
-const fullScriptPrompt = (title, summary, words, players) => `
-I am creating an English learning platform, and this particular feature consists of vocabulary mastering using role playing,
-and your task is to generate a fun and simple script (no unnecessarily complicated words) to keep the learners engaged and excited to master the vocabulary
 
-So:
-1. Using this list of words (${words}), create a script that contains one word in a line, and it's the players' job to use these words inside.
-2.  title:  ${title || "Generate a title for the story of the script"}
-    summary: ${summary || "Generate a summary for the story of the script"}
-    -> Use both this title and the summary to guide you in the script generation
-3. Each item of the script should indicate whether it's actor line or a scene cue or indication given by a narrator (which means this won't be spoken by an actor)
-4.  Use these player names. Players may sometimes reference each other, so use these names (once in a while you can be cheezy and nickname them using their actual names).
-    Key actors: ${players.filter(player => player.isMain).map(player => player.name.toLowerCase())}
-    Supporting characters: ${players.filter(player => !player.isMain).map(player => player.name.toLowerCase())}
-    -> Only key players will have lines that contain the words (because is practice is basically tailored towards them since their are learning. The rest are just supporting).
-5.  Since this is for the students to practice, the words they are practicing should be not be used anywhere (title, summary).
-    When it comes to the script, for each line that contains one of the words, provide a rephrased fied, where the line is rephrased around the area where the word is used
-    The words: ${words}
-    -> No line can use more than one of the words!
-6. The output is strictly json
+const scriptSummarySysMsg = `
+You are a brilliant creative writer for educational role-play scenarios.
+Your job is to come up with fun titles, story summaries, and interesting characters, without using the target vocabulary words.
+Respond strictly in clean JSON.
+`
+const scriptSummaryPrompt = (words, characters = 3) => `
+I am creating an English learning platform based on vocabulary mastering through role-playing.
 
-7. Typical output:
+Your current task is to:
+1. Propose a creative and fun **title** for a story.
+2. Generate a fairly detailed **summary** that captures the essence of that story.
+3. Create a small **cast of characters** (around 3-6 characters), giving each:
+   - First Name
+   - Last Name
+   - Whether they are a **main character** or not (isMain: true/false) and there is only one main character
+   - Sex (M/F) it has to be an initial like M or F or my app will crash
+   - Ethnicity (e.g., White, Black, Asian, Latina, etc.)
+   - Age
+   - Personality (in a few words)
+   - Motivation (what drives them)
+   - Relationships (array of {type, to}, where 'to' is another character's first name)
+
+Rules:
+- The story must **not** use or hint at the following vocabulary words in the title or summary: ${words}.
+- The cast should include at least 20%-30% diversity in ethnicity.
+- Output everything in **pure JSON** format.
+- Number of characters = ${characters || 3}
+
+Typical JSON output:
 {
-    title: The title of the story,
-    summary: a summary of the story,
-    words: random, potential, misery
-    details: [
+    "title": "The Great City Chase",
+    "summary": "A group of friends must solve a mystery across the city in one afternoon...",
+    "characters": [
         {
-            type: line, // or narration if it is a narration
-            actor: jayce or null if it's a narration,
-            line: Rodrigue, do you know how crazy it is for us to be gathered all here today,
-            // notice how there is no rephrased field since this is a supporting character
+            "firstName": "Liam",
+            "lastName": "Bennett",
+            "isMain": true,
+            "sex": "M",
+            "ethnicty": "White",
+            "age": 22,
+            "personality": "Curious and daring",
+            "motivation": "Prove he can lead",
+            "relationships": [
+                { "type": "friend", "to": "Maya" }
+            ]
+        },
+        ...
+    ]
+}
+`
+
+
+const fullScriptPrompt = (title, summary, words, characters) => `
+I am creating an English learning platform where users master vocabulary through role-playing scripts.
+
+Now your task is to:
+1. Using this list of words (${words}), create a simple and fun **script** where each **key player** uses exactly one vocabulary word per line.
+2. Follow this **title** and **summary** to guide the story:
+   - Title: ${title}
+   - Summary: ${summary}
+3. **Characters**:
+${JSON.stringify(characters, null, 2)}
+   - Only characters with "isMain: true" should have lines that must contain the vocabulary words.
+   - Supporting characters can have dialogue too, but they should not use the vocabulary words.
+4. Each script item should clearly state:
+   - "type": "line" (spoken line) or "narration" (description/cue)
+   - "actor": character first name (or null if narration)
+   - "line": actual text spoken or narrated
+5. For each main character line containing a vocabulary word:
+   - Add a "rephrased" field: **rephrase the line** differently but keeping the meaning (to give learners a second way to say it).
+6. Important rules:
+   - **One word per line only**.
+   - **Title and Summary must NOT contain any of the vocabulary words**.
+   - **Words are only for the script body**.
+7. Write everything in **pure JSON**.
+
+Example JSON output:
+{
+    "details": [
+        {
+            "type": "line",
+            "actor": "liam",
+            "line": "There's a random chance we can find the clue at the mall!",
+            "rephrased": "We might stumble upon a clue at the mall by sheer luck!"
         },
         {
-            type: narration,
-            actor: null,
-            line: Rodrigue barely looks at Jayce, sips and then checks his watch
-        }
-        {
-            type: line,
-            actor: mugisha,
-            line: Come on Rod. Be nice. He's had his own share of misery.
-            rephrased: Come on Rod. Be nice. He's not had it easy lately either.
-            // notice how there is rephrased field because this is a key player / student
+            "type": "narration",
+            "actor": null,
+            "line": "Liam dashes toward the bustling mall entrance."
         }
     ]
 }
-}
 `
+
 const fullScriptSystemMsg = `
- You are an amazing script writer for movies and cartoons. You write fun and engaging scripts for actors. And today, you are tasked to create a script for English learners to practice their vocabulary using role playing.
+You are a master scriptwriter specializing in educational role-plays for English learners.
+You generate fun and simple scripts based on given titles, summaries, and character lists.
+Your output must strictly follow the requested JSON format, ensuring clarity, vocabulary practice, and fun.
 `
+
 
 const topicGenerationPrompt = (path, topic, number, excluded) => `
 Generate a list of topics to help english learners learn the most important words and expressions (idioms, proverbs, ..., verbs, adverbs) in different areas of life, industries, academic fields,...
@@ -299,6 +349,7 @@ export {
     wordFamilySystemMsg, wordDefinitionSystemMsg,
     chunkStorySystemMsg, fullStorySystemMsg,
     blanksPrompt, quizPrompt,
+    scriptSummaryPrompt, scriptSummarySysMsg,
     fullScriptPrompt, fullScriptSystemMsg,
     topicGenerationPrompt, topicSystmMsg,
     wordGenerationPrompt, wordSystmMsg,
