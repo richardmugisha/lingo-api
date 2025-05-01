@@ -1,17 +1,5 @@
-import fullScriptGen from "./utils/openai-process/actingScriptGenerator.js";
-import generateAudioForScript from "./utils/openai-process/generateAudio.js";
+import getWords from "./controllers/personal/fyp/getWords.js";
 
-const words = [
-    "adventure",
-    "journey",
-    "mystery",
-    "exciting",
-    "challenge",
-    "discovery",
-    "surprise",
-    "explore",
-    "victory",
-    "encounter"
-  ];
-  
-fullScriptGen(null, null, words, null).then(generateAudioForScript)
+getWords("668420cef4108d0339eddda6")
+.then(console.log)
+.catch(console.log)

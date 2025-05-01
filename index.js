@@ -3,7 +3,7 @@ import http from "http"
 import topic from "./routes/personal/topic.js"
 import words from "./routes/personal/words.js"
 import batchRequest from "./routes/personal/batchRequest.js"
-
+import fyp from "./routes/personal/fyp.js"
 import network from "./routes/network/index.js";
 
 import connectDB from "./db/connect.js";
@@ -45,6 +45,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/batch-request', batchRequest)
 app.use('/api/v1/cards', topic)
 app.use('/api/v1/words', words)
+app.use('/api/v1/fyp', fyp)
 
 
 const port = process.env.PORT || 3500;
