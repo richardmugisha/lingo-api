@@ -13,7 +13,7 @@ const guide = (memoryGraph, structure, currentEp, currentAct, currentScenes, dev
         ${JSON.stringify(memoryGraph)}
 
     Your job at this stage is to just point out the fields that need to be updated and the path to them to access each of them. Ignore the actual update at this state
-    e.g: entities/people/the person
+    e.g: people
 
 
     The information that feeds the update comes from this scene:
@@ -21,17 +21,14 @@ const guide = (memoryGraph, structure, currentEp, currentAct, currentScenes, dev
 
     typical json output:
     {
-        "Kathy": "entities/people/Kathy",
-        "Emily": "entities/people/Emily",
-        "studio": "entities/places/studio",
-        "Kathy<>Emilt": "relationships/Kathy<>Emily",
-        "Emily<>studio": "relationships/Emily<>studio"
+        "Kathy": "people",
+        "Emily": "people",
+        "studio": "places",
+        ...
     }
 
-    Note: if people or any other entity parent is empty, you still point to the path/entity because this path is used to save the entity to an object of the same name as the parent, i.e, people
     Rules:
         - Only the most relevant details to the story are considered
-        - Create paths for at least one relationship. The relationships should be very relevant to the story though.
         - Only crete paths for entities that very relevant to the story
 `
 

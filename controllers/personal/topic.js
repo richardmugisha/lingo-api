@@ -2,7 +2,7 @@ import Topic from '../../models/topic.js';
 import getWordModel from '../../models/word/word.js'
 import Story from '../../models/story.js';
 import { fullStoryGen, aiCoEditor } from '../../utils/story/storyGenerator.js'
-import scriptGen from "../../utils/script/actingScriptGenerator.js"
+// import scriptGen from "../../utils/script/actingScriptGenerator.js"
 import generateAudioForScript from '../../utils/script/generateAudio.js';
 import Script from '../../models/script.js';
 import generateTopics from '../../utils/topic/generateTopics.js';
@@ -259,7 +259,7 @@ const createScript = async (req, res) => {
         const topic = req.params.topicId
         const { title, summary, words, writer, coWriters, players } = req.body
         console.log(req.body)
-        const script = await scriptGen(title, summary, words, players)
+        const script = 2 //await scriptGen(title, summary, words, players)
         Script.create({
             writer, coWriters: coWriters || [], topic, words, title: script.title, summary: script.summary, details: script.details, characters: script.characters
         })

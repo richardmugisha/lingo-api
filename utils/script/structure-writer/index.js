@@ -1,30 +1,18 @@
 
-import { structureRaw as structurePrompt, structure as JSONstructure, structureSysMsg } from "../prompts/structure.js";
-import openaiRequest from "../../../openai-process/openaiRequest.js";
+import structureBuild from "./executors/structure.js"
+import Script from "../../../models/script.js"
 
-const structureBuild = async ({
-    setting = "",
-    tone = "epic and adventurous",
-    genre = "fantasy",
-    protagonistType = "",
-    storyLength = "medium", // short, medium, long
-    logLine = ""
-  } = {}) => {
+const cleanStructure = async () => {
     try {
-        const prompt = structurePrompt(topicData.topic, topicData.subtopics)
-        const structure = await openaiRequest("gpt-4o", structureSysMsg, prompt, true)
+        const structure = await structureBuild(topicData)
 
-        const toJSONprompt = JSONstructure(structure)
-        const jsonStructure = await openaiRequest("gpt-4o", "You are a helpful assistant", toJSONprompt)
-        console.log(jsonStructure)
-        console.log("\n\n")
-        return structure
+        console.log(structure)
+
+        Script.create(structure)
     } catch (error) {
         console.log(error.message)
     }
 }
-
-export default structureBuild
 
 const topicData = {
     topic: "Climate Change",
@@ -82,3 +70,5 @@ const topicData = {
     ]
   };
   
+
+cleanStructure()

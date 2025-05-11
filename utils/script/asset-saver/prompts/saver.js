@@ -20,23 +20,15 @@ const saver = (memoryGraph, structure, currentEp, currentAct, currentScenes, dev
         "Kathy": info about Kathy,
         "Emily": info about Emily,
         "studio": info about the studio,
-        "Kathy<>Emily": info about Kathy and Emily relationshhip,
-        "Emily<>studio": info about the relationship between Emily and the studio (Is she the owner?)
     }
 
-    Each info about somone, something or... takes this form:
+    For new items to add to the log, this is the structure: They values are all bullet-points form strings (not list) and we keep the details to <= 5 because no need for trivial information
     {
-        "key aspects": <array>// key aspects this is always kept to 5 or less, and is regulary updated to reflect the most important aspects of the entity across the entire story so up to the current scene. (no borrowing from the future unless really necessary)
-                Don't feel this list with unecessary details. But you can replace the existing ones if the new scene has some new critical facts about something or someone. If they facts are not that important, just use them to update the short memory or summary
-            [
-                - a string description of a key aspect of this entity (emphasis: This fact has to come from the scene)
-                - don't feel this key aspects list with trivial facts
-                - better empty or 1 fact than trivial facts
-                - 
-                - 
-            ]
-        "short memory": <str>// short memory - reflects the most recent information about someone, something or ...
-        "summary": <str>// this is regularly re-summarized on each scene to reflect the general/global information about someone, something, or...
+        "identity": captures the core identity of the item (things that are less subject to change throughout the story) e.g: sex, ethnicity, age (may be updated if need be), and more
+        "summary": this is regularly re-summarized on each scene to reflect the general/global information about someone, something, or...
+        "history":  It reflects the major events, activities, transformations that happened to or surround this item
+        "recent": It captures the recent information, and is usually rich in detail because it mimics the working memory
+        "relationships": It captures the relationships this item has with other (if any) and updates them if necessary (think the protagonist's friend turns out to be the antagonist at some point)
     }
 
     Rules:
