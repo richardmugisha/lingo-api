@@ -1,9 +1,9 @@
 
-import openaiRequest from '../openaiRequest.js'
+import openaiRequest from '../openai-process/openaiRequest.js'
 
 import {
     quizPrompt
-} from '../../openaiHelper.js'
+} from '../openaiHelper.js'
 
 
 const quizGen = async ({paragraphs, title}) => {

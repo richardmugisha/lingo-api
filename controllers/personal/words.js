@@ -1,10 +1,10 @@
 
 import getWordModel from '../../models/word/word.js'
 import { createNewTopic } from './topic.js'
-import wordDefinition from '../../utils/openai-process/wordDefinition.js'
+import wordDefinition from '../../utils/word/executors/definer.js'
 import Topic from '../../models/topic.js'
 
-import { searchThrough } from '../../utils/stringCompare.js'
+import { searchThrough } from '../../utils/word/executors/stringCompare.js'
 
 
 const searchWords = async (req, res) => {

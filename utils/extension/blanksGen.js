@@ -1,9 +1,9 @@
 
-import openaiRequest from '../openaiRequest.js'
+import openaiRequest from '../openai-process/openaiRequest.js'
 
 import {
     blanksPrompt
-} from '../../openaiHelper.js'
+} from '../openaiHelper.js'
 
 
 const blanksGen = async (paragraphs) => {

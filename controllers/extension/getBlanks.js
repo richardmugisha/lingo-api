@@ -1,6 +1,6 @@
 
-import { blanksGen } from "../../utils/openai-process/extension/blanksGen.js"
-import { quizGen } from "../../utils/openai-process/extension/quizGen.js"
+import { blanksGen } from "../../utils/extension/blanksGen.js"
+import { quizGen } from "../../utils/extension/quizGen.js"
 
 import ArticleBlanks from "../../models/extension/articleBlanks.js";
 import ArticleQuiz from "../../models/extension/articleQuiz.js";

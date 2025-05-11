@@ -1,13 +1,13 @@
 import Topic from '../../models/topic.js';
 import getWordModel from '../../models/word/word.js'
 import Story from '../../models/story.js';
-import { fullStoryGen, aiCoEditor } from '../../utils/openai-process/storyGenerator.js'
-import scriptGen from "../../utils/openai-process/actingScriptGenerator.js"
-import generateAudioForScript from '../../utils/openai-process/generateAudio.js';
+import { fullStoryGen, aiCoEditor } from '../../utils/story/storyGenerator.js'
+import scriptGen from "../../utils/script/actingScriptGenerator.js"
+import generateAudioForScript from '../../utils/script/generateAudio.js';
 import Script from '../../models/script.js';
-import generateTopics from '../../utils/openai-process/generateTopics.js';
-import generateWords from '../../utils/openai-process/generateWords.js';
-import createCascadingTopics from '../../utils/insertTopics.js';
+import generateTopics from '../../utils/topic/generateTopics.js';
+import generateWords from '../../utils/word/executors/generateWords.js';
+import createCascadingTopics from '../../utils/topic/insertTopics.js';
 
 import { Learning, newLearning, wordMasteryUpdate, patchLearningTopic, pushNewTopic } 
 from '../../models/learning/learning.js'

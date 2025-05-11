@@ -1,8 +1,8 @@
 
-import openaiRequest from "./openaiRequest.js";
+import openaiRequest from "../../openai-process/openaiRequest.js";
 import {
     wordGenerationPrompt, wordSystmMsg
-} from "../openaiHelper.js"
+} from "../../openaiHelper.js"
 
 const generate = async (path, topic, number, excluded) => {
     try {

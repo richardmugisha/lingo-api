@@ -1,4 +1,4 @@
-import { createNewTopic } from "../controllers/personal/topic.js"
+import { createNewTopic } from "../../controllers/personal/topic.js"
 
 const createCascadingTopics = async (creator, language, structure, parent) => {
     // const topics = []  // ✅ Now correctly scoped and accessible

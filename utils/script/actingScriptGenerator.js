@@ -1,5 +1,5 @@
 
-import openaiRequest from './openaiRequest.js'
+import openaiRequest from '../openai-process/openaiRequest.js'
 
 import { fullScriptPrompt,
         fullScriptSystemMsg,
