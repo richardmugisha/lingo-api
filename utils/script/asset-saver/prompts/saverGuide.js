@@ -31,6 +31,8 @@ const guide = (memoryGraph, structure, currentEp, currentAct, currentScenes, dev
     Note: if people or any other entity parent is empty, you still point to the path/entity because this path is used to save the entity to an object of the same name as the parent, i.e, people
     Rules:
         - Only the most relevant details to the story are considered
+        - Create paths for at least one relationship. The relationships should be very relevant to the story though.
+        - Only crete paths for entities that very relevant to the story
 `
 
 const guideSysMsg = `

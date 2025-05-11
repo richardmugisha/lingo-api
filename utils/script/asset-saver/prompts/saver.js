@@ -27,21 +27,22 @@ const saver = (memoryGraph, structure, currentEp, currentAct, currentScenes, dev
     Each info about somone, something or... takes this form:
     {
         "key aspects": <array>// key aspects this is always kept to 5 or less, and is regulary updated to reflect the most important aspects of the entity across the entire story so up to the current scene. (no borrowing from the future unless really necessary)
+                Don't feel this list with unecessary details. But you can replace the existing ones if the new scene has some new critical facts about something or someone. If they facts are not that important, just use them to update the short memory or summary
             [
-                - key info 1
-                - key info 2
-                - 3
-                - 4
-                - 5
+                - a string description of a key aspect of this entity (emphasis: This fact has to come from the scene)
+                - don't feel this key aspects list with trivial facts
+                - better empty or 1 fact than trivial facts
+                - 
+                - 
             ]
         "short memory": <str>// short memory - reflects the most recent information about someone, something or ...
         "summary": <str>// this is regularly re-summarized on each scene to reflect the general/global information about someone, something, or...
     }
 
     Rules:
-        - if the existing info is empty or null, that means you have a blank slate to fill with the ONLY the important info from the current scene.
+        - if the existing info is empty or null, that means you have a blank slate to fill with the ONLYnd ONLY a the important info from the current scene.
         - Respect the keys given to you in the memory graph, and return them as such
-        - Provide the info string for each key
+        - Provide the info for each key
 `
 
 const saverSysMsg = `

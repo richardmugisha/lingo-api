@@ -6,19 +6,43 @@ const RelationshipSchema = mongoose.Schema({
 }, { _id: false }); // no extra id for subdocuments
 
 const CharacterSchema = mongoose.Schema({
-    firstName: String,
-    lastName: String,
-    isMain: {
-        type: Boolean,
-        default: false
-    },
+    name: String,
     sex: String,
-    ethnicty: String,
+    ethnicity: String,
     age: Number,
-    personality: String,
-    motivation: String,
+    description: String,
     relationships: [RelationshipSchema]
 }, { _id: false }); // no extra id for subdocuments
+
+const SceneDetailSchema = mongoose.Schema({
+    character: String,
+    type: String, // narration or line
+    line: String,
+    paraphrased: String,
+});
+
+const SceneSchema = mongoose.Schema({
+    title: String,
+    logline: String,
+    words: [ String ], // key words
+    details: [ SceneDetailSchema ]
+})
+
+const ActSchema = mongoose.Schema({
+    title: String,
+    logline: String,
+    scenes: [ SceneSchema ]
+})
+
+const EpisodeSchema = mongoose.Schema({
+    title: String,
+    topic: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Topic'
+    },
+    logline: String,
+    acts: [ ActSchema ]
+})
 
 const ScriptSchema = mongoose.Schema({
     writer: {
@@ -39,6 +63,10 @@ const ScriptSchema = mongoose.Schema({
     details: [Object],
     title: String,
     summary: String,
+    theme: String,
+    tone: String,
+    mainCharacter: String,
+    episodes: [EpisodeSchema],
     characters: [CharacterSchema],
     words: [String]
 });

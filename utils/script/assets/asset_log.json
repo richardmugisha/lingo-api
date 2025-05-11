@@ -1,23 +1,37 @@
-
 {
     "entities": {
         "people": [
-
+            "Dr. Elena Morales",
+            "Tom",
+            "Sam",
+            "Mia",
+            "James"
         ],
         "objects": [
-
+            "heavy machinery"
         ],
         "places": [
-
+            "Remote Climate Observatory",
+            "Elena's Childhood Home",
+            "conference"
         ],
-        "events": [
-
-        ],
+        "events": [],
         "abstract": [
-
+            "greenhouse gases",
+            "climate crisis",
+            "fossil fuels",
+            "community workshop",
+            "severe weather warnings",
+            "industrialization",
+            "sustainability",
+            "deforestation",
+            "carbon emissions",
+            "illegal logging",
+            "extreme rise in greenhouse gases",
+            "call to action",
+            "community meetings",
+            "social media"
         ]
     },
-    "relationships": [
-        
-    ]
+    "relationships": []
 }
