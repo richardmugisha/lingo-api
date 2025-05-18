@@ -1,13 +1,14 @@
 
 
-const writer = (assets, story, previousEpisode, currentEpisode) => `
+const writer = (assets, script, previousEpisode, currentEpisode) => `
 Context:
-- story theme: ${story.theme}
-- episodes: ${story.episodes.map(ep => ep.logline)}
-- previous episode: ${JSON.stringify(previousEpisode)}
+- story theme: ${script.theme}
+- episodes: ${script.episodes.map(ep => ep.logline)}
+- previous episode: ${JSON.stringify(previousEpisode?.logline)}
 - The episode to develop: ${JSON.stringify(currentEpisode)}
 - words (Have to be used at some point in spoken lines of the scene)
     !! The usage of these words should be logical to show the student how such a word is used in practical contexts.
+    words: ${currentEpisode.words}
 
 - act 1: act log line
         - scene 1 [chosen one or few words from the word lsit]: scene log line
@@ -27,7 +28,10 @@ Typical json output:
             logline
             words: [chosen set out of the word set put aside for this episode] // this set has to come from that set (it's a requirement)
             scenes: [
-                "- scene 1 [chosen one or few words from the word list]: scene log line"
+                {
+                    logline,
+                    words[]
+                }
                 ...,
                 ...
             ]

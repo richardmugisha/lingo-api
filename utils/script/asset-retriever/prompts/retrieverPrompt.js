@@ -17,7 +17,7 @@ const retriever = (memoryGraph, structure, currentEp, currentAct, currentScenes,
 
 
     The previous scene (to keep you grounded):
-        ${previousScene}
+        ${JSON.stringify(previousScene)}
 
     The scene to be developed:
         ${currentScene}
@@ -28,11 +28,9 @@ const retriever = (memoryGraph, structure, currentEp, currentAct, currentScenes,
     typical json output:
     
     {
-        "Kathy": "entities/people/Kathy",
-        "Emily": "entities/people/Emily",
-        "studio": "entities/places/studio",
-        "Kathy<>Emilt": "relationships/Kathy<>Emily",
-        "Emily<>studio": "relationships/Emily<>studio"
+        "Kathy": "people",
+        "Emily": "people",
+        "studio": "places",
     }
 
 `

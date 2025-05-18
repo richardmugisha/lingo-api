@@ -5,7 +5,8 @@ import  {
     deleteTopics, updateMastery, 
     createStory, createScript, getStories, 
     getTopics, getScripts, getSuggestions, 
-    saveTopics, getLearning, createLearning
+    saveTopics, getLearning, createLearning,
+    prepareEpisode
 } from "../../controllers/personal/topic.js"
 
 // router.route('/topic').get(getTopic).patch(updateMastery).delete(deleteTopics)
@@ -14,5 +15,6 @@ router.route("/topic").get(getLearning).post(createLearning).patch(updateMastery
 router.route("/topic/suggestions").get(getSuggestions)
 router.route('/story-time/:topicId').post(createStory).get(getStories);
 router.route('/chat-time/:topicId').post(createScript).get(getScripts)
+router.route('/chat-time/episode').patch(prepareEpisode)
 
 export default router

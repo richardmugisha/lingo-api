@@ -2,13 +2,14 @@
 import structureBuild from "./executors/structure.js"
 import Script from "../../../models/script.js"
 
-const cleanStructure = async () => {
+const cleanStructure = async (topicData) => {
     try {
         const structure = await structureBuild(topicData)
 
-        console.log(structure)
+        const script = await Script.create(structure)
 
-        Script.create(structure)
+        return script
+        
     } catch (error) {
         console.log(error.message)
     }
@@ -70,5 +71,4 @@ const topicData = {
     ]
   };
   
-
-cleanStructure()
+export default cleanStructure

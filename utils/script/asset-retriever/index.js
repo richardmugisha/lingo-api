@@ -1,10 +1,10 @@
 
 import assetRetriever from "./executors/retriever.js"
 
-export default async (previousScene, epIndex, actIndex, sceneIndex) => {
+export default async (props) => {
     try {
 
-        const assets = await assetRetriever(previousScene, epIndex, actIndex, sceneIndex)
+        const assets = await assetRetriever(props)
 
         return assets
         

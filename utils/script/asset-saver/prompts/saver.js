@@ -13,28 +13,35 @@ const saver = (memoryGraph, structure, currentEp, currentAct, currentScenes, dev
         ${JSON.stringify(memoryGraph)}
 
     The information that feeds the update comes from this scene:
-    ${developedScene}
+    ${JSON.stringify(developedScene)}
 
-    typical json output:
+    You must return a JSON object where each key is an entity name and each value is an object with the following structure:
     {
-        "Kathy": info about Kathy,
-        "Emily": info about Emily,
-        "studio": info about the studio,
+        "name": "name of the asset",
+        "identity": "bullet points about core identity",
+        "summary": "bullet points about general information",
+        "history": "bullet points about major events",
+        "recent": "bullet points about recent information",
+        "relationships": "bullet points about relationships"
     }
 
-    For new items to add to the log, this is the structure: They values are all bullet-points form strings (not list) and we keep the details to <= 5 because no need for trivial information
+    Example output:
     {
-        "identity": captures the core identity of the item (things that are less subject to change throughout the story) e.g: sex, ethnicity, age (may be updated if need be), and more
-        "summary": this is regularly re-summarized on each scene to reflect the general/global information about someone, something, or...
-        "history":  It reflects the major events, activities, transformations that happened to or surround this item
-        "recent": It captures the recent information, and is usually rich in detail because it mimics the working memory
-        "relationships": It captures the relationships this item has with other (if any) and updates them if necessary (think the protagonist's friend turns out to be the antagonist at some point)
+        "Kathy": {
+            "name": "Kathy",
+            "identity": "• Female\n• 35 years old\n• Environmental scientist",
+            "summary": "• Lead researcher at the observatory\n• Passionate about climate change",
+            "history": "• Discovered the greenhouse gas anomaly\n• Started the research project",
+            "recent": "• Found new evidence of illegal logging\n• Planning community meeting",
+            "relationships": "• Works closely with Tom\n• Mentors young scientists"
+        }
     }
 
     Rules:
-        - if the existing info is empty or null, that means you have a blank slate to fill with the ONLYnd ONLY a the important info from the current scene.
-        - Respect the keys given to you in the memory graph, and return them as such
-        - Provide the info for each key
+    - Each field must be a bullet-pointed string (not a list)
+    - Keep details to <= 5 bullet points per field
+    - Only use the information from the current scene (meaning don't fetch from the future scenes)
+    - Respect the keys given to you in the memory graph
 `
 
 const saverSysMsg = `

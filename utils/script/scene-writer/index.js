@@ -3,21 +3,16 @@ import assetRetriever from "../asset-retriever/index.js"
 import assetSaver from "../asset-saver/index.js"
 
 import sceneWriter from "./executors/sceneWriter.js"
+import sceneParser from "./executors/sceneParser.js"
 
-export default async (previousScene, epIndex, actIndex, sceneIndex) => {
+export default async (props) => {
     try {
         
-        const assets = await assetRetriever(previousScene, epIndex, actIndex, sceneIndex)
+        const rawDevelopedScene = await sceneWriter(props)
 
-        const scene = await sceneWriter(assets, epIndex, actIndex, sceneIndex)
+        const jsonDevelopedScene = await sceneParser(rawDevelopedScene, props.scene.words)
 
-        console.log(scene)
-
-        console.log("\n")
-
-        await assetSaver(scene, epIndex, actIndex)
-
-        return scene
+        return [rawDevelopedScene, jsonDevelopedScene]
 
     } catch (error) {
         console.log(error.message)

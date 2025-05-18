@@ -1,32 +1,30 @@
 
-import { loadStructure, loadAssetLog, extractKeyDetails, loadAssets } from "../../assets/index.js"
+import { loadAssets } from "../../assets/index.js"
+
 import { retriever, retrieverSysMsg } from "../prompts/retrieverPrompt.js"
 
 import openaiRequest from "../../../openai-process/openaiRequest.js"
 
-export default async (previousScene, epIndex, actIndex, sceneIndex) => {
+export default async (props) => {
     try {
-        const structure = loadStructure()
+        // const structure = loadStructure()
 
-        const { episode, act, scenes, scene } = extractKeyDetails(structure, epIndex, actIndex, sceneIndex)
-        
-        const assetLog = loadAssetLog()
+        // const { episode, act, scenes, scene } = extractKeyDetails(structure, epIndex, actIndex, sceneIndex)
 
-        const prompt = retriever(assetLog, structure, episode.logline, act.logline, scenes.map(sc => sc.logline), previousScene, scene.logline)
+        const prompt = retriever(props.assetLog, props.script, props.episode.logline, props.act.logline, props.scenes.map(sc => sc.logline), props.previousScene, props.scene.logline)
 
         // console.log(prompt)
 
         const retrieverGuide = await openaiRequest("gpt-4o-mini", retrieverSysMsg, prompt)
 
+
         // console.log(retrieverGuide)
 
-        const assets = loadAssets(JSON.parse(retrieverGuide))
+        const assets = loadAssets(JSON.parse(retrieverGuide), props.assets)
 
-        // console.log(assets)
 
         const valid = Object.entries(assets || {}).filter(([k, v]) => v)
 
-        console.log('--- valid ', valid)
 
         return Object.fromEntries(valid)
 

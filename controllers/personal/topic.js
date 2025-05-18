@@ -5,9 +5,11 @@ import { fullStoryGen, aiCoEditor } from '../../utils/story/storyGenerator.js'
 // import scriptGen from "../../utils/script/actingScriptGenerator.js"
 import generateAudioForScript from '../../utils/script/generateAudio.js';
 import Script from '../../models/script.js';
+import TopicScriptGroup from '../../models/topicScriptGroup.js';
 import generateTopics from '../../utils/topic/generateTopics.js';
 import generateWords from '../../utils/word/executors/generateWords.js';
 import createCascadingTopics from '../../utils/topic/insertTopics.js';
+import orchestractor from '../../utils/script/orchestrator/index.js';
 
 import { Learning, newLearning, wordMasteryUpdate, patchLearningTopic, pushNewTopic } 
 from '../../models/learning/learning.js'
@@ -285,15 +287,36 @@ const getStories = async(req, res) => {
 }
 
 const getScripts = async(req, res) => {
+    console.log('--- fetch scripts',)
     const { topicId } = req.params;
+    console.log(topicId)
     try {
-        const stories = await Script.find({ topic: topicId })
+        const group = await TopicScriptGroup.findOne({ topic: topicId })
+            .populate({
+                path: 'scripts.script',
+                model: 'Script'
+            })
+            .populate({
+                path: 'scripts.topics',
+                model: 'Topic'
+            })
         // //console.log(stories)
-        res.status(200).json({ stories })
+        console.log(group)
+        res.status(200).json({ stories: group.scripts })
 
     } catch (error) {
         //console.log(error.message)
         res.status(500).json({ msg: error.message });
+    }
+}
+
+const prepareEpisode = async(req, res) => {
+    const { scriptID, epIdx } = req.body
+    try {
+        orchestractor(scriptID, epIdx)
+        res.status(204).json({msg: 'success'})
+    } catch (error) {
+        res.status(500).json({msg: error.message})
     }
 }
 
@@ -308,6 +331,7 @@ export {
     createScript,
     getStories,
     getScripts,
+    prepareEpisode,
     getSuggestions,
     saveTopics
 };

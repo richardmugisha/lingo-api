@@ -16,18 +16,7 @@ const scenePrompt = (assets, structure, currentEp, currentAct, currentScenes, cu
             !! The usage of these words should be logical to show the student how such a word is used in practical contexts.
 
     memory:
-    ${Object.entries(assets || {}).map(([k, mem]) => 
-    `   - ${k}:
-            key facts:
-                ${mem["key aspects"]}
-            
-            short memory: 
-                ${mem["short memory"]}
-
-            summary:
-                ${mem["summary"]}
-        
-    `)}        
+    ${JSON.stringify(assets)}        
 
     ground rules:
         - Golden rule: show, don't tell. 

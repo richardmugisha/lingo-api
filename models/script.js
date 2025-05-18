@@ -21,7 +21,7 @@ const SceneDetailSchema = mongoose.Schema({
         enum: ['narration', 'line'],
         required: true
     },
-    line: String,
+    text: String,
     paraphrased: String,
 }, { _id: false });
 
@@ -50,6 +50,10 @@ const EpisodeSchema = mongoose.Schema({
     acts: {
         type: [ ActSchema ],
         default: []
+    },
+    ready: {
+        type: Boolean,
+        default: false
     }
 }, { _id: false })
 

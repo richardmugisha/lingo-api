@@ -1,14 +1,12 @@
 import openaiRequest from "../../../openai-process/openaiRequest.js";
 import { scenePrompt, sceneSysMsg } from "../prompts/scenePrompt.js";
-import { loadStructure, extractKeyDetails } from "../../assets/index.js";
 
-const sceneWriter = async (assets, epIndex, actIndex, sceneIndex) => {
+const sceneWriter = async (props) => {
     try {
-        const structure = loadStructure()
-        const { episode, act, scenes, scene, words } = extractKeyDetails(structure, epIndex, actIndex, sceneIndex)
-        const prompt = scenePrompt(assets, structure, episode.logline, act.logline, scenes.map(sc => sc.logline), scene.logline, words)
+        const prompt = scenePrompt(props.neededAssets, props.script, props.episode.logline, props.act.logline, props.scenes.map(sc => sc.logline), props.scene.logline, props.scene.words)
         // console.log(prompt, "\n\n")
         const genScene = await openaiRequest("gpt-4o-mini", sceneSysMsg, prompt, false)
+        console.log(".......... done scene writing")
         return genScene
     } catch (error) {
         console.log(error.message)
