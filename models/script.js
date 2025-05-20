@@ -29,6 +29,7 @@ const SceneSchema = mongoose.Schema({
     title: String,
     logline: String,
     words: [ String ], // key words
+    raw: String,
     details: {
         type: [ SceneDetailSchema ],
         default: []

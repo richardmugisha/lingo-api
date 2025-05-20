@@ -10,6 +10,7 @@ import generateTopics from '../../utils/topic/generateTopics.js';
 import generateWords from '../../utils/word/executors/generateWords.js';
 import createCascadingTopics from '../../utils/topic/insertTopics.js';
 import orchestractor from '../../utils/script/orchestrator/index.js';
+import liveChatHandle from '../../utils/live-chat/index.js'
 
 import { Learning, newLearning, wordMasteryUpdate, patchLearningTopic, pushNewTopic } 
 from '../../models/learning/learning.js'
@@ -320,6 +321,16 @@ const prepareEpisode = async(req, res) => {
     }
 }
 
+const liveChat = async (req, res) => {
+    const { chat, step, words } = req.body
+    try {
+        const response = await liveChatHandle(step, chat, words)
+        return res.status(200).json(response)
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 export {
     createNewTopic,
     getTopics,
@@ -333,7 +344,8 @@ export {
     getScripts,
     prepareEpisode,
     getSuggestions,
-    saveTopics
+    saveTopics,
+    liveChat
 };
 
 const bringSample = () => (

@@ -61,7 +61,6 @@ const orchestractor = async (scriptID, epIdx) => {
             // Process each scene in the act
             for (const [sceneIndex, scene] of act.scenes.entries()) {
                 props.scene = scene
-                props.previousScene = props.scenes[sceneIndex - 1]
 
                 // Retrieve assets needed for this scene
                 const neededAssets = await assetRetriever(props)
@@ -79,6 +78,7 @@ const orchestractor = async (scriptID, epIdx) => {
                 
                 // Write the scene
                 const [rawDevelopedScene, jsonDevelopedScene] = await sceneWriter(props)
+                props.previousScene = rawDevelopedScene
                 
                 // Log the scene
                 // fs.writeFileSync(
@@ -99,6 +99,7 @@ const orchestractor = async (scriptID, epIdx) => {
                 // );
                 // console.log("assets: ", props.assets)
                 props.scenes[sceneIndex].details = jsonDevelopedScene
+                props.scenes[sceneIndex].raw = rawDevelopedScene
 
                 // if (sceneIndex == 1) break
             }
