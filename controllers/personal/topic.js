@@ -322,9 +322,9 @@ const prepareEpisode = async(req, res) => {
 }
 
 const liveChat = async (req, res) => {
-    const { chat, step, words } = req.body
+    const { chat, step, words, topic } = req.body
     try {
-        const response = await liveChatHandle(step, chat, words)
+        const response = await liveChatHandle(step, chat, words, topic)
         return res.status(200).json(response)
     } catch (error) {
         console.log(error.message)

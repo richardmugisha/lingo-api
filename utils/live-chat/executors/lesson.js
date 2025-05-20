@@ -7,13 +7,13 @@ import {
 const chats = []
 
 
-export default async(userChat, words) => {
+export default async(userChat, words, topic) => {
     try {
         if (userChat) chats.push("Richard: " + userChat)
         const sysPrompt = sysMsg(
-            "sustainability", "Richard", "Bethany", chats
+           topic, "Richard", "Bethany", chats
         )
-        const prompt = msg(words, "sustainability", chats)
+        const prompt = msg(words, topic, chats)
         console.log(prompt)
         const res = await openaiRequest("gpt-4o-mini", sysPrompt, prompt)
 
