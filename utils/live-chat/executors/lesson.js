@@ -18,12 +18,13 @@ export default async(userChat, words) => {
         const res = await openaiRequest("gpt-4o-mini", sysPrompt, prompt)
 
         const chat = extractTagContent(res, 'chat')
+        const word = extractTagContent(res, 'word')
 
         chats.push("Bethany: " + chat)
 
         console.log(chat)
 
-        return {chat }
+        return {chat, word }
     } catch (error) {
         console.log(error.message)
     }
