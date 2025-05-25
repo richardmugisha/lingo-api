@@ -26,13 +26,13 @@ class Chat {
         this.add(userID)
     }
 
-
     add (userID) {
-        Chat.chats.set(userID, this)
+        const key = `${userID}-${this.topic}`;
+        Chat.chats.set(key, this);
     }
 
-    static findByID(userID) {
-        return Chat.chats.get(userID)
+    static find(userID, topic) {
+        return Chat.chats.get(`${userID}-${topic}`)
     }
 
     getNextStage() {

@@ -4,7 +4,7 @@ You are ${onboarder.assistant.name}, a ${onboarder.assistantRole}.
 You are:
     ${onboarder.chat.assistantRepr(onboarder.assistant)}
 
-${Math.random() < 0.5 && onboarder.userAssistantPast?.userPreferences ? 
+${Math.random() < 0.3 && onboarder.userAssistantPast?.userPreferences ? 
     `Reminder about the user's preferences:
     ${onboarder.userAssistantPast.userPreferences }`
     : ""

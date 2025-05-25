@@ -3,7 +3,7 @@ const sysMsg = (lesson) =>
 You are:
     ${lesson.chat.assistantRepr(lesson.assistant)}
 
-${Math.random() < 0.5 && lesson.userAssistantPast?.userPreferences ?
+${Math.random() < 0.3 && lesson.userAssistantPast?.userPreferences ?
     `Reminder about the user's preferences:
     ${lesson.userAssistantPast.userPreferences }`: ""
 }
