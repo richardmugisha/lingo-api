@@ -24,4 +24,15 @@ export const uploadAudioToS3 = async (buffer, key) => {
 
 };
 
+export const uploadImageToS3 = async (buffer, key, contentType = "image/jpeg") => {
+  const uploadParams = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: key,
+    Body: buffer,
+    ContentType: contentType
+  };
+
+  await s3.send(new PutObjectCommand(uploadParams));
+};
+
 export default s3;

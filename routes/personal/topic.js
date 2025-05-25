@@ -7,7 +7,8 @@ import  {
     getTopics, getScripts, getSuggestions, 
     saveTopics, getLearning, createLearning,
     prepareEpisode,
-    liveChat
+    liveChat, saveAgent, getAgents,
+    saveAgentPair, getAgentPairs
 } from "../../controllers/personal/topic.js"
 
 // router.route('/topic').get(getTopic).patch(updateMastery).delete(deleteTopics)
@@ -18,5 +19,9 @@ router.route('/story-time/:topicId').post(createStory).get(getStories);
 router.route('/chat-time/:topicId').post(createScript).get(getScripts)
 router.route('/chat-time/episode').patch(prepareEpisode)
 router.route('/live-chat').post(liveChat)
+router.route('/live-chat/agents').post(saveAgent).get(getAgents)
+router.route('/live-chat/agent-pairs')
+    .post(saveAgentPair)
+    .get(getAgentPairs);
 
 export default router

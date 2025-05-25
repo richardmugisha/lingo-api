@@ -10,10 +10,14 @@ import generateTopics from '../../utils/topic/generateTopics.js';
 import generateWords from '../../utils/word/executors/generateWords.js';
 import createCascadingTopics from '../../utils/topic/insertTopics.js';
 import orchestractor from '../../utils/script/orchestrator/index.js';
-import liveChatHandle from '../../utils/live-chat/index.js'
+// import liveChatHandle from '../../utils/live-chat/index.js'
+import LiveChat from '../../utils/live-chat/index.js'
 
 import { Learning, newLearning, wordMasteryUpdate, patchLearningTopic, pushNewTopic } 
 from '../../models/learning/learning.js'
+import Agent from '../../models/live-chat/agent.js'
+import { uploadImageToS3 } from '../../utils/s3Client.js'
+import AgentPair from '../../models/live-chat/agentPair.js';
 
 const createNewTopic = async (id, name, userId, language, parent, isAiGenerated) => {
     try {
@@ -322,14 +326,145 @@ const prepareEpisode = async(req, res) => {
 }
 
 const liveChat = async (req, res) => {
-    const { chat, step, words, topic } = req.body
+    const { chat: message, words, topic, userID, username, agentPair } = req.body
+    console.log(message, words, topic, userID, username)
     try {
-        const response = await liveChatHandle(step, chat, words, topic)
-        return res.status(200).json(response)
+        let chat = LiveChat.findByID(userID)
+        if (!chat) {
+            if (!(userID && username && topic && words.length)) throw new Error("Provide all the inputs")
+            chat = new LiveChat(userID, username, topic, words, agentPair)
+        }
+        const response = await chat.coordinator.reply(message)
+        //  = await liveChatHandle(step, chat, words, topic)
+        return res.status(200).json({ reply: response, stage: chat.stage })
     } catch (error) {
         console.log(error.message)
+        res.status(404).json({ msg: error.message})
     }
 }
+
+const saveAgent = async (req, res) => {
+    try {
+        const { name, age, sex, role, ethnicity, shortDescription, longDescription, image } = req.body;
+        
+        // Convert base64 image to buffer
+        const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+        const imageBuffer = Buffer.from(base64Data, 'base64');
+        
+        // Generate a unique key for S3
+        const timestamp = Date.now();
+        const key = `agents/${timestamp}-${name.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+        
+        // Upload image to S3
+        await uploadImageToS3(imageBuffer, key);
+        
+        // Create S3 URL
+        const imageUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+        
+        // Create new agent in MongoDB
+        const agent = await Agent.create({
+            name,
+            age: parseInt(age),
+            sex,
+            role,
+            ethnicity,
+            shortDescription,
+            longDescription,
+            imageUrl
+        });
+        
+        res.status(200).json({ 
+            message: 'Agent created successfully',
+        });
+        
+    } catch (error) {
+        console.error('Error saving agent:', error);
+        res.status(500).json({ 
+            message: 'Failed to save agent',
+            error: error.message 
+        });
+    }
+};
+
+const getAgents = async (req, res) => {
+    try {
+        const agents = await Agent.find({})
+            .select('name age sex role ethnicity shortDescription longDescription imageUrl')
+            .sort({ createdAt: -1 }); // Sort by newest first
+        
+        res.status(200).json({ 
+            message: 'Agents retrieved successfully',
+            agents 
+        });
+    } catch (error) {
+        console.error('Error fetching agents:', error);
+        res.status(500).json({ 
+            message: 'Failed to fetch agents',
+            error: error.message 
+        });
+    }
+};
+
+const saveAgentPair = async (req, res) => {
+    try {
+        const { agent1, agent2 } = req.body;
+        
+        // Create new agent pair
+        const agentPair = await AgentPair.create({
+            supervisor: agent1._id,
+            instructor: agent2._id
+        });
+
+        // Populate the agent details
+        await agentPair.populate([
+            { path: 'supervisor', select: 'name age sex ethnicity shortDescription imageUrl' },
+            { path: 'instructor', select: 'name age sex ethnicity shortDescription imageUrl' }
+        ]);
+        
+        res.status(200).json({ 
+            message: 'Agent pair created successfully',
+            agentPair 
+        });
+        
+    } catch (error) {
+        console.error('Error saving agent pair:', error);
+        
+        // Handle duplicate pair error
+        if (error.code === 11000) {
+            return res.status(400).json({ 
+                message: 'This agent pair already exists',
+                error: 'Duplicate pair'
+            });
+        }
+        
+        res.status(500).json({ 
+            message: 'Failed to save agent pair',
+            error: error.message 
+        });
+    }
+};
+
+const getAgentPairs = async (req, res) => {
+    try {
+        const agentPairs = await AgentPair.find({})
+            .populate([
+                { path: 'supervisor', select: 'name age sex ethnicity shortDescription imageUrl' },
+                { path: 'instructor', select: 'name age sex ethnicity shortDescription imageUrl' }
+            ])
+            .sort({ createdAt: -1 });
+        
+        res.status(200).json({ 
+            message: 'Agent pairs retrieved successfully',
+            agentPairs 
+        });
+    } catch (error) {
+        console.error('Error fetching agent pairs:', error);
+        res.status(500).json({ 
+            message: 'Failed to fetch agent pairs',
+            error: error.message 
+        });
+    }
+};
 
 export {
     createNewTopic,
@@ -345,7 +480,10 @@ export {
     prepareEpisode,
     getSuggestions,
     saveTopics,
-    liveChat
+    liveChat, saveAgent,
+    getAgents,
+    saveAgentPair,
+    getAgentPairs
 };
 
 const bringSample = () => (
