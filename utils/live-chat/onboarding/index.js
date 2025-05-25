@@ -9,12 +9,14 @@ class Onboarding {
         this.assistant = chat.supervisor;
         this.assistantRole = "onboarding assistant";
         this.userRole = "student";
+        this.userAssistantPast = null;
         this.stage = Onboarding.stages[0];
-        this.welcomeDuration = (Math.floor(Math.random() * (4)) + 2) * 2; // Random between 2-5 back-and-forths before wrapping up
-        this.topicIntroDuration = (Math.floor(Math.random() * (3)) + 2) * 2;
-        this.instructorIntroDuration = 2 * 2;
+        this.welcomeDuration = (Math.floor(Math.random() * 4) + 2) * 2; // Random between 2-5 back-and-forths before wrapping up
+        this.topicIntroDuration = 2;
+        this.instructorIntroDuration = 2;
         this.transitioning = false;
         this.wrappingUp = false
+        this.checkpoint = 0
 
         // Bind methods once
         this.start = this.start.bind(this);
@@ -32,6 +34,8 @@ class Onboarding {
     moveUp () {
         const indexOfCurrentStage = Onboarding.stages.indexOf(this.stage)
         this.stage = Onboarding.stages[indexOfCurrentStage + 1]
+        this.checkpoint = this.chat.details.get("onboarding").length
+        console.log('hhahahahah ----- transitioning')
         return this.stage
     }
 
@@ -39,20 +43,25 @@ class Onboarding {
         const historyLength = this.chat.details.get("onboarding").length
         let should = false;
         console.log(this.welcomeDuration, historyLength, '--- welcome')
+        console.log(this.topicIntroDuration, historyLength, '--- topic')
+        console.log(this.instructorIntroDuration, historyLength, '--- isntrcut')
+    
         if (historyLength) {
             switch (this.stage) {
                 case "welcoming":
                     should = [0, this.welcomeDuration - 1].includes(historyLength % this.welcomeDuration) ;
-                    console.log('shd: ', should)
-                    this.welcomeDuration -= this.welcomeDuration > 0 && should
+                    const newT = this.welcomeDuration - (should * 2)
+                    this.welcomeDuration = newT >= 0 ? newT : 0
                     break
                 case "topic introduction":
-                    should = [0, this.topicIntroDuration- 1].includes(historyLength % this.topicIntroDuration);
-                    this.topicIntroDuration -= this.topicIntroDuration > 0 && should
+                    should = [0, this.topicIntroDuration- 1].includes((historyLength - this.checkpoint) % this.topicIntroDuration);
+                    const newTT = this.topicIntroDuration - (should * 2)
+                    this.topicIntroDuration = newTT >= 0 ? newTT : 0
                     break
                 default:
-                    should = [0, this.instructorIntroDuration - 1].includes(historyLength % this.instructorIntroDuration) ;
-                    this.instructorIntroDuration -= this.instructorIntroDuration > 0 && should
+                    should = [0, this.instructorIntroDuration - 1].includes((historyLength - this.checkpoint) % this.instructorIntroDuration) ;
+                    const newTTT = this.instructorIntroDuration - (should * 2)
+                    this.instructorIntroDuration = newTTT >= 0 ? newTTT : 0
             }
         }
         this.wrappingUp = should
@@ -72,13 +81,6 @@ class Onboarding {
     async instructor() {
         const response = await instructorIntroduction(this)
         return response
-    }
-
-    async handleMessage(message) {
-        // Check if user is new
-        // If new, provide introduction
-        // If returning, engage in small talk
-        // Return response with ready flag when appropriate
     }
 }
 

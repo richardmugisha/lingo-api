@@ -9,7 +9,7 @@ To make the transition smooth, we are calling upon you to decide whether the stu
 
 To decide, I am attaching the last few back and forths, and I am expecting a json
 {
-    shouldTransition: true or false // based on if the student wants to transition
+    shouldTransition: true if the student approves to transition or hints at it. Even 'alright' is enough
 }
 
 The dialogue:

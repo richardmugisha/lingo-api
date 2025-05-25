@@ -8,7 +8,6 @@ export default async (chat) => {
         const prompt = msg(chat)
 
         const verdict = await openaiRequest("gpt-4o-mini", sysPrompt, prompt, false)
-        console.log(verdict, chat)
         return JSON.parse(verdict).shouldTransition
 
     } catch (error) {

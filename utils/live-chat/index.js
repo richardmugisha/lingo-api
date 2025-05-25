@@ -7,10 +7,12 @@ import Coordinator from './coordinator/index.js';
 class Chat {
     static chats = new Map();
     constructor(userID, username, topic, totalWords, agentPair) {
+        this.cutOff = 10;
         this.userID = userID;
         this.username = username;
-        this.instructor = agentPair.instructor.name
-        this.supervisor = agentPair.supervisor.name
+        this.isUserNew = true;
+        this.instructor = agentPair.instructor
+        this.supervisor = agentPair.supervisor
         this.topic = topic;
         this.totalWords = totalWords;
         this.usedWords = new Set();
@@ -35,6 +37,48 @@ class Chat {
 
     getNextStage() {
         return this.coordinator.determineNextStage();
+    }
+
+    relationshipRepr (relationship, recallPast) {
+        return `
+        User preferences: 
+            ${relationship.userPreferences}
+
+        Facts about the user:
+            ${relationship.userFacts}
+
+        ${recallPast ? 
+            (() => {
+                const lastInteraction = relationship.lastInteraction;
+                const timeSinceLastInteraction = Date.now() - lastInteraction.time;
+                const hoursSinceLastInteraction = Math.floor(timeSinceLastInteraction / (1000 * 60 * 60));
+                
+                if (hoursSinceLastInteraction >= 24) {
+                    return `It's been ${hoursSinceLastInteraction} hours since our last interaction.
+                    
+        And these are the details of our last interaction:
+        ${lastInteraction.details}`;
+                } else {
+                    return "This is not our first interaction today.";
+                }
+            })()
+            : ""
+        }
+        `
+    }
+
+    assistantRepr (assistant) {
+        return `
+        name: ${assistant.name},
+        age: ${assistant.age},
+        sex: ${assistant.sex},
+        ethnicity: ${assistant.ethnicity},
+
+        ${assistant.shortDescription},
+
+        ${assistant.longDescription}
+        
+        `
     }
  
 }

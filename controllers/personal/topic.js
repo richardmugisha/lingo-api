@@ -345,18 +345,21 @@ const liveChat = async (req, res) => {
 
 const saveAgent = async (req, res) => {
     try {
-        const { name, age, sex, role, ethnicity, shortDescription, longDescription, image } = req.body;
+        const { name, age, sex, role, ethnicity, shortDescription, longDescription } = req.body;
+        const imageFile = req.file; // This will be handled by multer middleware
         
-        // Convert base64 image to buffer
-        const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
-        const imageBuffer = Buffer.from(base64Data, 'base64');
+        if (!imageFile) {
+            return res.status(400).json({ 
+                message: 'Image file is required',
+            });
+        }
         
         // Generate a unique key for S3
         const timestamp = Date.now();
         const key = `agents/${timestamp}-${name.toLowerCase().replace(/\s+/g, '-')}.jpg`;
         
         // Upload image to S3
-        await uploadImageToS3(imageBuffer, key);
+        await uploadImageToS3(imageFile.buffer, key);
         
         // Create S3 URL
         const imageUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;

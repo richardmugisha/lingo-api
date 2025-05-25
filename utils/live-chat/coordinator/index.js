@@ -3,6 +3,8 @@ import Lesson from "../lesson/index.js"
 import Closer from "../closer/index.js";
 
 import shouldTransition from "./executors/shouldTransition.js";
+import updateUserAssistantPast from "./executors/updateUserAssistantPast.js";   
+import { createRelationship, updateRelationship } from "./executors/userAssistantPast.js";
 
 class Coordinator {
     static stages = ["onboarding", "lesson", "closing"]
@@ -17,20 +19,19 @@ class Coordinator {
         this.addUserMessage(message)
         if (this[this.chat.stage].wrappingUp) {
             // check if can transition
-            console.log('supposed to wrap up')
-            const verdict = await shouldTransition(this.chat.details.get(this.chat.stage).slice(-5))
+            const verdict = await shouldTransition(this.chat.details.get(this.chat.stage).slice(this.chat.CUT))
             if (verdict) {
                 this.nextStage()
             }
             this[this.chat.stage].wrappingUp = false
-            console.log(verdict ? 'hhahahahah ----- transitioning': "not ")
         } else {
             this[this.chat.stage].shouldWrapUp()
-            console.log('now: ', this[this.chat.stage].wrappingUp)
+            console.log(this.chat.stage + ': ', this[this.chat.stage].wrappingUp)
         }
         
         const response = await this[this.chat.stage].steps[this[this.chat.stage].stage]()
         this.addAssistantMessage(response)
+        if (this.chat.details.get(this.chat.stage).length % 5) this.updateRelationship()
         return response
     }
 
@@ -61,34 +62,37 @@ class Coordinator {
     addAssistantMessage (message) {
         if (message) {
             this.chat.details.get(this.chat.stage).push(
-                `${this[this.chat.stage].assistant}: ${message}
+                `${this[this.chat.stage].assistant.name}: ${message}
 
                 `
             )
         }
     }
 
-    // determineNextStage() {
-    //     if (this.chat.stage === 'welcoming') {
-    //         return 'instructing';
-    //     }
-    //     if (this.chat.stage === 'instructing' && this.chat.usedWords.size === this.chat.totalWords.length) {
-    //         return 'closing';
-    //     }
-    //     return this.chat.stage;
-    // }
+   async updateRelationship () {
+        const history = this.chat.details.get(this.chat.stage).slice(-this.chat.cutOff)
+        const stageObj = this[this.chat.stage]
+        const currentRelationship = stageObj.userAssistantPast
+        const newData = await updateUserAssistantPast(this.chat, history, this.chat.username, stageObj.assistant.name, currentRelationship)
 
-    // async welcomeUser() {
-    //     const response = await this.welcomer.handleMessage()
-    // }
+        let newRelationship = null;
+        if (!currentRelationship) {
+            newRelationship = await createRelationship(this.chat.userID, stageObj.assistant._id, 
+                newData.lastInteraction,
+                newData.userFacts,
+                newData.userPreferences
+            )
+        } else {
+            newRelationship = await updateRelationship(this.chat.userID, stageObj.assistant._id, 
+                newData.lastInteraction || currentRelationship.lastInteraction.details,
+                newData.userFacts || currentRelationship.userFacts,
+                newData.userPreferences || currentRelationship.userPreferences
+            )
+        }
 
-    // async teachUser() {
-    //     const response = await this.instructor.handleMessage()
-    // }
+        stageObj.userAssistantPast = newRelationship
 
-    // async closeChat() {
-    //     const response = await this.closer.handleMessage()
-    // }
+   }
 
 }
 

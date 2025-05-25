@@ -3,9 +3,10 @@ import lesson from "./executors/lesson.js";
 class Lesson {
     constructor (chat) {
         this.chat = chat;
-        this.assistant = "Bethany";
+        this.assistant = chat.instructor;
         this.assistantRole = "knowledgeable conversationalist";
         this.userRole = "student";
+        this.userAssistantPast = null;
         this.stage = 'talk';
         this.transitioning = false;
         this.wrappingUp = false
