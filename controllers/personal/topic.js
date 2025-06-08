@@ -1,6 +1,6 @@
 import Topic from '../../models/topic.js';
 import getWordModel from '../../models/word/word.js'
-import Story from '../../models/story.js';
+import Story from '../../models/story/story.js';
 import { fullStoryGen, aiCoEditor } from '../../utils/story/storyGenerator.js'
 // import scriptGen from "../../utils/script/actingScriptGenerator.js"
 import generateAudioForScript from '../../utils/script/generateAudio.js';
