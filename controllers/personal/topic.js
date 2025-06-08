@@ -469,6 +469,44 @@ const getAgentPairs = async (req, res) => {
     }
 };
 
+const searchTopics = async (req, res) => {
+    try {
+        const { searchTerm } = req.query;
+        console.log(searchTerm)
+        if (!searchTerm) {
+            return res.status(400).json({ error: "Search term is required" });
+        }
+
+        // First search for topics by name
+        const nameMatches = await Topic.find({
+            name: { $regex: searchTerm, $options: 'i' }
+        }).populate('parent', 'name').lean();
+
+        // If we have less than 5 results, also search by parent name
+        if (nameMatches.length < 5) {
+            const parentMatches = await Topic.find({
+                'parent.name': { $regex: searchTerm, $options: 'i' }
+            }).populate('parent', 'name').lean();
+
+            // Combine results, ensuring no duplicates
+            const combinedResults = [...nameMatches];
+            parentMatches.forEach(topic => {
+                if (!combinedResults.find(t => t._id.toString() === topic._id.toString())) {
+                    combinedResults.push(topic);
+                }
+            });
+
+            return res.status(200).json({ topics: combinedResults });
+        }
+
+        return res.status(200).json({ topics: nameMatches });
+
+    } catch (error) {
+        console.error('Error searching topics:', error);
+        res.status(500).json({ error: error.message || "Error searching topics" });
+    }
+};
+
 export {
     createNewTopic,
     getTopics,
@@ -486,5 +524,6 @@ export {
     liveChat, saveAgent,
     getAgents,
     saveAgentPair,
-    getAgentPairs
+    getAgentPairs,
+    searchTopics
 };

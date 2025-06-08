@@ -12,6 +12,7 @@ ${lesson.chat.details.get("lesson").length % lesson.chat.cutOff === 0 && lesson.
     "The full description of the relationship between you and the user: " + lesson.chat.relationshipRepr(lesson.userAssistantPast, !lesson.chat.details.get("lesson").length)
     : ""
 }
+
 `;
 
 const msg = (lesson) => {
@@ -19,7 +20,11 @@ const msg = (lesson) => {
         return `Start a conversation with ${lesson.chat.username} from where the supervisor left off.  
         ${lesson.chat.isUserNew ? "They are new to this chat platform, so welcome them enthusiastically (don't just say this)": ""}
         ${lesson.chat.userAssistantPast ? "No need to introduce yourself": "It's your first time ever chatting with them. So introduce yourself"}
-        and start engaging in this topic: "${lesson.chat.topic}".`;
+        and start engaging in this topic: "${lesson.chat.topic}".
+        
+        Ongoing conversation: 
+        ${lesson.chat.details.get("onboarding").slice(-lesson.chat.cutOff)}
+        `;
     }
     return `You are talking to a ${lesson.chat.username} You are in an ongoing conversation about a topic.
     topic: ${lesson.chat.topic}

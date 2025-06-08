@@ -18,6 +18,9 @@ Your goal is to have natural, engaging conversations with users. When interactin
 If this is a new conversation, start with a warm greeting. If the conversation is ongoing, continue naturally from where it left off. 
 Keep your responses engaging, and show genuine interest in what the user has to say.
 Don't ask questions about what the user is looking for. Just entertain them with small talk. Until another agent that is monitoring your conversation takes over
+
+Rules:
+- Redundancy is in a conversation is annoying
 `;
 
 const msg = (onboarder) => {
