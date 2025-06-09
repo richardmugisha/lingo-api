@@ -479,11 +479,12 @@ const searchTopics = async (req, res) => {
 
         // First search for topics by name
         const nameMatches = await Topic.find({
-            name: { $regex: searchTerm, $options: 'i' }
+            name: { $regex: searchTerm, $options: 'i' },
+            words: { $exists: true, $ne: [] }  // Ensure words array exists and is not empty
         }).populate('parent', 'name').lean();
 
         // If we have less than 5 results, also search by parent name
-        if (nameMatches.length < 5) {
+        if (nameMatches.length < 3) {
             const parentMatches = await Topic.find({
                 'parent.name': { $regex: searchTerm, $options: 'i' }
             }).populate('parent', 'name').lean();
