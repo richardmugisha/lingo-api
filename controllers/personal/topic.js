@@ -326,13 +326,14 @@ const prepareEpisode = async(req, res) => {
 }
 
 const liveChat = async (req, res) => {
-    const { chat: message, words, topic, userID, username, agentPair } = req.body
-    console.log(message, words, topic, userID, username)
+    const { chat: message, words, topic, userID, username, agentPair, type } = req.body
+    // console.log(message, words, topic, userID, username, agentPair)
+    console.log(message)
     try {
         let chat = LiveChat.find(userID, topic)
         if (!chat) {
-            if (!(userID && username && topic && words.length)) throw new Error("Provide all the inputs")
-            chat = new LiveChat(userID, username, topic, words, agentPair)
+            if (type === "focused" && !(userID && username && topic && words.length)) throw new Error("Provide all the inputs")
+            chat = new LiveChat({userID, username, topic, words, agentPair, type})
         }
         const response = await chat.coordinator.reply(message)
         //  = await liveChatHandle(step, chat, words, topic)

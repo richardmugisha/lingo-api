@@ -17,21 +17,23 @@ class Coordinator {
 
     async reply(message) {
         this.addUserMessage(message)
-        if (this[this.chat.stage].wrappingUp) {
-            // check if can transition
-            const verdict = await shouldTransition(this.chat.details.get(this.chat.stage).slice(this.chat.CUT))
-            if (verdict) {
-                this.nextStage()
+        if (this.chat.type === "focused") {
+            if (this[this.chat.stage].wrappingUp) {
+                // check if can transition
+                const verdict = await shouldTransition(this.chat.details.get(this.chat.stage).slice(this.chat.cutOff))
+                if (verdict) {
+                    this.nextStage()
+                }
+                this[this.chat.stage].wrappingUp = false
+            } else {
+                this[this.chat.stage].shouldWrapUp()
+                console.log(this.chat.stage + ': ', this[this.chat.stage].wrappingUp)
             }
-            this[this.chat.stage].wrappingUp = false
-        } else {
-            this[this.chat.stage].shouldWrapUp()
-            console.log(this.chat.stage + ': ', this[this.chat.stage].wrappingUp)
         }
-        
         const response = await this[this.chat.stage].steps[this[this.chat.stage].stage]()
         this.addAssistantMessage(response)
         if (this.chat.details.get(this.chat.stage).length % 5) this.updateRelationship()
+        console.log("here too")
         return response
     }
 

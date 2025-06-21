@@ -6,13 +6,14 @@ import Coordinator from './coordinator/index.js';
 
 class Chat {
     static chats = new Map();
-    constructor(userID, username, topic, totalWords, agentPair) {
+    constructor({userID, username, topic, totalWords, agentPair, type}) {
+        this.type = type || "focused";
         this.cutOff = 10;
         this.userID = userID;
         this.username = username;
         this.isUserNew = true;
-        this.instructor = agentPair.instructor
-        this.supervisor = agentPair.supervisor
+        this.instructor = agentPair.instructor;
+        this.supervisor = agentPair.supervisor;
         this.topic = topic;
         this.totalWords = totalWords;
         this.usedWords = new Set();
