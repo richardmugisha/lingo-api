@@ -7,7 +7,7 @@ import {
 const generate = async (path, topic, number, excluded) => {
     try {
         const prompt = topicPrompt(path, topic, number, excluded)
-        console.log(prompt)
+        // console.log(prompt)
         const topics = await openaiRequest("gpt-4o", topicSysMsg, prompt)
         // console.log(topics)
         return JSON.parse(topics)

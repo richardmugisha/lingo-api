@@ -27,13 +27,12 @@ class Coordinator {
                 this[this.chat.stage].wrappingUp = false
             } else {
                 this[this.chat.stage].shouldWrapUp()
-                console.log(this.chat.stage + ': ', this[this.chat.stage].wrappingUp)
+                // console.log(this.chat.stage + ': ', this[this.chat.stage].wrappingUp)
             }
         }
         const response = await this[this.chat.stage].steps[this[this.chat.stage].stage]()
         this.addAssistantMessage(response)
         if (this.chat.details.get(this.chat.stage).length % 5) this.updateRelationship()
-        console.log("here too")
         return response
     }
 

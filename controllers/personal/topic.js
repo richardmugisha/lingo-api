@@ -328,7 +328,6 @@ const prepareEpisode = async(req, res) => {
 const liveChat = async (req, res) => {
     const { chat: message, words, topic, userID, username, agentPair, type } = req.body
     // console.log(message, words, topic, userID, username, agentPair)
-    console.log(message)
     try {
         let chat = LiveChat.find(userID, topic)
         if (!chat) {

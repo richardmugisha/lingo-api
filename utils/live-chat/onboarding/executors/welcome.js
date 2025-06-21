@@ -12,7 +12,7 @@ export default async (onboarder) => {
         }
         const sysPrompt = sysMsg(onboarder)
         const prompt = msg(onboarder)
-        console.log(prompt)
+        // console.log(prompt)
         const response = await openaiRequest("gpt-4o-mini", sysPrompt, prompt)
         return response
     } catch (error) {
