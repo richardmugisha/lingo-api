@@ -1,5 +1,5 @@
 
-import Story from "../../../models/story/story.js"
+import Story, { Scene } from "../../../models/story/story.js"
 import chapter from "../../../models/story/chapter.js";
 
 const patchStory = async (req, res) => {
@@ -11,15 +11,31 @@ const patchStory = async (req, res) => {
                 story = await outlineUpdate(id, update);
                 res.status(200).json({ story });
                 break;
-            case 'details':
-                story = await detailsUpdate(id, update);
-                res.status(200).json({ story });
+            case 'scene':
+                story = await sceneUpdate(id, update);
+                res.status(200).json({ message: "Updated Scene successfully" });
+                break;
+            case 'title':
+                story = await titleUpdate(id, update)
+                res.status(200).json({message: "Updated title successfully"})
                 break;
             default:
                 res.status(400).json({ msg: "Invalid update item" });
         }
     } catch (error) {
         res.status(500).json({ msg: error.message})
+    }
+}
+
+const titleUpdate = async (id, update) => {
+    try {
+        const story = await Story.findByIdAndUpdate(id, {title: update})
+        if (!story) {
+            return res.status(404).json({ msg: "Story not found" });
+        }
+        return true
+    } catch (error) {
+        res.status(500).json({msg: error.message})
     }
 }
 
@@ -42,7 +58,7 @@ const patchChapter = async (req, res) => {
         const { id, item, update } = req.body
         switch(item) {
             case 'details':
-                const chapter = await detailsUpdate(id, update);
+                const chapter = await sceneUpdate(id, update);
                 res.status(200).json({ chapter });
                 break;
             case 'words':
@@ -58,17 +74,34 @@ const patchChapter = async (req, res) => {
 }
 
 
-const detailsUpdate = async(id, update) => {
+const sceneUpdate = async(id, update) => {
     try {
-        const storyDoc = await Story.findById(id);
-        if (!storyDoc) throw new Error("Chapter not found");
+        // Validate that update._id exists and is a valid ObjectId
+        if (!update._id) {
+            throw new Error("Scene ID is required");
+        }
         
-        storyDoc.details.push(...update);
-        await storyDoc.save();
+        // Check if the scene exists first
+        const existingScene = await Scene.findById(update._id);
+        if (!existingScene) {
+            throw new Error("Scene not found");
+        }
         
-        return storyDoc;
+        // Update the scene
+        const updatedScene = await Scene.findByIdAndUpdate(
+            update._id,
+            update,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedScene) {
+            throw new Error("Failed to update scene");
+        }
+        
+        return updatedScene;
     } catch (error) {
-        throw error
+        console.error('Scene update error:', error);
+        throw error;
     }
 }
 
@@ -120,7 +153,6 @@ const patchDeleteDetails = async(req, res) => {
     try {
         // INSERT_YOUR_CODE
         // Find the story by id
-        console.log(id)
         const story = await Story.findById(id);
         if (!story) {
             return res.status(404).json({ msg: "Story not found" });
@@ -160,12 +192,12 @@ const patchTypeSettings = async(req, res) => {
     }
 }
 
-const patchPageSettings = async(req, res) => {
-    const { id, pageSettings } = req.body
+const patchChapterLog = async(req, res) => {
+    const { id, chapterLog } = req.body
     try {
         const story = await Story.findByIdAndUpdate(
             id,
-            { pageSettings: pageSettings},
+            { chapters: chapterLog},
             { new: true}
         )
         if (!story) {
@@ -184,5 +216,5 @@ export {
     patchEditDetails,
     patchDeleteDetails,
     patchTypeSettings,
-    patchPageSettings
+    patchChapterLog
 }

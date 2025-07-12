@@ -1,11 +1,11 @@
-import Story from "../../../models/story/story.js"
+import Story, { Scene} from "../../../models/story/story.js"
 import Chapter from "../../../models/story/chapter.js"
 
 const getStories = async (req, res) => {
     const filters = req.query
     try {
         // Only select lightweight fields to avoid memory issues
-        const stories = await Story.find(filters).select('_id title summary author outline typeSettings pageSettings createdAt updatedAt');
+        const stories = await Story.find(filters).select('_id title summary author outline typeSettings chapters createdAt updatedAt');
         res.status(200).json({ stories })
     } catch (error) {
         res.status(500).json({ msg: error.message })
@@ -65,8 +65,20 @@ const getChapter = async (req, res) => {
     }
 }
 
+const getScene = async (req, res) => {
+    const { id } = req.params
+    try {
+        const scene = await Scene.findById(id)
+
+        res.status(200).json({ scene: scene })
+
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
+}
 export {
     getStories,
     getStory,
-    getChapter
+    getChapter,
+    getScene
 }

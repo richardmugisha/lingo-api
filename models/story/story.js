@@ -1,6 +1,18 @@
 import mongoose from "mongoose";
 
+const StorySceneSChema = mongoose.Schema({
+    text: {type: String, default: ""} ,
+    topics: {
+                type: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Topic',
+            }],
+             default: []
+    }
+})
+
 const StorySchema = mongoose.Schema({
+    title: { type: String, default: "Untitled Story"},
     leadAuthor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -27,49 +39,19 @@ const StorySchema = mongoose.Schema({
         }
     },
 
-    pageSettings: {
-        type: [
-            {
-                offset: Number,
-                size: Number,
-                sceneSettings: {
-                    type: [{
-                        offset: Number,
-                        size: Number
-                    }],
-                    default: []
-                }
+    chapters: [{
+        _id: false,
+        title: String,
+        scenes: [{
+            _id: false,
+            title: { type: String, default: "Untitled Scene" },
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'StoryScene'
             }
-        ],
-        default: [
-            {
-                offset: 0,
-                size: 2, 
-                sceneSettings: [
-                    {
-                        offset: 0, 
-                        size: 2 // contains the title of the chapter, and the title of its first scene
-                    }
-                ]
-            }
-        ]
-    },
-
-    details: {
-        type: [
-            {
-                sentence: String,
-                blanked: String,
-                topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
-                typeSettings: {
-                    type: Object, /*fontFamily: "Roboto, sans-serif",
-                    fontSize: 16,
-                    lineHeight: 1.5*/
-                }, 
-            }
-        ],
-        default: []
-    }
+        }]
+    }],
 }, { timestamps: true })
 
 export default mongoose.model('Story', StorySchema);
+export const Scene = mongoose.model('StoryScene', StorySceneSChema)

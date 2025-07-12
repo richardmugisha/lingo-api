@@ -1,5 +1,5 @@
 
-import Story from "../../../models/story/story.js"
+import Story, { Scene } from "../../../models/story/story.js"
 import Chapter from "../../../models/story/chapter.js";
 // import { fullStoryGen, aiCoEditor } from "../../../utils/story/storyGenerator";
 
@@ -15,7 +15,7 @@ const createStory = async (req, res) => {
 }
 
 const handler = async(topicId, body) => {
-    let {userId, leadAuthor, coAuthors, details, title, words, aiAssistance, summary, outline} = body;
+    let {userId, leadAuthor, coAuthors, details, title, words, aiAssistance, summary, outline, chapters} = body;
     //console.log(userId, details, title, words, aiAssistance, summary, '...creating story')
     try {
         // if (aiAssistance === 'Ai co-editor') {
@@ -30,6 +30,17 @@ const handler = async(topicId, body) => {
         // }
 
         const storyTocreate = {details, title, words}
+        let firstScene;
+        if (chapters) storyTocreate.chapters = chapters;
+        else {
+            firstScene = await Scene.create({})
+            storyTocreate.chapters = [{
+                title: "Untitled Chapter",
+                scenes: [ {
+                    id: firstScene._id
+                }]
+            }]
+        }
         if (userId) storyTocreate.leadAuthor = userId;
         if (leadAuthor) storyTocreate.leadAuthor = leadAuthor;
         if (coAuthors?.length) storyTocreate.coAuthors = coAuthors;
@@ -39,7 +50,7 @@ const handler = async(topicId, body) => {
     
         const createdStory = await Story.create(storyTocreate)
         // //console.log(createdStory)
-        return createdStory
+        return {...createdStory.toObject(), scene: firstScene}
     } catch (error) {
         //console.log(error.message)
         throw error
@@ -60,8 +71,18 @@ const createChapter = async(req, res) => {
     }
 }
 
+const createScene = async(req, res) => {
+    try {
+        const newScene = await Scene.create({})
+        res.status(200).json({scene: newScene})
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
+}
+
 export {
     createStory,
     handler,
-    createChapter
+    createChapter,
+    createScene
 }
