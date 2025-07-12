@@ -63,7 +63,7 @@ const detailsUpdate = async(id, update) => {
         const storyDoc = await Story.findById(id);
         if (!storyDoc) throw new Error("Chapter not found");
         
-        storyDoc.details.push(update);
+        storyDoc.details.push(...update);
         await storyDoc.save();
         
         return storyDoc;
@@ -140,9 +140,49 @@ const patchDeleteDetails = async(req, res) => {
     }
 }
 
+const patchTypeSettings = async(req, res) => {
+    const { id, typeSettings } = req.body
+    try {
+        // Find and update the story's typeSettings in one operation
+        const story = await Story.findByIdAndUpdate(
+            id, 
+            { typeSettings: typeSettings },
+            { new: true }
+        );
+        
+        if (!story) {
+            return res.status(404).json({ msg: "Story not found" });
+        }
+
+        res.status(200).json({ message: "typeSettings updated successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message})
+    }
+}
+
+const patchPageSettings = async(req, res) => {
+    const { id, pageSettings } = req.body
+    try {
+        const story = await Story.findByIdAndUpdate(
+            id,
+            { pageSettings: pageSettings},
+            { new: true}
+        )
+        if (!story) {
+            return res.status(404).json({ msg: "Story not found" });
+        }
+
+        res.status(200).json({ message: "pageSettings updated successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message})
+    }
+}
+
 export {
     patchStory,
     patchChapter,
     patchEditDetails,
-    patchDeleteDetails
+    patchDeleteDetails,
+    patchTypeSettings,
+    patchPageSettings
 }

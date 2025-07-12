@@ -17,12 +17,55 @@ const StorySchema = mongoose.Schema({
         type: String,
         default: ""
     },
+
+    typeSettings: {
+        type: Object,
+        default: {
+            fontFamily: "Roboto, sans-serif",
+            fontSize: 16,
+            lineHeight: 1.5
+        }
+    },
+
+    pageSettings: {
+        type: [
+            {
+                offset: Number,
+                size: Number,
+                sceneSettings: {
+                    type: [{
+                        offset: Number,
+                        size: Number
+                    }],
+                    default: []
+                }
+            }
+        ],
+        default: [
+            {
+                offset: 0,
+                size: 2, 
+                sceneSettings: [
+                    {
+                        offset: 0, 
+                        size: 2 // contains the title of the chapter, and the title of its first scene
+                    }
+                ]
+            }
+        ]
+    },
+
     details: {
         type: [
             {
                 sentence: String,
                 blanked: String,
-                topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" }
+                topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
+                typeSettings: {
+                    type: Object, /*fontFamily: "Roboto, sans-serif",
+                    fontSize: 16,
+                    lineHeight: 1.5*/
+                }, 
             }
         ],
         default: []
