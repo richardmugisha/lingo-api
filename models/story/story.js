@@ -11,6 +11,15 @@ const StorySceneSChema = mongoose.Schema({
     }
 })
 
+const OutlineSchema = mongoose.Schema({
+    general: { type: String, default: ""},
+    brainDump: { type: String, default: ""},
+    chapters: [{
+        outline: { type: String, default: ""},
+        scenes: [String]
+    }]
+})
+
 const StorySchema = mongoose.Schema({
     title: { type: String, default: "Untitled Story"},
     leadAuthor: {
@@ -26,8 +35,8 @@ const StorySchema = mongoose.Schema({
     }],
 
     outline: {
-        type: String,
-        default: ""
+        type: OutlineSchema,
+        default: { general: "", chapters: []}
     },
 
     typeSettings: {

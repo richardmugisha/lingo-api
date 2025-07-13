@@ -44,7 +44,6 @@ const handler = async(topicId, body) => {
         if (userId) storyTocreate.leadAuthor = userId;
         if (leadAuthor) storyTocreate.leadAuthor = leadAuthor;
         if (coAuthors?.length) storyTocreate.coAuthors = coAuthors;
-        storyTocreate.outline = outline || ""
         // if (topicId) storyTocreate.topic = topicId
         //console.log(topicId, userId, details)
     
