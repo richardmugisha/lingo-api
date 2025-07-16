@@ -36,6 +36,9 @@ network.start(server)
 app.use(cors())
 app.use(express.json());
 
+app.use('/api/v1/uptime', (req, res) => {
+    res.status(200).json({msg: "I am up"})
+})
 
 // Protect routes that need authentication with verifyToken
 app.use('/api/v1/protected-route', verifyToken, (req, res) => {
