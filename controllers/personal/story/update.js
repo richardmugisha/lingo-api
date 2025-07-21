@@ -1,5 +1,6 @@
 
 import Story, { Scene } from "../../../models/story/story.js"
+import { userWritingGoal } from "../../../models/story/user-contribution.js";
 import { logWritingProgress } from "../../../models/story/log_goal.js";
 import chapter from "../../../models/story/chapter.js";
 
@@ -235,6 +236,25 @@ const updateWriterLog = async (req, res) => {
   }
 };
 
+const updateWritingGoal = async (req, res) => {
+    try {
+        const { userID, goal } = req.body;
+        if (!userID || !goal) return res.status(400).json({error: "Invalid inputs"});
+
+        // Overwrite the user's writing goal
+        const updatedGoal = await userWritingGoal.findOneAndUpdate(
+            { userId: userID },
+            { ...goal, userId: userID },
+            { upsert: true, new: true, overwrite: true }
+        );
+
+        return res.status(200).json({ goal: updatedGoal });
+    } catch (error) {
+        console.error('Update writing goal error:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 
 export {
     patchStory,
@@ -243,5 +263,6 @@ export {
     patchDeleteDetails,
     patchTypeSettings,
     patchChapterLog,
-    updateWriterLog
+    updateWriterLog,
+    updateWritingGoal
 }

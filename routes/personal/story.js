@@ -5,12 +5,12 @@ const router = express.Router()
 
 import { createStory, createChapter, createScene } from "../../controllers/personal/story/create.js"
 import { getChapter, getStories, getStory, getScene, getUserContributions, getUserGoal } from '../../controllers/personal/story/get.js'
-import { patchStory, patchChapter, patchEditDetails, patchDeleteDetails, patchTypeSettings, patchChapterLog, updateWriterLog } from "../../controllers/personal/story/update.js"
+import { patchStory, patchChapter, patchEditDetails, patchDeleteDetails, patchTypeSettings, patchChapterLog, updateWriterLog, updateWritingGoal } from "../../controllers/personal/story/update.js"
 
 
 // 1. Static routes (most specific)
 router.route("/contributions").get(getUserContributions).patch(updateWriterLog)
-router.route("/goal").get(getUserGoal)
+router.route("/goal").get(getUserGoal).patch(updateWritingGoal)
 
 // 2. Root path operations
 router.route("/").post(createStory).patch(patchStory).get(getStories)
