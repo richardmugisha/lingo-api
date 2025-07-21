@@ -13,9 +13,11 @@ export async function logWritingProgress({ userId, date = new Date(), words }) {
   if (!goal) {
     goal = await userWritingGoal.create({
       userId,
-      startDate: today,
-      days: 7,
-      wordsPerDay: 300,
+      current: {
+        startDate: today,
+        days: 1,
+        wordsPerDay: 300,
+      },
       streak: {
         last: null,
         value: 0,
@@ -23,7 +25,7 @@ export async function logWritingProgress({ userId, date = new Date(), words }) {
     });
   }
 
-  const ratio = Math.min(words / goal.wordsPerDay, 1); // cap at 1
+  const ratio = words / goal.current.wordsPerDay //Math.min(words / goal.wordsPerDay, 1); // cap at 1
 
   // Update contribution count (fractional)
   await UserContributionDay.findOneAndUpdate(
@@ -46,6 +48,8 @@ export async function logWritingProgress({ userId, date = new Date(), words }) {
     last: today,
     value: newStreak
   };
+
+  console.log(goal)
 
   await goal.save();
 

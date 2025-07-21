@@ -20,12 +20,16 @@ const userWritingGoalSchema = new mongoose.Schema({
         value: Number,
     },
 
-    // Config
-    startDate: { type: Date, required: true },         // when the goal starts
-    days: { type: Number, required: true },            // e.g. 30
-    wordsPerDay: { type: Number, required: true },     // e.g. 200
-
-
+    current: {
+        startDate: { type: Date, required: true },         // when the goal starts
+        days: { type: Number, required: true },            // e.g. 30
+        wordsPerDay: { type: Number, required: true },     // e.g. 200
+    },
+    upcoming: {
+        startDate: { type: Date },         // when the goal starts
+        days: { type: Number },            // e.g. 30
+        wordsPerDay: { type: Number },     // e.g. 200
+    }
 })
 
 userWritingGoalSchema.index({ userId: 1}, { unique: true})
