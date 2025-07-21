@@ -1,5 +1,6 @@
 
 import Story, { Scene } from "../../../models/story/story.js"
+import { logWritingProgress } from "../../../models/story/log_goal.js";
 import chapter from "../../../models/story/chapter.js";
 
 const patchStory = async (req, res) => {
@@ -210,11 +211,37 @@ const patchChapterLog = async(req, res) => {
     }
 }
 
+
+const updateWriterLog = async (req, res) => {
+  try {
+    const {userID, date, words} = req.body
+
+    if (!words || typeof words !== 'number' || words <= 0) {
+      return res.status(400).json({ error: 'Invalid word count' });
+    }
+
+    const logDate = date ? new Date(date) : new Date();
+    console.log(userID)
+    const result = await logWritingProgress({userId: userID, date: logDate, words});
+
+    return res.status(200).json({
+      message: 'Writer log updated successfully',
+      data: result,
+    });
+
+  } catch (error) {
+    console.error('updateWriterLog error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
 export {
     patchStory,
     patchChapter,
     patchEditDetails,
     patchDeleteDetails,
     patchTypeSettings,
-    patchChapterLog
+    patchChapterLog,
+    updateWriterLog
 }

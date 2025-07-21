@@ -1,6 +1,7 @@
 
 import orchestractor from "./utils/script/orchestrator/index.js"
 import scriptJob from "./utils/script/scriptJob.js"
+import test from "./tests/story/user_contribution.js"
 
 import express from "express"
 import http from "http"
@@ -64,6 +65,7 @@ const start = async () => {
         await connectDB(process.env.MONGO_URI);
         server.listen(port, () =>{ 
             console.log(`listening on ${port}`)
+            // test()
             // orchestractor()
             // scriptJob()
         }

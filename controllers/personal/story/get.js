@@ -1,5 +1,6 @@
 import Story, { Scene} from "../../../models/story/story.js"
 import Chapter from "../../../models/story/chapter.js"
+import UserContributionDay, { userWritingGoal} from "../../../models/story/user-contribution.js"
 
 const getStories = async (req, res) => {
     const filters = req.query
@@ -14,6 +15,7 @@ const getStories = async (req, res) => {
 
 const getStory = async (req, res) => {
     const { id } = req.params;
+    console.log(req)
     const { start, end } = req.query.page
     
     try {
@@ -76,9 +78,47 @@ const getScene = async (req, res) => {
         res.status(500).json({msg: error.message})
     }
 }
+
+
+
+async function getUserContributions(req, res) {
+  try {
+    const year = parseInt(req.query.year, 10) || new Date().getFullYear();
+    const userId = req.query.userID
+
+    const startDate = new Date(Date.UTC(year, 0, 1)); // Jan 1, 00:00:00 UTC
+    const endDate = new Date(Date.UTC(year + 1, 0, 1)); // Jan 1 next year
+
+    const contributions = await UserContributionDay.find({
+      userId,
+      date: { $gte: startDate, $lt: endDate },
+    }).select('date count -_id');
+    console.log(contributions)
+    res.json(contributions);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch contributions' });
+  }
+}
+
+const getUserGoal = async (req, res) => {
+    try {
+        const userId = req.query.userID
+
+        const goal = await userWritingGoal.findOne({ userId })
+
+        res.json({ goal })
+
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch writing goal' });
+    }
+}
+
 export {
     getStories,
     getStory,
     getChapter,
-    getScene
+    getScene,
+    getUserContributions,
+    getUserGoal
 }
