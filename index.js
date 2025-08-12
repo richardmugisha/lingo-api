@@ -10,6 +10,7 @@ import words from "./routes/personal/words.js"
 import batchRequest from "./routes/personal/batchRequest.js"
 import fyp from "./routes/personal/fyp.js"
 import story from "./routes/personal/story.js"
+import guru from "./routes/personal/guru.js"
 import network from "./routes/network/index.js";
 
 import connectDB from "./db/connect.js";
@@ -56,6 +57,7 @@ app.use('/api/v1', topic)
 app.use('/api/v1/words', words)
 app.use('/api/v1/story', story)
 app.use('/api/v1/fyp', fyp)
+app.use('/api/v1/guru', guru)
 
 
 const port = process.env.PORT || 3500;
