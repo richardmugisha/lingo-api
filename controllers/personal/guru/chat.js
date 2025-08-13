@@ -1,10 +1,12 @@
 import Chat from "../../../models/guru/chat.js";
 import ChatManager from "../../../utils/guru/index.js";
+import titleGenerator from "../../../utils/guru/components/title.js";
+import summaryGenerator from "../../../utils/guru/components/summary.js";
 
 const getGuruChat = async (req, res) => {
     try {
         const { id } = req.params;
-        Chat.findOne({ userID: id })
+        Chat.findById(id)
             .then(chat => {
                 if (!chat) {
                     return res.status(404).json({ message: "Guru chat not found" });
@@ -38,8 +40,8 @@ const createGuruChat = async (req, res) => {
 
 const chatWithAI = async (req, res) => {
     try {
-        const { userID, title, summary, messages, userMessage, ongoing } = req.body;
-        const chatManager = ChatManager.getChat(userID, title, summary, messages);
+        const { userID, chatID, title, summary, messages, userMessage } = req.body;
+        const chatManager = ChatManager.getChat(userID, chatID, title, summary, messages);
 
         const chatRes = await chatManager.messageAI('user', userMessage)
         res.status(200).json(chatRes)
@@ -52,6 +54,7 @@ const chatWithAI = async (req, res) => {
 const updateGuruChat = async (req, res) => {
     try {
         const { id } = req.params;
+        console.log("Update Guru chat: ", id)
         const { title, summary, messages } = req.body;
         Chat.findByIdAndUpdate(id, { title, summary, messages }, { new: true })
             .then(updatedChat => {
@@ -67,5 +70,19 @@ const updateGuruChat = async (req, res) => {
     }   
 }   
 
+const createTitle = async (req, res) => {
+    try {
+        const { messages } = req.body;
+        if (!messages || messages.length === 0) {
+            return res.status(400).json({ message: "Messages are required to create a title" });
+        }
+        const [title, err] = await titleGenerator(messages);
+        res.status(200).json({ title });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
 
-export { getGuruChat, createGuruChat, updateGuruChat, chatWithAI };
+
+
+export { getGuruChat, createGuruChat, updateGuruChat, chatWithAI, createTitle };
