@@ -141,11 +141,30 @@ const dictionaryPopulating = async (processedWords, language) => {
     }
 };
 
+const createNewWord = async (req, res) => {
+    try {
+        const { id } = req.params
+        const topic = await createNewTopic(id)
+        if (!topic) throw new Error(`The topic with id: ${name} doesn't exist!`)
+        const { word, meaning, example, blanked, synonym, antonym, language, type, languageStyle } = req.body;
+        console.log(id, word, meaning, example, blanked, synonym, antonym, language, type, languageStyle)
+        const WordModel = getWordModel(language)
+        const newWord = await WordModel.create({ word, meaning, example, "blanked example": blanked, synonym, antonym, language, type, "language style": languageStyle });
+        topic.words.push(newWord._id)
+        console.log(topic)
+        await topic.save()
+        res.status(200).json({ word: newWord })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({msg: error.message})
+    }
+}
 
 export {
     searchWords,
     getWords,
     addWordToTopic,
     addToWishList,
-    wordProcessing
+    wordProcessing,
+    createNewWord
 }

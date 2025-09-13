@@ -1,6 +1,6 @@
 import { createNewTopic } from "../../controllers/personal/topic.js"
 
-const createCascadingTopics = async (creator, language, structure, parent) => {
+const createCascadingTopics = async (creator, language, structure, parent, isAiGenerated) => {
     // const topics = []  // ✅ Now correctly scoped and accessible
 
     try {
@@ -9,7 +9,7 @@ const createCascadingTopics = async (creator, language, structure, parent) => {
                 // Leaf array: ["chemistry", "physics"]
                 await Promise.all(
                     structure.map(async (node) => {
-                        const topic = await createNewTopic(null, node, creator, language, parent, true)
+                        const topic = await createNewTopic(null, node, creator, language, parent, true, isAiGenerated)
                         await topic.save()
                         // topics.push(topic)
                     })

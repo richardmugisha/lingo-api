@@ -45,13 +45,14 @@ const createNewTopic = async (id, name, userId, language, parent, isAiGenerated)
 
 const saveTopics = async (req, res) => {
     try {
-        const { parent, language, creator, topics } = req.body
+        const { parent, language, creator, topics, isAiGenerated } = req.body
         console.log( parent, language, creator, topics)
-        await createCascadingTopics(creator, language, topics, parent)
+        await createCascadingTopics(creator, language, topics, parent, isAiGenerated === true)
         res.status(200).json({msg: "success"})
         // console.log(topics)
     } catch (error) {
         console.log(error)
+        res.status(500).json({msg: error.message})
     }
 }
 
