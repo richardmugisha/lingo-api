@@ -11,7 +11,8 @@ import {
     prepareEpisode,
     liveChat, saveAgent, getAgents,
     saveAgentPair, getAgentPairs,
-    searchTopics
+    searchTopics,
+    updateTopic
 } from "../../controllers/personal/topic.js"
 
 // Configure multer for memory storage
@@ -25,6 +26,7 @@ const upload = multer({
 // router.route('/topic').get(getTopic).patch(updateMastery).delete(deleteTopics)
 router.route('/topics').get(getTopics).delete(deleteTopics).post(saveTopics)
 router.route('/topics/search').get(searchTopics)
+router.route('/topics/:id').patch(updateTopic)
 router.route("/topic").get(getLearning).post(createLearning).patch(updateMastery)
 router.route("/topic/suggestions").get(getSuggestions)
 router.route('/story-time/:topicId').post(createStory).get(getStories);

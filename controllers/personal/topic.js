@@ -101,7 +101,18 @@ const getTopics = async (req, res) => {
     }
 };
 
-
+const updateTopic = async (req, res) => {
+    try {
+        const { id } = req.params
+        const update = req.body
+        console.log(update)
+        const updatedTopic = await Topic.findByIdAndUpdate(id, update, { new: true})
+        res.status(200).json({ topic: updatedTopic })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: error.message})
+    }
+}
 
 const getLearning = async (req, res) => {
     try {
@@ -527,5 +538,6 @@ export {
     getAgents,
     saveAgentPair,
     getAgentPairs,
-    searchTopics
+    searchTopics,
+    updateTopic
 };
