@@ -3,6 +3,7 @@ import express from 'express'
 
 const router = express.Router()
 
+import deleteStories from "../../controllers/personal/story/delete.js"
 import { createStory, createChapter, createScene } from "../../controllers/personal/story/create.js"
 import { getChapter, getStories, getStory, getScene, getUserContributions, getUserGoal } from '../../controllers/personal/story/get.js'
 import { patchStory, patchChapter, patchEditDetails, patchDeleteDetails, patchTypeSettings, patchChapterLog, updateWriterLog, updateWritingGoal } from "../../controllers/personal/story/update.js"
@@ -24,7 +25,7 @@ router.route("/chapterLog").patch(patchChapterLog)
 
 // 4. Parameterized routes (least specific - should come LAST)
 router.route("/scene/:id").get(getScene)
-router.route("/:id").get(getStory)
+router.route("/:id").get(getStory).delete(deleteStories)
 
 
 export default router
