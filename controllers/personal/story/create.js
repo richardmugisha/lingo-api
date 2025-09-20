@@ -1,6 +1,7 @@
 
 import Story, { Scene } from "../../../models/story/story.js"
 import Chapter from "../../../models/story/chapter.js";
+import { uploadImageToS3 } from "../../../utils/s3Client.js";
 // import { fullStoryGen, aiCoEditor } from "../../../utils/story/storyGenerator";
 
 const createStory = async (req, res) => {
@@ -79,9 +80,40 @@ const createScene = async(req, res) => {
     }
 }
 
+const createSceneCover = async (req, res) => {
+    try {
+        const { id } = req.params
+        const imageFile = req.file; // This will be handled by multer middleware
+        if (!imageFile) {
+            return res.status(400).json({ 
+                message: 'Image file is required',
+            });
+        }
+        const timestamp = Date.now();
+        const key = `scene/cover/${id}.jpg`;
+
+        // Upload image to S3
+        await uploadImageToS3(imageFile.buffer, key);
+        
+        // Create S3 URL
+        const imageUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+
+        await Scene.findByIdAndUpdate(id, { imageUrl })
+
+        res.status(200).json({ 
+            message: 'Agent created successfully',
+        });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: error.message })
+    }
+}
+
 export {
     createStory,
     handler,
     createChapter,
-    createScene
+    createScene,
+    createSceneCover
 }

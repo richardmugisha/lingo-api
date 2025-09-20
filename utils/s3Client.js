@@ -1,4 +1,5 @@
 // aws/s3Client.js
+import multer from 'multer';
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import dotenv from "dotenv";
 dotenv.config();
@@ -34,5 +35,13 @@ export const uploadImageToS3 = async (buffer, key, contentType = "image/jpeg") =
 
   await s3.send(new PutObjectCommand(uploadParams));
 };
+
+// Configure multer for memory storage
+export const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
+    }
+});
 
 export default s3;

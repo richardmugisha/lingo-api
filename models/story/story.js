@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const StorySceneSChema = mongoose.Schema({
     text: {type: String, default: ""} ,
+    imageUrl: String,
     topics: {
                 type: [{
                 type: mongoose.Schema.Types.ObjectId,

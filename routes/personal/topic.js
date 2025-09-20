@@ -1,6 +1,5 @@
 import express from "express"
-import multer from 'multer';
-
+import { upload } from "../../utils/s3Client.js";
 const router = express.Router();
 
 import { 
@@ -15,13 +14,7 @@ import {
     updateTopic
 } from "../../controllers/personal/topic.js"
 
-// Configure multer for memory storage
-const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-        fileSize: 5 * 1024 * 1024, // 5MB limit
-    }
-});
+
 
 // router.route('/topic').get(getTopic).patch(updateMastery).delete(deleteTopics)
 router.route('/topics').get(getTopics).delete(deleteTopics).post(saveTopics)
