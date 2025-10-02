@@ -23,6 +23,7 @@ const OutlineSchema = mongoose.Schema({
 
 const StorySchema = mongoose.Schema({
     title: { type: String, default: "Untitled Story"},
+    imageUrl: { type: String, default: "" },
     leadAuthor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

@@ -1,4 +1,5 @@
 import Story, { Scene} from "../../../models/story/story.js"
+import User from "../../../models/user.js"
 import Chapter from "../../../models/story/chapter.js"
 import UserContributionDay, { userWritingGoal} from "../../../models/story/user-contribution.js"
 
@@ -6,8 +7,12 @@ const getStories = async (req, res) => {
     const filters = req.query
     try {
         // Only select lightweight fields to avoid memory issues
-        const stories = await Story.find(filters).select('_id title summary author outline typeSettings chapters createdAt updatedAt');
-        res.status(200).json({ stories })
+        const stories = await Story.find(filters).select('_id title summary imageUrl author outline typeSettings chapters createdAt updatedAt');
+        const storiesWithAuthors = await Promise.all(stories.map(async (story) => {
+            const author = await User.findById(story.author).select('username');
+            return { ...story.toObject(), author: author || "Unknown" };
+        }));
+        res.status(200).json({ stories: storiesWithAuthors })
     } catch (error) {
         res.status(500).json({ msg: error.message })
     }

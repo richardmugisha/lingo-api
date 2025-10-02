@@ -16,7 +16,7 @@ const createStory = async (req, res) => {
 }
 
 const handler = async(topicId, body) => {
-    let {userId, leadAuthor, coAuthors, details, title, words, aiAssistance, summary, outline, chapters} = body;
+    let {userId, leadAuthor, imageUrl, coAuthors, details, title, words, aiAssistance, summary, outline, chapters} = body;
     //console.log(userId, details, title, words, aiAssistance, summary, '...creating story')
     try {
         // if (aiAssistance === 'Ai co-editor') {
@@ -37,6 +37,7 @@ const handler = async(topicId, body) => {
             firstScene = await Scene.create({})
             storyTocreate.chapters = [{
                 title: "Untitled Chapter",
+                imageUrl: imageUrl || "",
                 scenes: [ {
                     id: firstScene._id
                 }]
@@ -109,9 +110,38 @@ const createSceneCover = async (req, res) => {
         res.status(500).json({ msg: error.message })
     }
 }
+const createStoryCover = async (req, res) => {
+    try {
+        const { id } = req.params
+        const imageFile = req.file; // This will be handled by multer middleware
+        if (!imageFile) {
+            return res.status(400).json({ 
+                message: 'Image file is required',
+            });
+        }
+        const key = `story/cover/${id}.jpg`;
+
+        // Upload image to S3
+        await uploadImageToS3(imageFile.buffer, key);
+        
+        // Create S3 URL
+        const imageUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+
+        await Story.findByIdAndUpdate(id, { imageUrl })
+
+        res.status(200).json({ 
+            message: 'Agent created successfully',
+        });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: error.message })
+    }
+}
 
 export {
     createStory,
+    createStoryCover,
     handler,
     createChapter,
     createScene,
